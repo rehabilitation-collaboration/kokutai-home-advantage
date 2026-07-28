@@ -238,6 +238,83 @@ def descriptive_host_summary(
     }
 
 
+def brant_partial_po_test(
+    df: pd.DataFrame | None = None,
+    cluster_col: str = "pref_code",
+    year_min: int = 2012,
+    year_max: int = 2022,
+    cup: Cup = "tennou",
+) -> dict:
+    """Brant-style partial-proportional-odds diagnostic for is_host across rank thresholds.
+
+    ordered logit の parallel-lines (PO) 仮定は各カテゴリ境界 j で説明変数の係数
+    β が共通 (β_j = β for all j) を要請する。本テストは各 threshold j について
+    Y <= j vs Y > j の binary logit を separately fit し、is_host の β_j が
+    共通かどうかを pooled Wald-style chi-square で診断する。
+
+    Note: これはフルの Brant (1990) SUR-based test ではなく (statsmodels は
+    cross-equation covariance を直接扱わない)、各 threshold coef を独立と仮定
+    した近似的 diagnostic である。厳密には保守的 (independent 仮定は cross-
+    equation dependence を過小評価するため p 値が高めに出る傾向)。
+    Methods/Limitations にその旨明記して報告する。
+
+    Finding #18 (P2) 対応: proportional-odds 仮定を明示的に評価。
+
+    Returns:
+        dict:
+          threshold_rows: pd.DataFrame with columns [threshold, n_success,
+                          coef_is_host, se_is_host, converged]
+          chi2: float, weighted sum of squared deviations from pooled β
+          df: int, degrees of freedom (n_thresholds - 1)
+          p_value: float, chi-square upper tail
+          n_thresholds_used: int
+          beta_pool_weighted: float, inverse-variance-weighted mean β
+    """
+    import scipy.stats as st
+
+    if df is None:
+        df = build_analysis_frame(year_min=year_min, year_max=year_max, cup=cup)
+    y = df["rank_ordinal"]
+    X = _build_design_matrix(df, add_pref_fe=False, add_year_fe=False,
+                             add_cup_fe=False, add_const=True)
+    thresholds = sorted(y.unique())[:-1]  # 最大カテゴリは Y > max なし
+    rows = []
+    for t in thresholds:
+        y_bin = (y <= t).astype(int)
+        n_succ = int(y_bin.sum())
+        if n_succ == 0 or n_succ == len(y_bin):
+            rows.append({"threshold": int(t), "n_success": n_succ,
+                         "coef_is_host": float("nan"), "se_is_host": float("nan"),
+                         "converged": False})
+            continue
+        try:
+            model = sm.Logit(y_bin, X)
+            r = model.fit(method="bfgs", disp=False, maxiter=500,
+                          cov_type="cluster", cov_kwds={"groups": df[cluster_col]})
+            rows.append({"threshold": int(t), "n_success": n_succ,
+                         "coef_is_host": float(r.params.get("is_host_int", float("nan"))),
+                         "se_is_host": float(r.bse.get("is_host_int", float("nan"))),
+                         "converged": bool(r.mle_retvals.get("converged", True))})
+        except Exception as e:  # noqa: BLE001
+            rows.append({"threshold": int(t), "n_success": n_succ,
+                         "coef_is_host": float("nan"), "se_is_host": float("nan"),
+                         "converged": False, "error": type(e).__name__})
+    tbl = pd.DataFrame(rows)
+    finite = tbl[tbl["coef_is_host"].notna() & (tbl["se_is_host"] > 0)]
+    if len(finite) < 2:
+        return {"threshold_rows": tbl, "chi2": float("nan"), "df": 0,
+                "p_value": float("nan"), "n_thresholds_used": len(finite),
+                "beta_pool_weighted": float("nan")}
+    w = 1.0 / (finite["se_is_host"] ** 2)
+    beta_pool = float((finite["coef_is_host"] * w).sum() / w.sum())
+    q = float((w * (finite["coef_is_host"] - beta_pool) ** 2).sum())
+    df_free = int(len(finite) - 1)
+    p_val = float(1.0 - st.chi2.cdf(q, df_free))
+    return {"threshold_rows": tbl, "chi2": q, "df": df_free,
+            "p_value": p_val, "n_thresholds_used": int(len(finite)),
+            "beta_pool_weighted": beta_pool}
+
+
 def results_to_dataframe(results: list[ModelResult]) -> pd.DataFrame:
     return pd.DataFrame([
         {

@@ -6,6 +6,7 @@ import pytest
 from src.analysis_main import (
     RANK_OUTSIDE,
     ModelResult,
+    brant_partial_po_test,
     build_analysis_frame,
     descriptive_host_summary,
     fit_logit,
@@ -179,6 +180,40 @@ class TestResultsToDataframe:
         expected_cols = {"name", "model_type", "dv", "coef_is_host", "se_is_host",
                          "p_is_host", "n_obs", "n_params", "converged", "llf"}
         assert set(df.columns) == expected_cols
+
+
+class TestBrantPartialPO:
+    """Finding #18: partial-proportional-odds diagnostic.
+
+    このデータ特有の host_top8_rate=100% により threshold 2-8 は near-complete
+    separation で fit 発散する = テスト自体が tractable でない事実を確認。
+    論文 Limitations に「Brant test not tractable due to host cell separation」
+    として honestly 報告する根拠。
+    """
+
+    def test_returns_expected_keys(self):
+        r = brant_partial_po_test(cup="tennou")
+        assert set(r.keys()) >= {"threshold_rows", "chi2", "df", "p_value",
+                                  "n_thresholds_used", "beta_pool_weighted"}
+
+    def test_threshold_1_converges(self):
+        # Threshold 1 = "top-1 vs rest" は logit_top1_pooled と等価で separation
+        # せず converge するはず
+        r = brant_partial_po_test(cup="tennou")
+        t1 = r["threshold_rows"][r["threshold_rows"]["threshold"] == 1].iloc[0]
+        assert t1["converged"], "threshold=1 should converge (matches logit_top1_pooled)"
+        assert not pd.isna(t1["coef_is_host"])
+
+    def test_higher_thresholds_hit_separation(self):
+        # host_top8_rate=100% のため threshold 8 は 全 host が Y<=8 = separation
+        # 少なくとも 1 つの高い threshold が converged=False であること
+        r = brant_partial_po_test(cup="tennou")
+        rows = r["threshold_rows"]
+        higher = rows[rows["threshold"] >= 2]
+        assert (~higher["converged"]).any(), (
+            "Expected at least one higher threshold to fail due to separation "
+            "(host_top8_rate=100% forces host cells to be all 1s at Y<=8)"
+        )
 
 
 class TestDescriptiveHostSummary:

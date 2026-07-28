@@ -47,6 +47,18 @@ def main_models():
                     f"n={r.n_obs} converged={r.converged} llf={r.llf:.4f} cov={cov}\n"
                 )
             f.write("\n")
+
+        # Finding #18: Brant-style partial-proportional-odds diagnostic
+        f.write("[brant_partial_po_test cup=tennou is_host_int across rank thresholds]\n")
+        f.write("  # Y<=j vs Y>j binary logit for each threshold, pref-clustered SE.\n")
+        f.write("  # Approximation: independent-threshold assumption (conservative).\n")
+        brant = analysis_main.brant_partial_po_test(cup="tennou")
+        f.write(f"  chi2={brant['chi2']} df={brant['df']} p_value={brant['p_value']} "
+                f"n_thresholds_used={brant['n_thresholds_used']} "
+                f"beta_pool_weighted={brant['beta_pool_weighted']}\n")
+        f.write("  threshold_rows:\n")
+        f.write(brant["threshold_rows"].to_string(index=False) + "\n")
+        f.write("\n")
     print(f"[OK] {out}")
 
 
