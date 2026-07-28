@@ -34,8 +34,8 @@
 - sport FE と category main effect は共線でも、host:category は設計を組めば推定できる
 
 **要作業**:
-- `src/analysis_cross_section_2024_2025.py` の modeling コード改修
-- 新 spec = (a) semi 除外 or (b) 3-way category dummies with obj as reference
+- `src/analysis_cross_section_2024_2025.py` の modeling コード改修 (`_build_design` L113 + `run_cross_section_models` L209 = **M2 に既に `with_semi` spec が存在 (L213 コメント確認済)**・単に Table 5 primary に昇格するだけで済む可能性大 → まず現状の M1/M2 spec 差を実測確認してから改修方針決定)
+- 新 spec = (a) semi 除外 (M1 の spec を semi 除外に絞る) or (b) 3-way category dummies with obj as reference (既存 M2 相当を primary 化)
 - Table 5 差替え + Abstract/Results/Discussion 反映
 - pytest 追加 (semi 除外時の n / 3-way spec の identifiability)
 
@@ -103,7 +103,8 @@
 - 「fencing/wrestling/sumo を semi に移す」
 
 **要作業**:
-- `src/sport_classifier.py` に代替分類 3 種追加 (pure_judged / no_combat / combat_to_semi)
+- `src/sport_classifier.py` (L22 `Category = Literal[...]` + L26 以降 mapping 辞書) に代替分類 3 種追加 (pure_judged / no_combat / combat_to_semi)
+- 実装案: 既存 `SPORT_CATEGORY` 辞書を残しつつ `SPORT_CATEGORY_PURE_JUDGED` / `SPORT_CATEGORY_NO_COMBAT` / `SPORT_CATEGORY_COMBAT_TO_SEMI` を並置 or classify 関数に `variant` param 追加
 - 各分類での β_HS 推定を新 Table として提示 (Table 5d)
 - Discussion で分類 sensitivity 段落追加
 - ★ Finding #1 と組み合わせて実装すると効率的
@@ -138,8 +139,8 @@
 - 本文「令和5年度版が出たら延長可能」の記述は要更新。内閣府 ESRI ページには現在、平成23年度–令和5年度の表が掲載されているが、「31都道府県、2政令指定都市分」注記あり → "complete 47-prefecture R5 data are not yet available" のように正確化
 
 **要作業**:
-- Data Availability 節: "concurrent with, or within 30 days of" → "concurrent with" に締める
-- 該当する ESRI 令和5 記述箇所 (Limitations 5th paragraph?) 実測確認 + 更新
+- Data Availability 節 (manuscript.md L212-214): "concurrent with, or within 30 days of" → "concurrent with" に締める
+- ESRI 令和5 情報更新の対象 = **manuscript.md L51 (Methods §2 covariates)** = 現状「covering fiscal 2011-2022 for all 47 prefectures」の後に「令和5 partial data (31 prefectures + 2 designated cities) has been released but complete 47-prefecture R5 data are not yet available; the 2011-2022 window is therefore retained」を追記。Limitations 5th paragraph (L163) は Funahashi replication の pre-2011 gap の話で ESRI R5 更新とは別文脈のため追記対象外 (** 初セッション初見テストで判明・元指示 "Limitations 5th paragraph?" は誤り**)
 
 ---
 
