@@ -158,8 +158,8 @@ def plot_fig3_event_study_two_layers(cup: str = "tennou") -> tuple[Path, Path]:
     """Fig 3: event-study 2層 (Layer1 単発 + Layer2 stacked) の τ プロット (95% CI)"""
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.5), sharey=True)
     for ax, layer, title in [
-        (axes[0], "layer1", "Layer 1: 2002 Kochi (pre-2005)"),
-        (axes[1], "layer2", "Layer 2: post-2016 stacked (5 shocks)"),
+        (axes[0], "L1_pre2005", "Layer 1: 2002 Kochi (pre-2005)"),
+        (axes[1], "L2_post2016", "Layer 2: post-2016 stacked (5 shocks)"),
     ]:
         df = build_event_study_frame(layer=layer, cup=cup)
         coef_df, _ = fit_event_study_lp(df, dv="top1", reference_time=-1)

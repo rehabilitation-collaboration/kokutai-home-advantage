@@ -2,37 +2,37 @@
 analysis_event_study.py — Layer1 (2002高知) + Layer2 (post-2016 5ショック)
 ================================================================================
 
-[build + fit_event_study_lp layer=layer1]
-  frame shape: (1081, 22)
+[build + fit_event_study_lp layer=L1_pre2005]
+  frame shape: (329, 22)
   columns: ['pref_code', 'pref_name', 'kai_num', 'kai_label', 'year', 'cup', 'rank', 'is_host', 'is_special', 'cancelled', 'population', 'gdp_nominal_mil_yen', 'log_population', 'log_gdp', 'shock_year', 'shock_id', 'host_pref', 'relative_time', 'is_treated', 'rank_ordinal', 'top1', 'top8']
   fit type: tuple
 
-[parallel_trend_test layer=layer1]
+[parallel_trend_test layer=L1_pre2005]
   n_pre_dummies                          2
-  wald_stat                              3.232942418521892e-27
+  wald_stat                              1.0327238975610304e-28
   wald_df                                2
   wald_p                                 1.0
 
-[compute_pre_post_means layer=layer1]
+[compute_pre_post_means layer=L1_pre2005]
   means:
   period    group      mean  count
-0   post  control  0.021739    644
-1   post  treated  0.000000     14
-2    pre  control  0.021739    414
-3    pre  treated  0.000000      9
+0   post  control  0.021739    184
+1   post  treated  0.000000      4
+2    pre  control  0.021739    138
+3    pre  treated  0.000000      3
 
-[build + fit_event_study_lp layer=layer2]
+[build + fit_event_study_lp layer=L2_post2016]
   frame shape: (1081, 22)
   columns: ['pref_code', 'pref_name', 'kai_num', 'kai_label', 'year', 'cup', 'rank', 'is_host', 'is_special', 'cancelled', 'population', 'gdp_nominal_mil_yen', 'log_population', 'log_gdp', 'shock_year', 'shock_id', 'host_pref', 'relative_time', 'is_treated', 'rank_ordinal', 'top1', 'top8']
   fit type: tuple
 
-[parallel_trend_test layer=layer2]
+[parallel_trend_test layer=L2_post2016]
   n_pre_dummies                          2
   wald_stat                              3.232942418521892e-27
   wald_df                                2
   wald_p                                 1.0
 
-[compute_pre_post_means layer=layer2]
+[compute_pre_post_means layer=L2_post2016]
   means:
   period    group      mean  count
 0   post  control  0.021739    644

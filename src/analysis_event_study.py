@@ -32,7 +32,12 @@ LAYER2_SHOCKS: dict[int, str] = {
 
 
 def _get_shocks(layer: Layer) -> dict[int, str]:
-    return LAYER1_SHOCKS if layer == "L1_pre2005" else LAYER2_SHOCKS
+    # 明示分岐 + ValueError で silent fallback (v1.2 で発覚した layer key bug) を構造的に防ぐ
+    if layer == "L1_pre2005":
+        return LAYER1_SHOCKS
+    if layer == "L2_post2016":
+        return LAYER2_SHOCKS
+    raise ValueError(f"Unknown layer: {layer!r}. Expected 'L1_pre2005' or 'L2_post2016'.")
 
 
 def build_event_study_frame(

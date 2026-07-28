@@ -86,7 +86,7 @@ def event_study_models():
         f.write("analysis_event_study.py — Layer1 (2002高知) + Layer2 (post-2016 5ショック)\n")
         f.write("=" * 80 + "\n\n")
 
-        for layer in ["layer1", "layer2"]:
+        for layer in ["L1_pre2005", "L2_post2016"]:
             f.write(f"[build + fit_event_study_lp layer={layer}]\n")
             try:
                 df = analysis_event_study.build_event_study_frame(layer=layer)

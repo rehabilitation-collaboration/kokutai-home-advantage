@@ -108,3 +108,57 @@ class TestPrePostMeans:
         assert {"period", "group", "mean", "count"}.issubset(means.columns)
         assert set(means["period"].unique()).issubset({"pre", "post"})
         assert set(means["group"].unique()).issubset({"treated", "control"})
+
+
+class TestLayerKeyIntegration:
+    """v1.2 で発覚した layer key silent fallback bug (Finding #1・Monju B3) の regression guard"""
+
+    def test_layer1_and_layer2_frames_are_structurally_distinct(self):
+        # Layer 1 = 2002 単発 shock / Layer 2 = 5 shock stacked → shock_year 集合が別物
+        df1 = build_event_study_frame("L1_pre2005", pre_window=3, post_window=3, cup="tennou")
+        df2 = build_event_study_frame("L2_post2016", pre_window=3, post_window=3, cup="tennou")
+        assert set(df1["shock_year"].unique()) == {2002}
+        assert set(df2["shock_year"].unique()) == {2016, 2017, 2022, 2023, 2024}
+        # frame shape も別 (Layer 2 は 5 shock stacked で明らかに大きい)
+        assert df1.shape[0] < df2.shape[0]
+
+    def test_layer1_wald_stat_differs_from_layer2(self):
+        # v1.2 バグ時は Layer 1 が Layer 2 の pixel-identical 複製になっており wald_stat が完全一致していた
+        df1 = build_event_study_frame("L1_pre2005", pre_window=3, post_window=3, cup="tennou")
+        df2 = build_event_study_frame("L2_post2016", pre_window=3, post_window=3, cup="tennou")
+        stat1 = parallel_trend_test(df1, dv="top1", reference_time=-1)
+        stat2 = parallel_trend_test(df2, dv="top1", reference_time=-1)
+        # 両方数値が出ていること (nan でない) + wald_stat が一致していないこと
+        assert not np.isnan(stat1["wald_stat"])
+        assert not np.isnan(stat2["wald_stat"])
+        assert stat1["wald_stat"] != stat2["wald_stat"]
+
+    def test_get_shocks_rejects_invalid_layer_key(self):
+        # silent fallback 廃止・不正 key で ValueError
+        from src.analysis_event_study import _get_shocks
+        with pytest.raises(ValueError, match="Unknown layer"):
+            _get_shocks("layer1")  # 旧 buggy key
+        with pytest.raises(ValueError, match="Unknown layer"):
+            _get_shocks("layer2")
+        with pytest.raises(ValueError, match="Unknown layer"):
+            _get_shocks("bogus")
+
+    def test_run_all_models_source_uses_literal_layer_keys(self):
+        # run_all_models.py が Literal 型準拠 ("layer1"/"layer2" 旧 key 使わない) の source-level 保証
+        from pathlib import Path
+        proj_root = Path(__file__).resolve().parents[1]
+        src_text = (proj_root / "run_all_models.py").read_text()
+        assert '"L1_pre2005"' in src_text
+        assert '"L2_post2016"' in src_text
+        assert '"layer1"' not in src_text
+        assert '"layer2"' not in src_text
+
+    def test_plots_source_uses_literal_layer_keys(self):
+        # src/plots.py::plot_fig3_event_study_two_layers が Literal 型準拠の source-level 保証
+        from pathlib import Path
+        proj_root = Path(__file__).resolve().parents[1]
+        plots_text = (proj_root / "src" / "plots.py").read_text()
+        assert '"L1_pre2005"' in plots_text
+        assert '"L2_post2016"' in plots_text
+        assert '"layer1"' not in plots_text
+        assert '"layer2"' not in plots_text
