@@ -80,7 +80,7 @@ All analyses were performed with Python 3.14 using pandas 3.0.5, numpy 2.5.1, st
 
 ### Ethical considerations
 
-This study analyzes publicly available Kokutai overall-standings data released by the Japan Sport Association and prefectural sport associations. No individual-level, health, or personally identifying data are used. Under the Japanese Ethical Guidelines for Medical and Biological Research Involving Human Subjects (2021 revision), research using publicly available data without personal identifiers does not require ethics committee review; accordingly, no institutional review board approval or waiver was sought.
+This study analyzes publicly available Kokutai overall-standings data released by the Japan Sport Association and prefectural sport associations. No individual-level, health, or personally identifying data are used, and no human subjects were recruited or contacted. Because the analysis is restricted to already-public aggregate competition results without any personally identifiable information, it does not meet the standard threshold for human-subjects research under either domestic (e.g., MEXT/MHLW ethical guidelines for research using publicly available secondary data) or international (e.g., 45 CFR §46.102 for non-human-subjects data) frameworks; accordingly, no institutional review board approval or waiver was sought or required.
 
 ## Results
 
