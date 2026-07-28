@@ -230,12 +230,12 @@ All input data used in this study are publicly available. Prefecture rankings ar
 
 ### Table 2. Main-panel regression results (2012-2022 tennou, n = 423)
 
-| Specification | Coefficient (host) | SE | p-value | log-likelihood | McFadden pseudo-R² | Notes |
-|---|---|---|---|---|---|---|
-| Ordered logit, pooled (+ log_pop + log_gdp) | -13.73 | 2.03 | < 0.001 | -173.85 | 0.487 | Negative = better rank |
-| Ordered logit, pref FE + year FE (+ log_pop + log_gdp) | -49.56 | 172.4 | 0.77 | -111.19 | 0.672 | Separation-driven degeneracy |
-| Top-1 logit, pooled (+ log_pop + log_gdp) | +9.09 | 2.13 | < 0.001 (exact 1.9 × 10⁻⁵) | -12.75 | 0.707 | |
-| Top-1 logit, pref FE + year FE (+ log_pop + log_gdp) | +1,877.3 | (undefined) | (undefined) | -0.00 | 1.000 | Complete separation (pseudo-R² = 1 is a signature, not a fit) |
+| Specification | Coefficient (host) | SE | 95% CI | p-value | log-likelihood | McFadden pseudo-R² | Notes |
+|---|---|---|---|---|---|---|---|
+| Ordered logit, pooled (+ log_pop + log_gdp) | -13.73 | 2.03 | [-17.71, -9.75] | < 0.001 | -173.85 | 0.487 | Negative = better rank |
+| Ordered logit, pref FE + year FE (+ log_pop + log_gdp) | -49.56 | 172.4 | [-387.5, +288.4] | 0.77 | -111.19 | 0.672 | Separation-driven degeneracy |
+| Top-1 logit, pooled (+ log_pop + log_gdp) | +9.09 | 2.13 | [+4.92, +13.27] | < 0.001 (exact 1.9 × 10⁻⁵) | -12.75 | 0.707 | |
+| Top-1 logit, pref FE + year FE (+ log_pop + log_gdp) | +1,877.3 | (undefined) | (undefined) | (undefined) | -0.00 | 1.000 | Complete separation (pseudo-R² = 1 is a signature, not a fit) |
 
 *Prefecture-clustered standard errors (47 clusters, Liang-Zeger sandwich) for the pooled specifications; Fisher-information for the fixed-effect specifications, where prefecture FE renders further clustering mechanically redundant and where SE degeneracy is itself a diagnostic signature of complete separation. All specifications above include log-population and log-GDP as covariates by construction; the "pooled" label denotes the absence of prefecture and year fixed effects, not the absence of covariates. The two pooled rows above are numerically identical (coefficient and clustered SE) to the M3 (+ log GDP) row of Table 4. Fixed-effect specifications are reported for transparency but not interpreted as coefficient estimates; see Methods.*
 
@@ -252,24 +252,24 @@ All input data used in this study are publicly available. Prefecture rankings ar
 
 ### Table 4. Csurilla-style staged specification (2012-2022 tennou, n = 423)
 
-| Stage | Model | Host coefficient | SE | p | log-likelihood (top-1 / rank) | pseudo-R² (top-1 / rank) |
-|---|---|---|---|---|---|---|
-| M1 | Host only | +5.61 (top-1) / -6.11 (rank) | 1.09 / 1.21 | < 0.001 / < 0.001 | -23.50 / -308.20 | 0.461 / 0.091 |
-| M2 | + log population | +10.90 (top-1) / -13.17 (rank) | 3.35 / 2.01 | 0.0011 / < 0.001 | -14.83 / -176.49 | 0.660 / 0.479 |
-| M3 | + log GDP | +9.09 (top-1) / -13.73 (rank) | 2.13 / 2.03 | < 0.001 / < 0.001 | -12.75 / -173.85 | 0.707 / 0.487 |
-| M4 | + prefecture FE | +498 / -116 | NaN / NaN | (degenerate) | -3.43 / -112.51 | 0.921 / 0.668 |
-| M5 | + year FE | +1,877 / -49.6 | NaN / 172 | (degenerate) | -0.00 / -111.19 | 1.000 / 0.672 |
+| Stage | Model | Host coefficient (top-1 / rank) | SE (top-1 / rank) | 95% CI (top-1 / rank) | p (top-1 / rank) | log-likelihood (top-1 / rank) | pseudo-R² (top-1 / rank) |
+|---|---|---|---|---|---|---|---|
+| M1 | Host only | +5.61 / -6.11 | 1.09 / 1.21 | [+3.47, +7.75] / [-8.48, -3.74] | < 0.001 / < 0.001 | -23.50 / -308.20 | 0.461 / 0.091 |
+| M2 | + log population | +10.90 / -13.17 | 3.35 / 2.01 | [+4.33, +17.47] / [-17.11, -9.23] | 0.0011 / < 0.001 | -14.83 / -176.49 | 0.660 / 0.479 |
+| M3 | + log GDP | +9.09 / -13.73 | 2.13 / 2.03 | [+4.92, +13.27] / [-17.71, -9.75] | < 0.001 / < 0.001 | -12.75 / -173.85 | 0.707 / 0.487 |
+| M4 | + prefecture FE | +498 / -116 | NaN / NaN | (undefined) / (undefined) | (degenerate) / (degenerate) | -3.43 / -112.51 | 0.921 / 0.668 |
+| M5 | + year FE | +1,877 / -49.6 | NaN / 172.4 | (undefined) / [-387.5, +288.4] | (degenerate) / 0.77 | -0.00 / -111.19 | 1.000 / 0.672 |
 
 *Standard errors are prefecture-clustered (47 clusters, Liang-Zeger sandwich) for M1-M3 and Fisher-information for M4/M5 (where prefecture FE renders clustering mechanically redundant and complete separation drives SEs to degeneracy). The M3 row is numerically identical (coefficient and clustered SE) to the corresponding pooled row of Table 2. The attenuation Csurilla & Fertő (2023) documented at the Olympics (host coefficient shrinks by ~45% from M1 to fully adjusted) is inverted at the Kokutai: M1 → M3 raises the top-1 coefficient by ~62% and the ordered-rank coefficient by ~125%. See Discussion for interpretation.*
 
 ### Table 5. 2024-2025 cross-section: Balmer2003 host × subjective interaction (n = 6,991; 2 treated prefectures out of 47)
 
-| Specification | Coefficient (host) | Coefficient (host × subj) | SE (int) | p (int) | Cluster SE |
-|---|---|---|---|---|---|
-| Baseline (score, sport FE + year FE), cluster-robust p | +16.60 | **+16.68** | 7.72 | **0.031** | 47 pref clusters |
-| Baseline, wild-cluster bootstrap (Rademacher, B = 999, restricted null) | +16.60 | +16.68 | 7.72 | **0.155** | 47 pref clusters (2 treated) |
-| Three-way (obj/semi/subj interactions) | +12.99 | +20.31 | NaN | (rank-deficient) | — |
-| Log(1 + score) baseline, cluster-robust p | +0.467 | +0.293 | 0.170 | 0.084 (marginal) | 47 pref clusters |
+| Specification | Coefficient (host) | Coefficient (host × subj) | SE (int) | 95% CI (int) | p (int) | Cluster SE |
+|---|---|---|---|---|---|---|
+| Baseline (score, sport FE + year FE), cluster-robust p | +16.60 | **+16.68** | 7.72 | [+1.55, +31.81] | **0.031** | 47 pref clusters |
+| Baseline, wild-cluster bootstrap (Rademacher, B = 999, restricted null) | +16.60 | +16.68 | 7.72 | (see Baseline row; bootstrap CI not tabulated) | **0.155** | 47 pref clusters (2 treated) |
+| Three-way (obj/semi/subj interactions) | +12.99 | +20.31 | NaN | (rank-deficient) | (rank-deficient) | — |
+| Log(1 + score) baseline, cluster-robust p | +0.467 | +0.293 | 0.170 | [-0.040, +0.626] (crosses 0) | 0.084 (marginal) | 47 pref clusters |
 
 *47 prefecture clusters (Saga and Shiga are the two treated clusters), robust SE throughout. Sport (n = 40-41) and year (n = 2) fixed effects included in all specifications. Because only 2 of 47 prefectures are treated in this cross-section, we complement the cluster-robust p with a wild-cluster bootstrap p (Cameron, Gelbach & Miller, 2008); the bootstrap correction moves the interaction p from 0.031 to 0.155 and dominates the cluster-robust p for inference under the few-treated-clusters regime (Cameron & Miller, 2015). The three-way spec is reported descriptively only owing to rank deficiency from sport-and-category multicollinearity.*
 
