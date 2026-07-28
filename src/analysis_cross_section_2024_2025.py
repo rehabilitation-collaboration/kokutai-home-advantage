@@ -207,14 +207,23 @@ def fit_cross_section_ols(
 
 
 def run_cross_section_models(include_winter: bool = True) -> list[CrossSectionResult]:
-    """副次分析の主モデル一式
+    """副次分析の主モデル一式 (Table 5 primary + sensitivity 構成)
 
-    (M1) baseline:            score ~ is_host + is_subjective + host×subj + FE
-    (M2) with_semi:           score ~ is_host + subj + semi + host×subj + host×semi + FE
-    (M3) log_score baseline:  log(score+1) ~ ... (Robustness・分散安定化)
+    GPT round-1 Finding #1 応答: 主回帰を obj vs subj pure に純化する (semi 除外)。
+    inclusive spec (semi 含む) は sensitivity として retention。
+
+    (Primary)     obj_vs_subj_primary: semi 除外・obj vs subj pure 比較 (n≈4,744)
+                  score ~ is_host + is_subjective + host×subj + FE
+    (Sensitivity) baseline:           semi 含む全 sample (旧 M1・n=6,991)
+                  score ~ is_host + is_subjective + host×subj + FE
+    (Descriptive) with_semi:          3-way (subj + semi 両交互作用・cluster SE 計算不能)
+                  score ~ is_host + subj + semi + host×subj + host×semi + FE
+    (Robustness)  log_baseline:       log(score+1) inclusive (旧 M3)
     """
     df = build_cross_section_frame(include_winter=include_winter)
+    df_obj_subj = df[df["is_semi"] == 0].reset_index(drop=True)
     return [
+        fit_cross_section_ols(df_obj_subj, dv="score", with_semi_interaction=False, name="cross_section_obj_vs_subj_primary"),
         fit_cross_section_ols(df, dv="score", with_semi_interaction=False, name="cross_section_baseline"),
         fit_cross_section_ols(df, dv="score", with_semi_interaction=True, name="cross_section_with_semi"),
         fit_cross_section_ols(df, dv="log_score", with_semi_interaction=False, name="cross_section_log_baseline"),

@@ -109,20 +109,26 @@ class TestFitCrossSectionOLS:
 
 
 class TestRunCrossSectionModels:
-    def test_returns_3_models(self):
+    def test_returns_4_models(self):
+        # GPT round-1 Finding #1 応答で primary spec (obj_vs_subj_primary) 追加 → 4 spec 構成
         results = run_cross_section_models()
-        assert len(results) == 3
+        assert len(results) == 4
         assert {r.name for r in results} == {
+            "cross_section_obj_vs_subj_primary",
             "cross_section_baseline",
             "cross_section_with_semi",
             "cross_section_log_baseline",
         }
 
-    def test_baseline_and_log_significant(self):
-        # SE がクラスタリング下で崩れない主要 2 モデル
+    def test_primary_and_baseline_and_log_significant(self):
+        # SE がクラスタリング下で崩れない 3 モデル (with_semi は cluster SE 計算不能 = 除外)
         results = run_cross_section_models()
         for r in results:
-            if r.name in ("cross_section_baseline", "cross_section_log_baseline"):
+            if r.name in (
+                "cross_section_obj_vs_subj_primary",
+                "cross_section_baseline",
+                "cross_section_log_baseline",
+            ):
                 assert r.p_is_host < 0.01, f"{r.name}: p={r.p_is_host}"
 
 
@@ -143,11 +149,58 @@ class TestDescriptiveByCategory:
         assert diff_subj > diff_semi
 
 
+class TestObjVsSubjPrimary:
+    """GPT round-1 Finding #1 応答: obj vs subj pure 分離 primary spec (Table 5 primary)
+
+    「semi 含む inclusive spec だと host main effect が obj + semi 混合ベース = タイトル通りの
+    subjective vs objective 検定になってない」という GPT 指摘への直接応答。semi を除外して
+    obj vs subj pure 比較にすると、cluster SE が計算可能 + interaction coef はむしろ大きくなる。
+    """
+
+    def test_n_reduction_from_semi_exclusion(self):
+        df = build_cross_section_frame()
+        df_obj_subj = df[df["is_semi"] == 0].reset_index(drop=True)
+        assert len(df_obj_subj) < len(df)
+        # semi は 13 sports × 47 pref × 2 year × 2 cup 相当 = 全体の約 32%
+        assert 4500 < len(df_obj_subj) < 5000
+
+    def test_no_semi_in_primary_sample(self):
+        df = build_cross_section_frame()
+        df_obj_subj = df[df["is_semi"] == 0].reset_index(drop=True)
+        assert (df_obj_subj["is_semi"] == 0).all()
+        assert (df_obj_subj["category"] != "semi_subjective").all()
+
+    def test_primary_cluster_se_computable(self):
+        # M2 (with_semi) で nan だった cluster SE が obj vs subj pure spec なら計算可能
+        df = build_cross_section_frame()
+        df_obj_subj = df[df["is_semi"] == 0].reset_index(drop=True)
+        result = fit_cross_section_ols(
+            df_obj_subj, dv="score", with_semi_interaction=False, name="test_primary"
+        )
+        assert not np.isnan(result.se_is_host)
+        assert not np.isnan(result.se_interaction)
+        assert result.se_interaction > 0
+
+    def test_primary_interaction_larger_than_inclusive(self):
+        # 実測: 案 β (semi 除外) の host_x_subj coef ~ +20.27 は inclusive (+16.68) より大
+        # → GPT 指摘「obj + semi 混合ベースで真の subj boost が過小評価」を実証
+        df = build_cross_section_frame()
+        df_obj_subj = df[df["is_semi"] == 0].reset_index(drop=True)
+        result_primary = fit_cross_section_ols(
+            df_obj_subj, dv="score", with_semi_interaction=False, name="test_primary"
+        )
+        result_inclusive = fit_cross_section_ols(
+            df, dv="score", with_semi_interaction=False, name="test_inclusive"
+        )
+        assert result_primary.coef_interaction > result_inclusive.coef_interaction
+        assert result_primary.p_interaction < 0.05
+
+
 class TestResultsToDataframe:
     def test_shape_and_columns(self):
         results = run_cross_section_models()
         df = results_to_dataframe(results)
-        assert df.shape[0] == 3
+        assert df.shape[0] == 4
         expected_cols = {
             "name", "dv", "coef_is_host", "se_is_host", "p_is_host",
             "coef_interaction", "se_interaction", "p_interaction",
