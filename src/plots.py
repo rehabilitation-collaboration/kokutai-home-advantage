@@ -118,7 +118,13 @@ def plot_fig2_subj_vs_obj_host_bias() -> tuple[Path, Path]:
 
     Balmer2003 novelty core: subjective が objective/semi_subjective を有意に上回るか。
     baseline 係数 = coef_is_host (= objective の host boost) + 分類別 additive coef.
+
+    Finding #8 fix: SE は per-category `score ~ is_host` OLS の prefecture-clustered
+    SE (47 clusters) を使う。旧実装の two-sample var/n formula は cell 独立性を
+    仮定していて、同一県内の年内多sport clustering を過小推定する。
     """
+    import statsmodels.api as sm
+
     df = build_cross_section_frame()
     desc = descriptive_by_category(df).set_index("category")
 
@@ -127,15 +133,15 @@ def plot_fig2_subj_vs_obj_host_bias() -> tuple[Path, Path]:
     means = [desc.loc[cat, "diff_mean_host_minus_nonhost"] for cat in categories]
     n_hosts = [int(desc.loc[cat, "count_host"]) for cat in categories]
 
-    # SE from OLS-per-category baseline: score ~ is_host in each subset
+    # Per-category prefecture-clustered SE from `score ~ is_host` OLS
     ses = []
     for cat in categories:
-        sub = df[df["category"] == cat]
-        # 簡易 SE = std / sqrt(n_host) + std / sqrt(n_nonhost) の diff SE
-        h = sub[sub["is_host"]]["score"]
-        nh = sub[~sub["is_host"]]["score"]
-        se = np.sqrt(h.var(ddof=1) / len(h) + nh.var(ddof=1) / len(nh))
-        ses.append(float(se))
+        sub = df[df["category"] == cat].copy()
+        sub["is_host_int"] = sub["is_host"].astype(int)
+        X = sm.add_constant(sub[["is_host_int"]].astype(float))
+        y = sub["score"].astype(float)
+        model = sm.OLS(y, X).fit(cov_type="cluster", cov_kwds={"groups": sub["pref_code"]})
+        ses.append(float(model.bse["is_host_int"]))
     ci95 = [1.96 * s for s in ses]
 
     fig, ax = plt.subplots(figsize=(6.5, 4.5))
@@ -149,7 +155,8 @@ def plot_fig2_subj_vs_obj_host_bias() -> tuple[Path, Path]:
     ax.set_xticks(xs)
     ax.set_xticklabels(labels)
     ax.set_ylabel("Host - Nonhost mean score (points)")
-    ax.set_title("Host bias by sport category (2024 Saga + 2025 Shiga, tennou+kougou pooled)")
+    ax.set_title("Host bias by sport category (2024 Saga + 2025 Shiga, tennou+kougou pooled;\n"
+                 "error bars = 95% CI from prefecture-clustered SE, 47 clusters)")
     ax.set_ylim(0, max(means) + max(ci95) + 8)
     return _save(fig, "fig2_subj_vs_obj_host_bias")
 
