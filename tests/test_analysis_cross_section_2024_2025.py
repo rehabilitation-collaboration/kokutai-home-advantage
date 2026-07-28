@@ -109,12 +109,14 @@ class TestFitCrossSectionOLS:
 
 
 class TestRunCrossSectionModels:
-    def test_returns_4_models(self):
-        # GPT round-1 Finding #1 応答で primary spec (obj_vs_subj_primary) 追加 → 4 spec 構成
+    def test_returns_5_models(self):
+        # GPT round-1 Finding #1 応答で primary spec (obj_vs_subj_primary) 追加 → 4 spec
+        # + GPT round-1 Finding #5 応答で sport × cup interaction diagnostic 追加 → 5 spec
         results = run_cross_section_models()
-        assert len(results) == 4
+        assert len(results) == 5
         assert {r.name for r in results} == {
             "cross_section_obj_vs_subj_primary",
+            "cross_section_obj_vs_subj_primary_sport_cup",
             "cross_section_baseline",
             "cross_section_with_semi",
             "cross_section_log_baseline",
@@ -200,7 +202,7 @@ class TestResultsToDataframe:
     def test_shape_and_columns(self):
         results = run_cross_section_models()
         df = results_to_dataframe(results)
-        assert df.shape[0] == 4
+        assert df.shape[0] == 5
         expected_cols = {
             "name", "dv", "coef_is_host", "se_is_host", "p_is_host",
             "coef_interaction", "se_interaction", "p_interaction",
@@ -239,3 +241,78 @@ class TestWildClusterBootstrap:
         assert 0.0 <= out["bootstrap_p"] <= 1.0
         # observed_t は既存の cluster-robust fit と整合すべき (headline p=0.031 → |t|>2)
         assert abs(out["observed_t"]) > 1.5
+
+
+class TestSportCupInteraction:
+    """GPT round-1 Finding #5 応答: sport × cup interaction diagnostic spec
+
+    GPT の「trophy FE がない」指摘は実装欠落ではなく Methods 開示ギャップ
+    (cup FE は _build_design/fit_cross_section_ols に default True で投入済)。
+    GPT の「sport × trophy 感度分析」要求は primary spec に sport × cup interaction を
+    追加した diagnostic spec で応答。Finding #1 with_semi (3-way) と同 pattern:
+    rank-deficient regime (k=131 params / G=47 clusters ≈ 2.8) で cluster SE 計算不能
+    のため point-estimate-only diagnostic として実装 = β_HS の direction/magnitude
+    頑健性確認に使用 (primary +20.27 と近接 → 四者内的整合)。
+    """
+
+    def test_sport_cup_columns_present(self):
+        # NEW spec の design matrix に sport_cup_* dummy 列が入る
+        from src.analysis_cross_section_2024_2025 import _build_design
+        df = build_cross_section_frame()
+        df_obj_subj = df[df["is_semi"] == 0].reset_index(drop=True)
+        X = _build_design(
+            df_obj_subj,
+            with_semi_interaction=False,
+            add_pref_fe=True,
+            add_sport_fe=True,
+            add_year_fe=True,
+            add_cup_fe=True,
+            add_sport_cup_interaction=True,
+        )
+        sport_cup_cols = [c for c in X.columns if c.startswith("sport_cup_")]
+        assert len(sport_cup_cols) > 0
+
+    def test_n_preserved_from_primary(self):
+        # interaction 追加で n が変わらない (primary = 4744 と一致・47 pref clusters 保持)
+        df = build_cross_section_frame()
+        df_obj_subj = df[df["is_semi"] == 0].reset_index(drop=True)
+        result = fit_cross_section_ols(
+            df_obj_subj,
+            dv="score",
+            with_semi_interaction=False,
+            add_sport_cup_interaction=True,
+            name="test_sport_cup",
+        )
+        assert result.n_obs == 4744
+        assert result.n_clusters == 47
+
+    def test_k_over_G_ratio_exceeds_2(self):
+        # rank-deficient regime (Finding #1 3-way M2 と同 regime = k/G > 2・Kezdi 2004)
+        df = build_cross_section_frame()
+        df_obj_subj = df[df["is_semi"] == 0].reset_index(drop=True)
+        result = fit_cross_section_ols(
+            df_obj_subj,
+            dv="score",
+            with_semi_interaction=False,
+            add_sport_cup_interaction=True,
+            name="test_sport_cup",
+        )
+        assert result.n_params / result.n_clusters > 2.0
+
+    def test_point_estimate_close_to_primary(self):
+        # sport_cup spec の β_HS point estimate が primary +20.27 に近い (|diff| < 5)
+        # → 四者内的整合 (primary +20.27・inclusive +16.68・3-way +20.31・sport_cup ~+22)
+        df = build_cross_section_frame()
+        df_obj_subj = df[df["is_semi"] == 0].reset_index(drop=True)
+        result_primary = fit_cross_section_ols(
+            df_obj_subj, dv="score", with_semi_interaction=False, name="test_primary"
+        )
+        result_sport_cup = fit_cross_section_ols(
+            df_obj_subj,
+            dv="score",
+            with_semi_interaction=False,
+            add_sport_cup_interaction=True,
+            name="test_sport_cup",
+        )
+        assert result_sport_cup.coef_interaction > 0  # direction preserved
+        assert abs(result_sport_cup.coef_interaction - result_primary.coef_interaction) < 5.0

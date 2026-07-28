@@ -19,6 +19,8 @@ Balmer2003 の主観 vs 客観分離を国体で世界初検証する。
 Robustness:
 - with_semi: subjective/semi_subjective を分離して 2 交互作用項
 - log_score: log(score+1) 変換版
+- sport_cup interaction: primary spec に sport × cup 交互作用を追加 (GPT round-1 Finding #5
+  診断・rank-deficient regime k/G≈2.8 で cluster SE 計算不能・point-estimate-only diagnostic)
 """
 
 from dataclasses import dataclass
@@ -117,6 +119,7 @@ def _build_design(
     add_sport_fe: bool,
     add_year_fe: bool,
     add_cup_fe: bool,
+    add_sport_cup_interaction: bool = False,
 ) -> pd.DataFrame:
     """OLS design matrix
 
@@ -128,6 +131,7 @@ def _build_design(
     - host_x_subj = is_host_int × is_subjective  ← 主目的の交互作用項
     - [host_x_semi] (with_semi_interaction=True 時のみ)
     - pref FE / sport FE / year FE / cup FE
+    - [sport × cup FE] (add_sport_cup_interaction=True 時のみ・GPT round-1 Finding #5 診断用)
     """
     base = pd.DataFrame({
         "is_host_int": df["is_host_int"].astype(float),
@@ -148,6 +152,9 @@ def _build_design(
         X = pd.concat([X, pd.get_dummies(df["year"], prefix="year", drop_first=True, dtype=float)], axis=1)
     if add_cup_fe and df["cup"].nunique() > 1:
         X = pd.concat([X, pd.get_dummies(df["cup"], prefix="cup", drop_first=True, dtype=float)], axis=1)
+    if add_sport_cup_interaction and df["cup"].nunique() > 1:
+        sport_cup = df["sport"].astype(str) + "__" + df["cup"].astype(str)
+        X = pd.concat([X, pd.get_dummies(sport_cup, prefix="sport_cup", drop_first=True, dtype=float)], axis=1)
 
     X = sm.add_constant(X, has_constant="add")
     return X
@@ -171,6 +178,7 @@ def fit_cross_section_ols(
     add_sport_fe: bool = True,
     add_year_fe: bool = True,
     add_cup_fe: bool = True,
+    add_sport_cup_interaction: bool = False,
     cluster_col: str = "pref_code",
     name: str = "cross_section_baseline",
 ) -> CrossSectionResult:
@@ -179,9 +187,11 @@ def fit_cross_section_ols(
     Args:
         dv: "score" or "log_score"
         with_semi_interaction: True で semi_subjective も同時交互作用推定 (3 分類対比)
+        add_sport_cup_interaction: True で sport × cup FE を追加 (GPT round-1 Finding #5
+            診断用・k/G≈2.8 で cluster SE 計算不能 = point-estimate-only diagnostic)
         cluster_col: SE clustering キー (default = "pref_code")
     """
-    X = _build_design(df, with_semi_interaction, add_pref_fe, add_sport_fe, add_year_fe, add_cup_fe)
+    X = _build_design(df, with_semi_interaction, add_pref_fe, add_sport_fe, add_year_fe, add_cup_fe, add_sport_cup_interaction)
     y = df[dv].astype(float)
     model = sm.OLS(y, X)
     result = model.fit(cov_type="cluster", cov_kwds={"groups": df[cluster_col]})
@@ -207,23 +217,29 @@ def fit_cross_section_ols(
 
 
 def run_cross_section_models(include_winter: bool = True) -> list[CrossSectionResult]:
-    """副次分析の主モデル一式 (Table 5 primary + sensitivity 構成)
+    """副次分析の主モデル一式 (Table 5 primary + sensitivity + diagnostic 構成)
 
     GPT round-1 Finding #1 応答: 主回帰を obj vs subj pure に純化する (semi 除外)。
     inclusive spec (semi 含む) は sensitivity として retention。
+    GPT round-1 Finding #5 応答: sport × cup interaction を primary base に追加した
+    diagnostic spec を新設 (rank-deficient regime k/G≈2.8 で cluster SE 計算不能・
+    point-estimate-only として β_HS の direction/magnitude 頑健性確認に使用)。
 
-    (Primary)     obj_vs_subj_primary: semi 除外・obj vs subj pure 比較 (n≈4,744)
+    (Primary)     obj_vs_subj_primary:            semi 除外・obj vs subj pure 比較 (n≈4,744)
                   score ~ is_host + is_subjective + host×subj + FE
-    (Sensitivity) baseline:           semi 含む全 sample (旧 M1・n=6,991)
+    (Diagnostic)  obj_vs_subj_primary_sport_cup:  primary base + sport×cup interaction
+                  (Finding #5 診断・cluster SE 計算不能・point estimate only)
+    (Sensitivity) baseline:                       semi 含む全 sample (旧 M1・n=6,991)
                   score ~ is_host + is_subjective + host×subj + FE
-    (Descriptive) with_semi:          3-way (subj + semi 両交互作用・cluster SE 計算不能)
+    (Descriptive) with_semi:                      3-way (subj + semi 両交互作用・cluster SE 計算不能)
                   score ~ is_host + subj + semi + host×subj + host×semi + FE
-    (Robustness)  log_baseline:       log(score+1) inclusive (旧 M3)
+    (Robustness)  log_baseline:                   log(score+1) inclusive (旧 M3)
     """
     df = build_cross_section_frame(include_winter=include_winter)
     df_obj_subj = df[df["is_semi"] == 0].reset_index(drop=True)
     return [
         fit_cross_section_ols(df_obj_subj, dv="score", with_semi_interaction=False, name="cross_section_obj_vs_subj_primary"),
+        fit_cross_section_ols(df_obj_subj, dv="score", with_semi_interaction=False, add_sport_cup_interaction=True, name="cross_section_obj_vs_subj_primary_sport_cup"),
         fit_cross_section_ols(df, dv="score", with_semi_interaction=False, name="cross_section_baseline"),
         fit_cross_section_ols(df, dv="score", with_semi_interaction=True, name="cross_section_with_semi"),
         fit_cross_section_ols(df, dv="log_score", with_semi_interaction=False, name="cross_section_log_baseline"),
