@@ -53,6 +53,10 @@
 - Discussion 冒頭段落の語調調整
 - Conclusion 節 (もしあれば) の "exhibits" / "empirically anchored" 差替え
 - ★ Finding #1 の spec 変更後に語調を再検討 (obj-only なら結果が変わる可能性あり)
+- **★事前 grep 結果 (v3 Phase A 完遂後 2026-07-28)**:
+  - `"exhibits"` = L109 (Results 段落内・"host prefectures exhibits non-zero top-1 status" = data descriptor 用法・**修正不要**) + L177 (Conclusion 冒頭・"Japan's National Sports Festival exhibits a host bonus" = **修正対象**)
+  - `"empirically anchored"` = L177 (Conclusion 末尾・"the interaction itself, however, is now empirically anchored" = **修正対象**)
+  - Abstract L21-23 は "exhibits" 直接使ってないが overall 語調要再検討 (Phase A で primary/inclusive 両方数値併記 + pure artistic scoring mechanism 追加済で語調降下範囲は Finding #6 novelty 拡張と両立させる要)
 
 ---
 
@@ -80,6 +84,7 @@
 - Table 1 脚注 + 該当 descriptive 段落 + Discussion の 3 箇所で表現を統一
 - 「2013 Tokyo は含まれる / 含まれない」のどちらか一貫を選ぶ (含める方が n 保持できて安全)
 - 感度分析として "2013 Tokyo 除外時の 5/8 = 62.5% も同方向" を追記
+- **★事前 grep 結果 (v3 Phase A 完遂後 2026-07-28)**: "2013 Tokyo" / "self-host" / "6 of 9" ヒット行 = L21 (Abstract) + L89 (Descriptive・"host wins in 2012 Gifu, 2013 Tokyo (self-host)...") + L91 (Descriptive・"6 of 9 host-years" 説明・matter #4 の core) + L239 (Discussion) + L285 (Table 4b 脚注・"2013 Tokyo's own self-host year also removed") = 5 箇所で表現統一
 
 ---
 
@@ -119,6 +124,7 @@
 - caption と図タイトルのどちらが真実か確定 (実際のデータ範囲を実測)
 - `src/plots.py::plot_fig1_host_win_rate_timeseries` の title / manuscript caption の一致
 - Fig 1 再生成
+- **★事前 grep 結果 (v3 Phase A 完遂後 2026-07-28)**: manuscript.md 側 = L337 caption "1948-2025" のみ (Figure Legends 節・第 1 回 Kokutai = 1948 を反映)・"1978-2025" は manuscript.md 内ヒットなし = 図タイトル側 (matplotlib fig 側) の可能性 = **src/plots.py の title 定義を要確認**・実際のデータ範囲 (1948 vs 1978) は Phase 1 データ収集経緯 (archive) で確認可能
 
 ---
 
@@ -129,6 +135,7 @@
 **要作業**:
 - `grep -n "Balmer2003" manuscript.md` で全出現特定 → "Balmer et al. (2003)" 置換
 - "Balmer2001" 同様なら同時修正
+- **★事前 grep 結果 (v3 Phase A 完遂後 2026-07-28)**: `"Balmer2003"` ヒット = **22 箇所** (L21, 23, 33, 37, 39, 41, 49, 61, 65, 113, 115, 119, 127, 129, 133, 135, 159, 161, 287, 305, 320, 339) = Edit の replace_all で `"Balmer2003"` → `"Balmer et al. (2003)"` 一括置換可能 (unique 文字列で誤爆リスクなし)
 
 ---
 
