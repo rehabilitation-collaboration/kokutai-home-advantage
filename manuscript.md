@@ -280,7 +280,7 @@ All input data used in this study are publicly available. Prefecture rankings ar
 |---|---|---|---|---|---|---|
 | Baseline (score, sport FE + year FE), cluster-robust p | +16.60 | **+16.68** | 7.72 | [+1.55, +31.81] | **0.031** | 47 pref clusters |
 | Baseline, wild-cluster bootstrap (Rademacher, B = 999, restricted null) | +16.60 | +16.68 | 7.72 | (see Baseline row; bootstrap CI not tabulated) | **0.155** | 47 pref clusters (2 treated) |
-| Three-way (obj/semi/subj interactions) | +12.99 | +20.31 | NaN | (rank-deficient) | (rank-deficient) | — |
+| **Diagnostic only — not identified**: Three-way (obj/semi/subj interactions) | +12.99 | +20.31 | NaN | (rank-deficient) | (rank-deficient) | — |
 | Log(1 + score) baseline, cluster-robust p | +0.467 | +0.293 | 0.170 | [-0.040, +0.626] (crosses 0) | 0.084 (marginal) | 47 pref clusters |
 
 *47 prefecture clusters (Saga and Shiga are the two treated clusters), robust SE throughout. Sport (n = 40-41) and year (n = 2) fixed effects included in all specifications. Because only 2 of 47 prefectures are treated in this cross-section, we complement the cluster-robust p with a wild-cluster bootstrap p (Cameron, Gelbach & Miller, 2008); the bootstrap correction moves the interaction p from 0.031 to 0.155 and dominates the cluster-robust p for inference under the few-treated-clusters regime (Cameron & Miller, 2015). The three-way spec is reported descriptively only owing to rank deficiency from sport-and-category multicollinearity.*
