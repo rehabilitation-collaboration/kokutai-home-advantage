@@ -235,16 +235,19 @@ def plot_fig5_replication_extended(cup: str = "tennou") -> tuple[Path, Path]:
     ax.errorbar(coefs, ys, xerr=ci95, fmt="s", color="#003377", ecolor="#888888",
                 capsize=5, markersize=8, linewidth=1.2)
     for i, c in enumerate(coefs):
-        ax.text(c, ys[i] + 0.15, f"{c:+.0f}", ha="center", va="bottom", fontsize=8)
+        ax.text(c, ys[i] + 0.18, f"{c:+.0f}", ha="center", va="bottom", fontsize=8)
 
     ax.axvline(FUNAHASHI_2016_HOST_COEF, color="#cc0033", linewidth=1.0, linestyle="--",
                label=f"Funahashi2016 ref = {FUNAHASHI_2016_HOST_COEF:+.0f}")
     ax.axvline(0, color="black", linewidth=0.5)
     ax.set_yticks(ys)
     ax.set_yticklabels(disp)
+    ax.set_ylim(-0.6, len(names) - 0.1)
     ax.set_xlabel("Host coefficient (points)")
-    ax.set_title("Replication of Funahashi 2016 + 1-year extension (tennou score DV)")
-    ax.legend(loc="lower right", frameon=False)
+    ax.set_title("Replication of Funahashi 2016 + 1-year extension (tennou score DV)", pad=12)
+    ax.legend(loc="lower right", frameon=True, facecolor="white", framealpha=0.9,
+              edgecolor="none")
+    fig.tight_layout()
     return _save(fig, "fig5_replication_extended")
 
 
