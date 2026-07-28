@@ -1,6 +1,6 @@
 # Reference Verification Report
 
-Generated: 2026-07-28 09:41
+Generated: 2026-07-28 11:54
 Tool: verify_refs.py (CrossRef API)
 
 ## Summary
