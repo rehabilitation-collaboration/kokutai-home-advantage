@@ -94,11 +94,12 @@ Bibliographic corrections applied in Phase 8:
 - **Take-away**: Same as Suetsugu 2024. Cited in Discussion for framing continuity.
 - **Status**: In-scope. Citation only.
 
-### 11. Wilson & Ramchandani (2018) — UK
+### 11. Wilson & Ramchandani (2021) — UK
 
-- **Citation**: Wilson D, Ramchandani G. "Home advantage in the Commonwealth Games." *J Global Sport Manage* 2018; 4(1):1-19. DOI: 10.1080/24704067.2018.1537676.
-- **Design**: Multi-Games panel analysis of Commonwealth Games host-country advantage.
-- **Take-away**: Provides an intermediate-scale international comparison between the Olympics (Csurilla & Fertő 2023) and single-country national games (present study, Funahashi 2016). Cited in Introduction for cross-context calibration.
+- **Citation**: Wilson D, Ramchandani G. "A comparative analysis of home advantage in the Olympic and Paralympic Games 1988-2018." *Journal of Global Sport Management* 2021; 6(2):170-184. DOI: 10.1080/24704067.2018.1537676.
+- **Design**: Multi-Games comparative panel of host-country advantage in the Summer Olympic and Paralympic Games 1988-2018.
+- **Take-away**: Provides an international multi-Games comparison of the size of host-country advantage across Olympic and Paralympic settings, complementing the single-Games Olympic evidence in Csurilla & Fertő (2023) and the single-country national-games evidence in Funahashi (2016) and the present study. Cited in the Introduction for cross-context calibration of magnitude.
+- **Note**: The DOI (10.1080/24704067.2018.1537676) resolves to the 2021 vol.6(2) article above via Crossref; earlier drafts of this file used the 2018 online-first title "Home advantage in the Commonwealth Games", which was a citation error corrected via `verify_refs.py`. The manuscript reference list (Ref 2) uses the 2021 form.
 - **Status**: Adjacent.
 
 ---
