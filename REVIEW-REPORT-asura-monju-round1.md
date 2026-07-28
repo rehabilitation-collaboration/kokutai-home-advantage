@@ -87,6 +87,30 @@ Pre-processing: `verify_refs.py` **run** (`output/reference_verification.md` + `
 4. **P2 text-only corrections** (Findings #8, #9, #13-#16, #19): straightforward text edits.
 5. **P3 cleanup** (Findings #22-#32): batch at end before v2 PDF build.
 
+## v2 P1 Completion Status (added 2026-07-28)
+
+All 7 P1 findings resolved in an additional session on 2026-07-28. Draft PDF `pdf/kokutai-v2-p1-complete.pdf` (25 pages, 929 KB) was built after P1 completion as a rollback checkpoint before P2/P3 begin.
+
+| Finding | Status | Commit | Notes |
+|---|---|---|---|
+| #1 event_study layer key | ✅ FIXED | `56b3a7b` | `_get_shocks` now raises ValueError; +5 assertion tests; Layer 1 truly computes as 2002-only single-event |
+| #2 Table 1 footnote | ✅ FIXED | `28de498` | 9-host list corrected (2012 Gifu added, 2025 Shiga removed, three/six typo fixed) |
+| #3 Fig 5 "within one SE" | ✅ FIXED | `28de498` | Text + caption unified as "within 1.96 SE (95% CI)" |
+| #4 pooled = M3 hidden covariates | ✅ FIXED | `8983824` | Rename option (a) adopted — 6 locations updated to disclose log_pop + log_gdp explicitly. Numerical values unchanged. |
+| #5 cross_section 2-treated-cluster | ✅ FIXED (**substantive**) | `38c4597` | Wild-cluster bootstrap implemented; **p moves from 0.031 to 0.155**. Reflected honestly in 7 manuscript locations + Table 5 new row + References 13/14 added. |
+| #6 Csurilla apples-to-oranges | ✅ FIXED | `28de498` | "Opposite of Csurilla" framing dropped; DV/link/identification-variance mismatch explicitly disclosed |
+| #7 "pre-registered" claim | ✅ FIXED | `28de498` | Methods L55 rewritten as "The primary analysis is organized around three complementary specifications" |
+
+Pytest: 259 → 267 (all pass). `verify_refs.py`: Refs 13/14 checked (Ref 13 shows a crossref author-field-mapping artifact, AMA style preserved).
+
+**Substantive impact of #5**: The novelty-core claim was downgraded from "first quantitative confirmation" to "directionally consistent first quantitative anchor". The descriptive monotonicity (+37.9 subj vs. +17.6 obj) and log-outcome interaction direction (+0.293) continue to support the Balmer2003 direction independently.
+
+## Remaining v2 work (P2/P3)
+
+- **P2 quantitative additions** (12 items, some with code work): Findings #8 Fig 2 clustered SE, #9 multiple-comparisons discussion, #10 CI columns (Tables 2/4/5), #11 pseudo-R²/llf columns, #12 Tokyo-exclusion sensitivity, #13 objective-sport count 16→17, #14 arithmetic 6,991 vs 7,097, #15 p = 6.7×10⁻¹⁹ → 4.8×10⁻¹⁹, #16 p-precision policy, #17 pooled clustered SE, #18 Brant test, #20 Table 5 rank-deficient tagging, #21 2-prefecture asymmetric identification.
+- **P3 cleanup** (11 items, mostly text): #22-#32 (abbreviation expansion, 2013 Tokyo footnote, Fig 5 label overlap, IRB citation domain, Table 2 SE precision, assertion tests documentation, Fig 1 y≈0.5 point investigation, LITERATURE.md §11 update).
+- **Then**: rebuild PDF as `pdf/kokutai-v2-final.pdf` (edit `generate_pdf.py` out_path), rerun verify_refs.py, self-QA 100% via pdftotext -layout, then GPT round-1 iteration cycle.
+
 ## Post-v2 workflow
 
 1. Regenerate `results/*.txt` after code fixes
