@@ -3,32 +3,32 @@ analysis_confounders.py — Csurilla型段階投入 M1→M5
 ================================================================================
 
 [run_staged_analysis dv=top1 tennou 2012-2022]
-  logit_top1_M1_host_only                  coef=+5.613468 se=0.914256 p=0.000000 n=423 converged=True llf=-23.4995
-  logit_top1_M2_add_pop                    coef=+10.904266 se=3.230670 p=0.000738 n=423 converged=True llf=-14.8290
-  logit_top1_M3_add_gdp                    coef=+9.094158 se=2.796680 p=0.001147 n=423 converged=True llf=-12.7478
+  logit_top1_M1_host_only                  coef=+5.613468 se=1.090789 p=0.000000 n=423 converged=True llf=-23.4995
+  logit_top1_M2_add_pop                    coef=+10.904266 se=3.345652 p=0.001117 n=423 converged=True llf=-14.8290
+  logit_top1_M3_add_gdp                    coef=+9.094158 se=2.125675 p=0.000019 n=423 converged=True llf=-12.7478
   logit_top1_M4_add_prefFE                 coef=+498.005062 se=nan p=nan n=423 converged=True llf=-3.4331
   logit_top1_M5_full_FE                    coef=+1877.278833 se=nan p=nan n=423 converged=True llf=-0.0001
 
 [compute_attenuation dv=top1]
                        name  coef_is_host  se_is_host     p_is_host  attenuation_vs_M1  n_obs  n_params  converged
-0   logit_top1_M1_host_only      5.613468    0.914256  8.255752e-10           0.000000    423         2       True
-1     logit_top1_M2_add_pop     10.904266    3.230670  7.375290e-04          -0.942519    423         3       True
-2     logit_top1_M3_add_gdp      9.094158    2.796680  1.146890e-03          -0.620060    423         4       True
+0   logit_top1_M1_host_only      5.613468    1.090789  2.657523e-07           0.000000    423         2       True
+1     logit_top1_M2_add_pop     10.904266    3.345652  1.117131e-03          -0.942519    423         3       True
+2     logit_top1_M3_add_gdp      9.094158    2.125675  1.883727e-05          -0.620060    423         4       True
 3  logit_top1_M4_add_prefFE    498.005062         NaN           NaN         -87.716107    423        50       True
 4     logit_top1_M5_full_FE   1877.278833         NaN           NaN        -333.424050    423        58       True
 
 [run_staged_analysis dv=rank_ordinal tennou 2012-2022]
-  ordered_M1_host_only                     coef=-6.108524 se=0.886265 p=0.000000 n=423 converged=True llf=-308.1997
-  ordered_M2_add_pop                       coef=-13.169693 se=1.482392 p=0.000000 n=423 converged=True llf=-176.4908
-  ordered_M3_add_gdp                       coef=-13.726475 se=1.539428 p=0.000000 n=423 converged=True llf=-173.8497
+  ordered_M1_host_only                     coef=-6.108524 se=1.208904 p=0.000000 n=423 converged=True llf=-308.1997
+  ordered_M2_add_pop                       coef=-13.169693 se=2.012282 p=0.000000 n=423 converged=True llf=-176.4908
+  ordered_M3_add_gdp                       coef=-13.726475 se=2.030554 p=0.000000 n=423 converged=True llf=-173.8497
   ordered_M4_add_prefFE                    coef=-116.104985 se=nan p=nan n=423 converged=False llf=-112.5112
   ordered_M5_full_FE                       coef=-49.564877 se=172.446308 p=0.773789 n=423 converged=True llf=-111.1923
 
 [compute_attenuation dv=rank_ordinal]
                     name  coef_is_host  se_is_host     p_is_host  attenuation_vs_M1  n_obs  n_params  converged
-0   ordered_M1_host_only     -6.108524    0.886265  5.484605e-12           0.000000    423         9       True
-1     ordered_M2_add_pop    -13.169693    1.482392  6.445181e-19          -1.155953    423        10       True
-2     ordered_M3_add_gdp    -13.726475    1.539428  4.807824e-19          -1.247102    423        11       True
+0   ordered_M1_host_only     -6.108524    1.208904  4.350539e-07           0.000000    423         9       True
+1     ordered_M2_add_pop    -13.169693    2.012282  5.963266e-11          -1.155953    423        10       True
+2     ordered_M3_add_gdp    -13.726475    2.030554  1.380248e-11          -1.247102    423        11       True
 3  ordered_M4_add_prefFE   -116.104985         NaN           NaN         -18.007043    423        57      False
 4     ordered_M5_full_FE    -49.564877  172.446308  7.737892e-01          -7.114051    423        65       True
 

@@ -130,18 +130,30 @@ def _make_result(
     )
 
 
+def _fit_kwargs_for_cluster(cluster_groups: pd.Series | None) -> dict:
+    if cluster_groups is None:
+        return {}
+    return {"cov_type": "cluster", "cov_kwds": {"groups": cluster_groups}}
+
+
 def fit_ordered_logit(
     df: pd.DataFrame,
     add_pref_fe: bool = False,
     add_year_fe: bool = False,
     add_cup_fe: bool = False,
     name: str = "ordered_pooled",
+    cluster_groups: pd.Series | None = None,
 ) -> ModelResult:
-    """rank_ordinal ~ is_host + log_pop + log_gdp (+ FE)"""
+    """rank_ordinal ~ is_host + log_pop + log_gdp (+ FE)
+
+    cluster_groups: 渡すと prefecture-clustered SE (repeated-observations 対応)。
+    None なら Fisher-information SE (backward compatible)。
+    """
     X = _build_design_matrix(df, add_pref_fe, add_year_fe, add_cup_fe, add_const=False)
     y = df["rank_ordinal"]
     model = OrderedModel(y, X, distr="logit")
-    result = model.fit(method="bfgs", disp=False, maxiter=500)
+    result = model.fit(method="bfgs", disp=False, maxiter=500,
+                       **_fit_kwargs_for_cluster(cluster_groups))
     return _make_result(name, "ordered_logit", "rank_ordinal", result)
 
 
@@ -152,12 +164,17 @@ def fit_logit(
     add_year_fe: bool = False,
     add_cup_fe: bool = False,
     name: str | None = None,
+    cluster_groups: pd.Series | None = None,
 ) -> ModelResult:
-    """{top1|top8} ~ is_host + log_pop + log_gdp (+ FE)"""
+    """{top1|top8} ~ is_host + log_pop + log_gdp (+ FE)
+
+    cluster_groups: 渡すと prefecture-clustered SE。None なら Fisher-information SE。
+    """
     X = _build_design_matrix(df, add_pref_fe, add_year_fe, add_cup_fe, add_const=True)
     y = df[dv]
     model = sm.Logit(y, X)
-    result = model.fit(method="bfgs", disp=False, maxiter=500)
+    result = model.fit(method="bfgs", disp=False, maxiter=500,
+                       **_fit_kwargs_for_cluster(cluster_groups))
     return _make_result(name or f"logit_{dv}_pooled", "logit", dv, result)
 
 
@@ -179,11 +196,16 @@ def run_main_models(
     """
     df = build_analysis_frame(year_min=year_min, year_max=year_max, cup=cup)
     add_cup = cup == "both"
+    pref_clusters = df["pref_code"]
     return [
-        fit_ordered_logit(df, add_pref_fe=False, add_year_fe=False, add_cup_fe=add_cup, name="ordered_pooled"),
-        fit_ordered_logit(df, add_pref_fe=True, add_year_fe=True, add_cup_fe=add_cup, name="ordered_prefFE_yearFE"),
-        fit_logit(df, dv="top1", add_pref_fe=False, add_year_fe=False, add_cup_fe=add_cup, name="logit_top1_pooled"),
-        fit_logit(df, dv="top1", add_pref_fe=True, add_year_fe=True, add_cup_fe=add_cup, name="logit_top1_prefFE_yearFE"),
+        fit_ordered_logit(df, add_pref_fe=False, add_year_fe=False, add_cup_fe=add_cup,
+                          name="ordered_pooled", cluster_groups=pref_clusters),
+        fit_ordered_logit(df, add_pref_fe=True, add_year_fe=True, add_cup_fe=add_cup,
+                          name="ordered_prefFE_yearFE"),
+        fit_logit(df, dv="top1", add_pref_fe=False, add_year_fe=False, add_cup_fe=add_cup,
+                  name="logit_top1_pooled", cluster_groups=pref_clusters),
+        fit_logit(df, dv="top1", add_pref_fe=True, add_year_fe=True, add_cup_fe=add_cup,
+                  name="logit_top1_prefFE_yearFE"),
     ]
 
 

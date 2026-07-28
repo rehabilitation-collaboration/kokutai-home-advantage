@@ -37,12 +37,14 @@ def main_models():
 
         for cup in ["tennou", "kougou"]:
             f.write(f"[run_main_models cup={cup}]\n")
+            f.write("  # pooled = prefecture-clustered SE (47 clusters); FE = Fisher info\n")
             results = analysis_main.run_main_models(cup=cup)
             for r in results:
+                cov = getattr(r.result_obj, "cov_type", "nonrobust")
                 f.write(
                     f"  {r.name:<40} coef={r.coef_is_host:+.6f} "
                     f"se={r.se_is_host:.6f} p={r.p_is_host:.6f} "
-                    f"n={r.n_obs} converged={r.converged} llf={r.llf:.4f}\n"
+                    f"n={r.n_obs} converged={r.converged} llf={r.llf:.4f} cov={cov}\n"
                 )
             f.write("\n")
     print(f"[OK] {out}")

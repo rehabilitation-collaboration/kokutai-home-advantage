@@ -65,6 +65,46 @@ class TestRunStagedAnalysis:
         assert len(results) == 5
 
 
+class TestStagedClusteredSE:
+    """Finding #17 consistency: M1-M3 (FE なし) must use prefecture-clustered SE
+    to preserve numerical identity with analysis_main pooled specifications.
+    M4/M5 (含 pref FE) stays Fisher-info (FE と cluster が冗長 + separation blowup)."""
+
+    def test_M1_M3_use_cluster_cov(self):
+        for dv in ("rank_ordinal", "top1"):
+            results = run_staged_analysis(cup="tennou", dv=dv)
+            by_name = {r.name: r for r in results}
+            for stage in ["M1_host_only", "M2_add_pop", "M3_add_gdp"]:
+                key = f"{'ordered' if dv == 'rank_ordinal' else 'logit_top1'}_{stage}"
+                r = by_name[key]
+                assert getattr(r.result_obj, "cov_type", None) == "cluster", (
+                    f"{r.name} ({dv}): expected cov_type='cluster'"
+                )
+
+    def test_M4_M5_remain_nonrobust(self):
+        for dv in ("rank_ordinal", "top1"):
+            results = run_staged_analysis(cup="tennou", dv=dv)
+            by_name = {r.name: r for r in results}
+            for stage in ["M4_add_prefFE", "M5_full_FE"]:
+                key = f"{'ordered' if dv == 'rank_ordinal' else 'logit_top1'}_{stage}"
+                r = by_name[key]
+                assert getattr(r.result_obj, "cov_type", None) == "nonrobust", (
+                    f"{r.name} ({dv}): FE-including specs should stay Fisher-info"
+                )
+
+    def test_M3_matches_analysis_main_pooled(self):
+        # Finding #4 の bit-identical 主張を clustered SE でも維持
+        from src.analysis_main import run_main_models
+        main = {r.name: r for r in run_main_models(cup="tennou")}
+        stg_top1 = {r.name: r for r in run_staged_analysis(cup="tennou", dv="top1")}
+        stg_ord = {r.name: r for r in run_staged_analysis(cup="tennou", dv="rank_ordinal")}
+        # coef は完全一致 / SE も clustered 同士で一致 (共に pref cluster)
+        assert abs(main["logit_top1_pooled"].coef_is_host - stg_top1["logit_top1_M3_add_gdp"].coef_is_host) < 1e-9
+        assert abs(main["logit_top1_pooled"].se_is_host - stg_top1["logit_top1_M3_add_gdp"].se_is_host) < 1e-6
+        assert abs(main["ordered_pooled"].coef_is_host - stg_ord["ordered_M3_add_gdp"].coef_is_host) < 1e-9
+        assert abs(main["ordered_pooled"].se_is_host - stg_ord["ordered_M3_add_gdp"].se_is_host) < 1e-6
+
+
 class TestComputeAttenuation:
     def test_M1_attenuation_zero(self):
         results = run_staged_analysis(cup="tennou", dv="rank_ordinal")

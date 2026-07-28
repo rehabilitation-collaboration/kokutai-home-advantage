@@ -114,6 +114,63 @@ class TestRunMainModels:
             assert r.p_is_host < 0.01, f"{r.name}: p={r.p_is_host}"
 
 
+class TestClusteredSE:
+    """Finding #17: pooled specifications must use prefecture-clustered SE (47 clusters)
+
+    Repeated-observations across years per prefecture violates the independence assumption
+    of Fisher-information SE. run_main_models() must therefore apply cov_type='cluster'
+    with groups=pref_code to the pooled ordered logit and pooled top-1 logit.
+    """
+
+    def test_pooled_models_use_cluster_cov(self):
+        results = run_main_models(cup="tennou")
+        pooled = [r for r in results if r.name.endswith("_pooled")]
+        assert len(pooled) == 2
+        for r in pooled:
+            assert getattr(r.result_obj, "cov_type", None) == "cluster", (
+                f"{r.name}: expected cov_type='cluster' but got {getattr(r.result_obj, 'cov_type', None)}"
+            )
+
+    def test_pooled_cluster_se_differs_from_fisher(self):
+        df = build_analysis_frame(cup="tennou")
+        # top1 pooled: Fisher SE ≈ 2.80, clustered SE ≈ 2.13 (Fisher overstates)
+        fisher = fit_logit(df, dv="top1", name="fisher_top1")
+        clustered = fit_logit(df, dv="top1", name="clustered_top1", cluster_groups=df["pref_code"])
+        assert abs(fisher.se_is_host - clustered.se_is_host) > 0.3, (
+            f"Fisher/clustered SE should differ meaningfully: "
+            f"Fisher={fisher.se_is_host:.4f} vs clustered={clustered.se_is_host:.4f}"
+        )
+        # ordered pooled: Fisher SE ≈ 1.54, clustered SE ≈ 2.03 (Fisher understates)
+        fisher_ord = fit_ordered_logit(df, name="fisher_ord")
+        clustered_ord = fit_ordered_logit(df, name="clustered_ord", cluster_groups=df["pref_code"])
+        assert abs(fisher_ord.se_is_host - clustered_ord.se_is_host) > 0.3, (
+            f"ordered Fisher/clustered SE should differ meaningfully: "
+            f"Fisher={fisher_ord.se_is_host:.4f} vs clustered={clustered_ord.se_is_host:.4f}"
+        )
+
+    def test_fe_models_remain_nonrobust(self):
+        # FE モデルは pref FE と cluster が冗長 + separation blowup で SE=NaN のため
+        # clustered 化しない。cov_type='nonrobust' のままであることを保証。
+        results = run_main_models(cup="tennou")
+        fe = [r for r in results if "FE" in r.name]
+        assert len(fe) == 2
+        for r in fe:
+            assert getattr(r.result_obj, "cov_type", None) == "nonrobust", (
+                f"{r.name}: FE models should remain nonrobust (Fisher info)"
+            )
+
+    def test_pooled_headline_directions_preserved_under_cluster(self):
+        # 論文正確性最優先: clustered SE 化しても headline 方向は不変
+        # ordered_pooled coef < 0 (better rank), logit_top1_pooled coef > 0 (higher top-1 prob)
+        # 両モデルとも clustered p < 0.001 で有意
+        results = run_main_models(cup="tennou")
+        by_name = {r.name: r for r in results}
+        assert by_name["ordered_pooled"].coef_is_host < 0
+        assert by_name["ordered_pooled"].p_is_host < 0.001
+        assert by_name["logit_top1_pooled"].coef_is_host > 0
+        assert by_name["logit_top1_pooled"].p_is_host < 0.001
+
+
 class TestResultsToDataframe:
     def test_shape_and_columns(self):
         results = run_main_models(cup="tennou")

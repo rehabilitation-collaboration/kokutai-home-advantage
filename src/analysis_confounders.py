@@ -25,6 +25,7 @@ from statsmodels.miscmodels.ordinal_model import OrderedModel
 from src.analysis_main import (
     ModelResult,
     _build_design_matrix,
+    _fit_kwargs_for_cluster,
     _make_result,
     build_analysis_frame,
 )
@@ -68,19 +69,29 @@ def _build_stage_design(df: pd.DataFrame, spec: StageSpec, add_const: bool) -> p
     return X
 
 
-def fit_staged_ordered_logit(df: pd.DataFrame, spec: StageSpec) -> ModelResult:
+def fit_staged_ordered_logit(
+    df: pd.DataFrame,
+    spec: StageSpec,
+    cluster_groups: pd.Series | None = None,
+) -> ModelResult:
     X = _build_stage_design(df, spec, add_const=False)
     y = df["rank_ordinal"]
     model = OrderedModel(y, X, distr="logit")
-    result = model.fit(method="bfgs", disp=False, maxiter=500)
+    result = model.fit(method="bfgs", disp=False, maxiter=500,
+                       **_fit_kwargs_for_cluster(cluster_groups))
     return _make_result(f"ordered_{spec.name}", "ordered_logit", "rank_ordinal", result)
 
 
-def fit_staged_logit_top1(df: pd.DataFrame, spec: StageSpec) -> ModelResult:
+def fit_staged_logit_top1(
+    df: pd.DataFrame,
+    spec: StageSpec,
+    cluster_groups: pd.Series | None = None,
+) -> ModelResult:
     X = _build_stage_design(df, spec, add_const=True)
     y = df["top1"]
     model = sm.Logit(y, X)
-    result = model.fit(method="bfgs", disp=False, maxiter=500)
+    result = model.fit(method="bfgs", disp=False, maxiter=500,
+                       **_fit_kwargs_for_cluster(cluster_groups))
     return _make_result(f"logit_top1_{spec.name}", "logit", "top1", result)
 
 
@@ -90,10 +101,22 @@ def run_staged_analysis(
     cup: Literal["tennou", "kougou", "both"] = "tennou",
     dv: Dv = "rank_ordinal",
 ) -> list[ModelResult]:
-    """段階投入 5 モデルを実行 (DV は 1 種類ずつ・両方欲しければ 2 回呼ぶ)"""
+    """段階投入 5 モデルを実行 (DV は 1 種類ずつ・両方欲しければ 2 回呼ぶ)
+
+    Finding #17 対応: M1-M3 (FE なし) は prefecture-clustered SE (47 clusters)。
+    M4/M5 (pref FE 含む) は Fisher-info のまま (pref FE と cluster が冗長 +
+    complete separation で SE 発散するため clustered 化しても意味なし)。
+    Table 2 pooled 行と Table 4 M3 行の数値一貫性を保つため。
+    """
     df = build_analysis_frame(year_min=year_min, year_max=year_max, cup=cup)
     fitter = fit_staged_ordered_logit if dv == "rank_ordinal" else fit_staged_logit_top1
-    return [fitter(df, spec) for spec in STAGES]
+    pref_clusters = df["pref_code"]
+    results = []
+    for spec in STAGES:
+        # M1-M3 = FE なし → clustered / M4-M5 = pref FE 含む → Fisher
+        cg = None if spec.add_pref_fe else pref_clusters
+        results.append(fitter(df, spec, cluster_groups=cg))
+    return results
 
 
 def compute_attenuation(results: list[ModelResult]) -> pd.DataFrame:
