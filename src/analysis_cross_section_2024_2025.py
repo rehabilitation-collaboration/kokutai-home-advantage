@@ -221,6 +221,100 @@ def run_cross_section_models(include_winter: bool = True) -> list[CrossSectionRe
     ]
 
 
+def wild_cluster_bootstrap(
+    df: pd.DataFrame,
+    dv: str = "score",
+    with_semi_interaction: bool = False,
+    add_pref_fe: bool = True,
+    add_sport_fe: bool = True,
+    add_year_fe: bool = True,
+    add_cup_fe: bool = True,
+    cluster_col: str = "pref_code",
+    test_coef: str = "host_x_subj",
+    n_bootstrap: int = 999,
+    seed: int = 20260728,
+) -> dict:
+    """Wild-cluster bootstrap p-value for a single coefficient under a restricted null.
+
+    Implements the Cameron-Gelbach-Miller (2008) wild-cluster bootstrap with Rademacher
+    weights and restricted null (H0: β_{test_coef} = 0). Addresses the Cameron-Miller
+    (2015) few-treated-clusters problem when the cross-section has only 2 treated
+    prefecture clusters (2024 Saga, 2025 Shiga) out of 47.
+
+    Two-sided bootstrap p = share of |t*_b| ≥ |t_observed|.
+    """
+    rng = np.random.default_rng(seed)
+
+    X_full = _build_design(df, with_semi_interaction, add_pref_fe, add_sport_fe, add_year_fe, add_cup_fe)
+    y = df[dv].astype(float).values
+
+    model_full = sm.OLS(y, X_full)
+    result_full = model_full.fit(cov_type="cluster", cov_kwds={"groups": df[cluster_col]})
+
+    n_clusters = int(df[cluster_col].nunique())
+    treated_clusters = int(df.loc[df["is_host_int"] == 1, cluster_col].nunique())
+
+    if test_coef not in result_full.params.index:
+        return {
+            "test_coef": test_coef,
+            "observed_coef": float("nan"),
+            "observed_se": float("nan"),
+            "observed_t": float("nan"),
+            "cluster_robust_p": float("nan"),
+            "bootstrap_p": float("nan"),
+            "n_bootstrap_used": 0,
+            "n_bootstrap_requested": n_bootstrap,
+            "seed": seed,
+            "n_clusters": n_clusters,
+            "treated_clusters": treated_clusters,
+        }
+
+    observed_coef = float(result_full.params[test_coef])
+    observed_se = float(result_full.bse[test_coef])
+    observed_t = observed_coef / observed_se
+    cluster_robust_p = float(result_full.pvalues[test_coef])
+
+    X_restricted = X_full.drop(columns=[test_coef])
+    model_restricted = sm.OLS(y, X_restricted)
+    result_restricted = model_restricted.fit(cov_type="cluster", cov_kwds={"groups": df[cluster_col]})
+    y_hat_restricted = np.asarray(result_restricted.predict(X_restricted), dtype=float)
+    residuals_restricted = y - y_hat_restricted
+
+    clusters = df[cluster_col].values
+    unique_clusters = np.unique(clusters)
+
+    bootstrap_ts = []
+    for _ in range(n_bootstrap):
+        omega = rng.choice([-1.0, 1.0], size=len(unique_clusters))
+        omega_map = dict(zip(unique_clusters, omega))
+        omega_i = np.array([omega_map[c] for c in clusters], dtype=float)
+        y_star = y_hat_restricted + residuals_restricted * omega_i
+        try:
+            result_star = sm.OLS(y_star, X_full).fit(cov_type="cluster", cov_kwds={"groups": df[cluster_col]})
+            t_star = float(result_star.params[test_coef] / result_star.bse[test_coef])
+            if np.isfinite(t_star):
+                bootstrap_ts.append(t_star)
+        except Exception:
+            continue
+
+    bootstrap_ts_arr = np.array(bootstrap_ts)
+    bootstrap_p = float(np.mean(np.abs(bootstrap_ts_arr) >= abs(observed_t))) if len(bootstrap_ts_arr) else float("nan")
+
+    return {
+        "test_coef": test_coef,
+        "observed_coef": observed_coef,
+        "observed_se": observed_se,
+        "observed_t": observed_t,
+        "cluster_robust_p": cluster_robust_p,
+        "bootstrap_p": bootstrap_p,
+        "n_bootstrap_used": len(bootstrap_ts_arr),
+        "n_bootstrap_requested": n_bootstrap,
+        "seed": seed,
+        "n_clusters": n_clusters,
+        "treated_clusters": treated_clusters,
+    }
+
+
 def descriptive_by_category(df: pd.DataFrame | None = None) -> pd.DataFrame:
     """カテゴリ × host のクロス集計 (Discussion 用)
 

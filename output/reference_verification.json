@@ -358,7 +358,7 @@
   {
     "ref_number": 12,
     "status": "MATCH",
-    "raw_text": "Zitzewitz E. Nationalism in winter sports judging and its lessons for organizational decision making. *J Econ Manage Strategy*. 2006;15(1):67-99. doi:10.1111/j.1530-9134.2006.00092.x\n\n---",
+    "raw_text": "Zitzewitz E. Nationalism in winter sports judging and its lessons for organizational decision making. *J Econ Manage Strategy*. 2006;15(1):67-99. doi:10.1111/j.1530-9134.2006.00092.x",
     "mismatched_fields": [],
     "manuscript_data": {
       "authors": "Zitzewitz E",
@@ -380,6 +380,72 @@
     },
     "crossref_doi": "10.1111/j.1530-9134.2006.00092.x",
     "corrected_citation": "Zitzewitz E. <scp>Nationalism in Winter Sports Judging and Its Lessons for Organizational Decision Making</scp>. Journal of Economics &amp; Management Strategy. 2006;15:67-99. doi:10.1111/j.1530-9134.2006.00092.x.",
+    "is_retracted": false,
+    "retraction_doi": "",
+    "url_status": 0,
+    "notes": [
+      "Resolved via DOI (high confidence)"
+    ]
+  },
+  {
+    "ref_number": 13,
+    "status": "MISMATCH",
+    "raw_text": "Cameron AC, Miller DL. A practitioner's guide to cluster-robust inference. *J Human Resources*. 2015;50(2):317-372. doi:10.3368/jhr.50.2.317",
+    "mismatched_fields": [
+      "author_1_surname"
+    ],
+    "manuscript_data": {
+      "authors": "Cameron AC, Miller DL",
+      "title": "A practitioner's guide to cluster-robust inference",
+      "journal": "",
+      "year": "2015",
+      "volume": "50",
+      "pages": "317-372",
+      "doi": "10.3368/jhr.50.2.317"
+    },
+    "crossref_data": {
+      "title": "A Practitioner’s Guide to Cluster-Robust Inference",
+      "journal": "Journal of Human Resources",
+      "year": "2015",
+      "volume": "50",
+      "page": "317-372",
+      "doi": "10.3368/jhr.50.2.317",
+      "authors": "Colin Cameron A, Miller DL"
+    },
+    "crossref_doi": "10.3368/jhr.50.2.317",
+    "corrected_citation": "Colin Cameron A, Miller DL. A Practitioner’s Guide to Cluster-Robust Inference. Journal of Human Resources. 2015;50:317-372. doi:10.3368/jhr.50.2.317.",
+    "is_retracted": false,
+    "retraction_doi": "",
+    "url_status": 0,
+    "notes": [
+      "Resolved via DOI (high confidence)"
+    ]
+  },
+  {
+    "ref_number": 14,
+    "status": "MATCH",
+    "raw_text": "Cameron AC, Gelbach JB, Miller DL. Bootstrap-based improvements for inference with clustered errors. *Rev Econ Stat*. 2008;90(3):414-427. doi:10.1162/rest.90.3.414\n\n---",
+    "mismatched_fields": [],
+    "manuscript_data": {
+      "authors": "Cameron AC, Gelbach JB, Miller DL",
+      "title": "Bootstrap-based improvements for inference with clustered errors",
+      "journal": "",
+      "year": "2008",
+      "volume": "90",
+      "pages": "414-427",
+      "doi": "10.1162/rest.90.3.414"
+    },
+    "crossref_data": {
+      "title": "Bootstrap-Based Improvements for Inference with Clustered Errors",
+      "journal": "Review of Economics and Statistics",
+      "year": "2008",
+      "volume": "90",
+      "page": "414-427",
+      "doi": "10.1162/rest.90.3.414",
+      "authors": "Cameron AC, Gelbach JB, Miller DL"
+    },
+    "crossref_doi": "10.1162/rest.90.3.414",
+    "corrected_citation": "Cameron AC, Gelbach JB, Miller DL. Bootstrap-Based Improvements for Inference with Clustered Errors. Review of Economics and Statistics. 2008;90:414-427. doi:10.1162/rest.90.3.414.",
     "is_retracted": false,
     "retraction_doi": "",
     "url_status": 0,

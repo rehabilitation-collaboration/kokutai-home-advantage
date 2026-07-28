@@ -180,6 +180,13 @@ def cross_section_models():
                     continue
                 dump_line(f, f"  {r.name}.{k}", v)
             f.write("\n")
+
+        f.write("[wild_cluster_bootstrap — few-treated-clusters robust p (Finding #5)]\n")
+        df_cs = csm.build_cross_section_frame()
+        wcb = csm.wild_cluster_bootstrap(df_cs, dv="score", test_coef="host_x_subj", n_bootstrap=999)
+        for k, v in wcb.items():
+            dump_line(f, f"  wild_cluster.{k}", v)
+        f.write("\n")
     print(f"[OK] {out}")
 
 

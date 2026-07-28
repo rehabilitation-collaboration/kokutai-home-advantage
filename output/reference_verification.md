@@ -1,13 +1,13 @@
 # Reference Verification Report
 
-Generated: 2026-07-28 08:34
+Generated: 2026-07-28 09:41
 Tool: verify_refs.py (CrossRef API)
 
 ## Summary
 
-- Total references: 12
-- MATCH: 7
-- MISMATCH: 3
+- Total references: 14
+- MATCH: 8
+- MISMATCH: 4
 - MANUAL: 2
 
 ## Issues Requiring Attention
@@ -17,6 +17,7 @@ Tool: verify_refs.py (CrossRef API)
 | [4] | MISMATCH | title, year, pages, author_1_surname | Resolved via title search (lower confidence) |
 | [5] | MISMATCH | title, year, volume, pages, author_count, author_1_surname | Resolved via title search (lower confidence) |
 | [11] | MISMATCH | title, year, volume, pages, author_count, author_1_surname, author_2_surname | Resolved via title search (lower confidence) |
+| [13] | MISMATCH | author_1_surname | Resolved via DOI (high confidence) |
 
 ## Mismatch Details
 
@@ -49,6 +50,11 @@ Tool: verify_refs.py (CrossRef API)
   - **author_2_surname**: manuscript=`Lan T, Yu X` / crossref=`JIANG Y, ZHANG H, ZHANG P`
 - **Suggested**: JIANG Y, ZHANG H, ZHANG P. A Theoretical Exploration and Empirical Research on the Fellow-Townsman Reference Effect in China. Advances in Psychological Science. 2013;20:1237-1242. doi:10.3724/sp.j.1042.2012.01237.
 
+### Ref [13]
+- **Manuscript**: Cameron AC, Miller DL. A practitioner's guide to cluster-robust inference. *J Human Resources*. 2015;50(2):317-372. doi:10.3368/jhr.50.2.317
+  - **author_1_surname**: manuscript=`Cameron AC, Miller DL` / crossref=`Colin Cameron A, Miller DL`
+- **Suggested**: Colin Cameron A, Miller DL. A Practitioner’s Guide to Cluster-Robust Inference. Journal of Human Resources. 2015;50:317-372. doi:10.3368/jhr.50.2.317.
+
 ## Full Results
 
 | Ref | Status | DOI | Notes |
@@ -65,3 +71,5 @@ Tool: verify_refs.py (CrossRef API)
 | [10] | MATCH | 10.3389/fspor.2022.927774 | Resolved via DOI (high confidence) |
 | [11] | MISMATCH | 10.3724/sp.j.1042.2012.01237 | Resolved via title search (lower confidence) |
 | [12] | MATCH | 10.1111/j.1530-9134.2006.00092.x | Resolved via DOI (high confidence) |
+| [13] | MISMATCH | 10.3368/jhr.50.2.317 | Resolved via DOI (high confidence) |
+| [14] | MATCH | 10.1162/rest.90.3.414 | Resolved via DOI (high confidence) |

@@ -49,3 +49,16 @@ Subj×Host 交互作用 (novelty core)
   cross_section_log_baseline.n_clusters  47
   cross_section_log_baseline.r2          0.27919535640777426
 
+[wild_cluster_bootstrap — few-treated-clusters robust p (Finding #5)]
+  wild_cluster.test_coef                 host_x_subj
+  wild_cluster.observed_coef             16.683694075745333
+  wild_cluster.observed_se               7.722305799612529
+  wild_cluster.observed_t                2.160454986978429
+  wild_cluster.cluster_robust_p          0.030737464640059758
+  wild_cluster.bootstrap_p               0.15515515515515516
+  wild_cluster.n_bootstrap_used          999
+  wild_cluster.n_bootstrap_requested     999
+  wild_cluster.seed                      20260728
+  wild_cluster.n_clusters                47
+  wild_cluster.treated_clusters          2
+

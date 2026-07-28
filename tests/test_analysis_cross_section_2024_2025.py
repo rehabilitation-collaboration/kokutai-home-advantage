@@ -154,3 +154,35 @@ class TestResultsToDataframe:
             "n_obs", "n_params", "n_clusters", "r2",
         }
         assert set(df.columns) == expected_cols
+
+
+class TestWildClusterBootstrap:
+    """Finding #5: few-treated-clusters (2 of 47) → wild-cluster bootstrap robust p"""
+
+    def test_returns_expected_keys(self):
+        from src.analysis_cross_section_2024_2025 import build_cross_section_frame, wild_cluster_bootstrap
+        df = build_cross_section_frame()
+        # B=49 で smoke test (実行時間 ~10秒)
+        out = wild_cluster_bootstrap(df, dv="score", test_coef="host_x_subj", n_bootstrap=49, seed=1)
+        expected = {
+            "test_coef", "observed_coef", "observed_se", "observed_t",
+            "cluster_robust_p", "bootstrap_p", "n_bootstrap_used",
+            "n_bootstrap_requested", "seed", "n_clusters", "treated_clusters",
+        }
+        assert set(out.keys()) == expected
+
+    def test_treated_clusters_is_two(self):
+        # Cross-section の treated cluster は Saga (2024) + Shiga (2025) = 2 のみ (few-treated-clusters problem の core)
+        from src.analysis_cross_section_2024_2025 import build_cross_section_frame, wild_cluster_bootstrap
+        df = build_cross_section_frame()
+        out = wild_cluster_bootstrap(df, dv="score", test_coef="host_x_subj", n_bootstrap=1, seed=1)
+        assert out["n_clusters"] == 47
+        assert out["treated_clusters"] == 2
+
+    def test_bootstrap_p_in_unit_interval(self):
+        from src.analysis_cross_section_2024_2025 import build_cross_section_frame, wild_cluster_bootstrap
+        df = build_cross_section_frame()
+        out = wild_cluster_bootstrap(df, dv="score", test_coef="host_x_subj", n_bootstrap=49, seed=42)
+        assert 0.0 <= out["bootstrap_p"] <= 1.0
+        # observed_t は既存の cluster-robust fit と整合すべき (headline p=0.031 → |t|>2)
+        assert abs(out["observed_t"]) > 1.5
