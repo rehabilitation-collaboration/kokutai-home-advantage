@@ -230,12 +230,12 @@ All input data used in this study are publicly available. Prefecture rankings ar
 
 ### Table 2. Main-panel regression results (2012-2022 tennou, n = 423)
 
-| Specification | Coefficient (host) | SE | p-value | Notes |
-|---|---|---|---|---|
-| Ordered logit, pooled (+ log_pop + log_gdp) | -13.73 | 2.03 | < 0.001 | Negative = better rank |
-| Ordered logit, pref FE + year FE (+ log_pop + log_gdp) | -49.56 | 172.4 | 0.77 | Separation-driven degeneracy |
-| Top-1 logit, pooled (+ log_pop + log_gdp) | +9.09 | 2.13 | < 0.001 (exact 1.9 × 10⁻⁵) | |
-| Top-1 logit, pref FE + year FE (+ log_pop + log_gdp) | +1,877.3 | (undefined) | (undefined) | Complete separation |
+| Specification | Coefficient (host) | SE | p-value | log-likelihood | McFadden pseudo-R² | Notes |
+|---|---|---|---|---|---|---|
+| Ordered logit, pooled (+ log_pop + log_gdp) | -13.73 | 2.03 | < 0.001 | -173.85 | 0.487 | Negative = better rank |
+| Ordered logit, pref FE + year FE (+ log_pop + log_gdp) | -49.56 | 172.4 | 0.77 | -111.19 | 0.672 | Separation-driven degeneracy |
+| Top-1 logit, pooled (+ log_pop + log_gdp) | +9.09 | 2.13 | < 0.001 (exact 1.9 × 10⁻⁵) | -12.75 | 0.707 | |
+| Top-1 logit, pref FE + year FE (+ log_pop + log_gdp) | +1,877.3 | (undefined) | (undefined) | -0.00 | 1.000 | Complete separation (pseudo-R² = 1 is a signature, not a fit) |
 
 *Prefecture-clustered standard errors (47 clusters, Liang-Zeger sandwich) for the pooled specifications; Fisher-information for the fixed-effect specifications, where prefecture FE renders further clustering mechanically redundant and where SE degeneracy is itself a diagnostic signature of complete separation. All specifications above include log-population and log-GDP as covariates by construction; the "pooled" label denotes the absence of prefecture and year fixed effects, not the absence of covariates. The two pooled rows above are numerically identical (coefficient and clustered SE) to the M3 (+ log GDP) row of Table 4. Fixed-effect specifications are reported for transparency but not interpreted as coefficient estimates; see Methods.*
 
@@ -252,13 +252,13 @@ All input data used in this study are publicly available. Prefecture rankings ar
 
 ### Table 4. Csurilla-style staged specification (2012-2022 tennou, n = 423)
 
-| Stage | Model | Host coefficient | SE | p |
-|---|---|---|---|---|
-| M1 | Host only | +5.61 (top-1) / -6.11 (rank) | 1.09 / 1.21 | < 0.001 / < 0.001 |
-| M2 | + log population | +10.90 (top-1) / -13.17 (rank) | 3.35 / 2.01 | 0.0011 / < 0.001 |
-| M3 | + log GDP | +9.09 (top-1) / -13.73 (rank) | 2.13 / 2.03 | < 0.001 / < 0.001 |
-| M4 | + prefecture FE | +498 / -116 | NaN / NaN | (degenerate) |
-| M5 | + year FE | +1,877 / -49.6 | NaN / 172 | (degenerate) |
+| Stage | Model | Host coefficient | SE | p | log-likelihood (top-1 / rank) | pseudo-R² (top-1 / rank) |
+|---|---|---|---|---|---|---|
+| M1 | Host only | +5.61 (top-1) / -6.11 (rank) | 1.09 / 1.21 | < 0.001 / < 0.001 | -23.50 / -308.20 | 0.461 / 0.091 |
+| M2 | + log population | +10.90 (top-1) / -13.17 (rank) | 3.35 / 2.01 | 0.0011 / < 0.001 | -14.83 / -176.49 | 0.660 / 0.479 |
+| M3 | + log GDP | +9.09 (top-1) / -13.73 (rank) | 2.13 / 2.03 | < 0.001 / < 0.001 | -12.75 / -173.85 | 0.707 / 0.487 |
+| M4 | + prefecture FE | +498 / -116 | NaN / NaN | (degenerate) | -3.43 / -112.51 | 0.921 / 0.668 |
+| M5 | + year FE | +1,877 / -49.6 | NaN / 172 | (degenerate) | -0.00 / -111.19 | 1.000 / 0.672 |
 
 *Standard errors are prefecture-clustered (47 clusters, Liang-Zeger sandwich) for M1-M3 and Fisher-information for M4/M5 (where prefecture FE renders clustering mechanically redundant and complete separation drives SEs to degeneracy). The M3 row is numerically identical (coefficient and clustered SE) to the corresponding pooled row of Table 2. The attenuation Csurilla & Fertő (2023) documented at the Olympics (host coefficient shrinks by ~45% from M1 to fully adjusted) is inverted at the Kokutai: M1 → M3 raises the top-1 coefficient by ~62% and the ordered-rank coefficient by ~125%. See Discussion for interpretation.*
 

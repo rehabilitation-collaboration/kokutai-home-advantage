@@ -18,17 +18,17 @@ host_mean_rank_when_ranked               1.3333333333333333
 
 [run_main_models cup=tennou]
   # pooled = prefecture-clustered SE (47 clusters); FE = Fisher info
-  ordered_pooled                           coef=-13.726475 se=2.030554 p=0.000000 n=423 converged=True llf=-173.8497 cov=cluster
-  ordered_prefFE_yearFE                    coef=-49.564877 se=172.446308 p=0.773789 n=423 converged=True llf=-111.1923 cov=nonrobust
-  logit_top1_pooled                        coef=+9.094158 se=2.125675 p=0.000019 n=423 converged=True llf=-12.7478 cov=cluster
-  logit_top1_prefFE_yearFE                 coef=+1877.278833 se=nan p=nan n=423 converged=True llf=-0.0001 cov=nonrobust
+  ordered_pooled                           coef=-13.726475 se=2.030554 p=0.000000 n=423 converged=True llf=-173.8497 pseudoR2=0.4871 cov=cluster
+  ordered_prefFE_yearFE                    coef=-49.564877 se=172.446308 p=0.773789 n=423 converged=True llf=-111.1923 pseudoR2=0.6720 cov=nonrobust
+  logit_top1_pooled                        coef=+9.094158 se=2.125675 p=0.000019 n=423 converged=True llf=-12.7478 pseudoR2=0.7073 cov=cluster
+  logit_top1_prefFE_yearFE                 coef=+1877.278833 se=nan p=nan n=423 converged=True llf=-0.0001 pseudoR2=1.0000 cov=nonrobust
 
 [run_main_models cup=kougou]
   # pooled = prefecture-clustered SE (47 clusters); FE = Fisher info
-  ordered_pooled                           coef=-11.561606 se=1.625316 p=0.000000 n=423 converged=True llf=-188.9096 cov=cluster
-  ordered_prefFE_yearFE                    coef=-56.499979 se=23.517797 p=0.016286 n=423 converged=False llf=-133.1568 cov=nonrobust
-  logit_top1_pooled                        coef=+9.187990 se=3.769527 p=0.014792 n=423 converged=True llf=-10.5411 cov=cluster
-  logit_top1_prefFE_yearFE                 coef=+20170.194062 se=nan p=nan n=423 converged=True llf=-0.0001 cov=nonrobust
+  ordered_pooled                           coef=-11.561606 se=1.625316 p=0.000000 n=423 converged=True llf=-188.9096 pseudoR2=0.4427 cov=cluster
+  ordered_prefFE_yearFE                    coef=-56.499979 se=23.517797 p=0.016286 n=423 converged=False llf=-133.1568 pseudoR2=0.6072 cov=nonrobust
+  logit_top1_pooled                        coef=+9.187990 se=3.769527 p=0.014792 n=423 converged=True llf=-10.5411 pseudoR2=0.7580 cov=cluster
+  logit_top1_prefFE_yearFE                 coef=+20170.194062 se=nan p=nan n=423 converged=True llf=-0.0001 pseudoR2=1.0000 cov=nonrobust
 
 [brant_partial_po_test cup=tennou is_host_int across rank thresholds]
   # Y<=j vs Y>j binary logit for each threshold, pref-clustered SE.

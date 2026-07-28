@@ -41,10 +41,12 @@ def main_models():
             results = analysis_main.run_main_models(cup=cup)
             for r in results:
                 cov = getattr(r.result_obj, "cov_type", "nonrobust")
+                prsq = float(getattr(r.result_obj, "prsquared", float("nan")))
                 f.write(
                     f"  {r.name:<40} coef={r.coef_is_host:+.6f} "
                     f"se={r.se_is_host:.6f} p={r.p_is_host:.6f} "
-                    f"n={r.n_obs} converged={r.converged} llf={r.llf:.4f} cov={cov}\n"
+                    f"n={r.n_obs} converged={r.converged} llf={r.llf:.4f} "
+                    f"pseudoR2={prsq:.4f} cov={cov}\n"
                 )
             f.write("\n")
 
@@ -157,10 +159,13 @@ def confounders_models():
             f.write(f"[run_staged_analysis dv={dv} tennou 2012-2022]\n")
             results = analysis_confounders.run_staged_analysis(cup="tennou", dv=dv)
             for r in results:
+                cov = getattr(r.result_obj, "cov_type", "nonrobust")
+                prsq = float(getattr(r.result_obj, "prsquared", float("nan")))
                 f.write(
                     f"  {r.name:<40} coef={r.coef_is_host:+.6f} "
                     f"se={r.se_is_host:.6f} p={r.p_is_host:.6f} "
-                    f"n={r.n_obs} converged={r.converged} llf={r.llf:.4f}\n"
+                    f"n={r.n_obs} converged={r.converged} llf={r.llf:.4f} "
+                    f"pseudoR2={prsq:.4f} cov={cov}\n"
                 )
             f.write("\n")
 
