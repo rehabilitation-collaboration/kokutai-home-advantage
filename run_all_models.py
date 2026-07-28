@@ -172,6 +172,25 @@ def confounders_models():
             f.write(f"[compute_attenuation dv={dv}]\n")
             att = analysis_confounders.compute_attenuation(results)
             f.write(f"{att.to_string()}\n\n")
+
+        # Finding #12: Tokyo (pref_code=13) exclusion sensitivity
+        for dv in ["top1", "rank_ordinal"]:
+            f.write(f"[run_staged_analysis dv={dv} tennou 2012-2022 EXCLUDE Tokyo (pref=13)]\n")
+            f.write("  # Csurilla-reverse mechanism quantitative check: Tokyo dominates\n")
+            f.write("  # non-host top-1 (3/3 = 2016/2017/2022) so removal purges the\n")
+            f.write("  # non-host championship mass; expect host coef to strengthen.\n")
+            results = analysis_confounders.run_staged_analysis(cup="tennou", dv=dv,
+                                                                exclude_pref_codes=[13])
+            for r in results:
+                cov = getattr(r.result_obj, "cov_type", "nonrobust")
+                prsq = float(getattr(r.result_obj, "prsquared", float("nan")))
+                f.write(
+                    f"  {r.name:<40} coef={r.coef_is_host:+.6f} "
+                    f"se={r.se_is_host:.6f} p={r.p_is_host:.6f} "
+                    f"n={r.n_obs} converged={r.converged} llf={r.llf:.4f} "
+                    f"pseudoR2={prsq:.4f} cov={cov}\n"
+                )
+            f.write("\n")
     print(f"[OK] {out}")
 
 

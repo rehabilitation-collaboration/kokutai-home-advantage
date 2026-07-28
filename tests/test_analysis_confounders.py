@@ -105,6 +105,58 @@ class TestStagedClusteredSE:
         assert abs(main["ordered_pooled"].se_is_host - stg_ord["ordered_M3_add_gdp"].se_is_host) < 1e-6
 
 
+class TestTokyoExclusion:
+    """Finding #12: Tokyo (pref_code=13) exclusion sensitivity.
+
+    Csurilla-reverse hypothesis: Tokyo が large-pop/high-GDP かつ non-host year の
+    top-1 を独占 (3/3 = 2016/2017/2022) → 除外すると non-host championship mass が
+    消えて host coef が larger になるはず。実測で確認。
+    """
+
+    def test_exclusion_removes_tokyo_cells(self):
+        from src.analysis_main import build_analysis_frame
+        df_all = build_analysis_frame(cup="tennou")
+        df_notok = build_analysis_frame(cup="tennou", exclude_pref_codes=[13])
+        assert len(df_all) - len(df_notok) == 9, (
+            f"Expected exactly 9 Tokyo cells (9 years × 1 pref) to be removed"
+        )
+        assert (df_notok["pref_code"] != 13).all()
+
+    def test_tokyo_exclusion_removes_all_nonhost_top1(self):
+        # Tokyo は 2016/2017/2022 の non-host top-1 winner だった 3 件 = 全 non-host
+        # top-1 count 3 → 0 になるはず
+        from src.analysis_main import build_analysis_frame
+        df_notok = build_analysis_frame(cup="tennou", exclude_pref_codes=[13])
+        n_nonhost_top1 = int(((~df_notok["is_host"]) & (df_notok["top1"] == 1)).sum())
+        assert n_nonhost_top1 == 0, (
+            f"Expected 0 non-host top-1 after Tokyo exclusion but got {n_nonhost_top1}"
+        )
+
+    def test_tokyo_exclusion_strengthens_host_coef_top1(self):
+        # Csurilla-reverse の quantitative confirmation
+        all_m3 = next(r for r in run_staged_analysis(cup="tennou", dv="top1")
+                      if r.name.endswith("_M3_add_gdp"))
+        notok_m3 = next(r for r in run_staged_analysis(cup="tennou", dv="top1",
+                                                        exclude_pref_codes=[13])
+                        if r.name.endswith("_M3_add_gdp"))
+        assert notok_m3.coef_is_host > all_m3.coef_is_host, (
+            f"Tokyo-excluded host coef should exceed full-sample: "
+            f"full={all_m3.coef_is_host:.4f} vs no-Tokyo={notok_m3.coef_is_host:.4f}"
+        )
+
+    def test_tokyo_exclusion_strengthens_host_coef_rank(self):
+        # ordered rank: 負号なので "larger in magnitude" = "より負" を検証
+        all_m3 = next(r for r in run_staged_analysis(cup="tennou", dv="rank_ordinal")
+                      if r.name.endswith("_M3_add_gdp"))
+        notok_m3 = next(r for r in run_staged_analysis(cup="tennou", dv="rank_ordinal",
+                                                        exclude_pref_codes=[13])
+                        if r.name.endswith("_M3_add_gdp"))
+        assert abs(notok_m3.coef_is_host) > abs(all_m3.coef_is_host), (
+            f"Tokyo-excluded |ordered coef| should exceed full-sample: "
+            f"full={all_m3.coef_is_host:.4f} vs no-Tokyo={notok_m3.coef_is_host:.4f}"
+        )
+
+
 class TestComputeAttenuation:
     def test_M1_attenuation_zero(self):
         results = run_staged_analysis(cup="tennou", dv="rank_ordinal")

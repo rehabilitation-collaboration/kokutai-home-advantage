@@ -100,15 +100,21 @@ def run_staged_analysis(
     year_max: int = 2022,
     cup: Literal["tennou", "kougou", "both"] = "tennou",
     dv: Dv = "rank_ordinal",
+    exclude_pref_codes: list[int] | None = None,
 ) -> list[ModelResult]:
     """段階投入 5 モデルを実行 (DV は 1 種類ずつ・両方欲しければ 2 回呼ぶ)
 
-    Finding #17 対応: M1-M3 (FE なし) は prefecture-clustered SE (47 clusters)。
-    M4/M5 (pref FE 含む) は Fisher-info のまま (pref FE と cluster が冗長 +
-    complete separation で SE 発散するため clustered 化しても意味なし)。
-    Table 2 pooled 行と Table 4 M3 行の数値一貫性を保つため。
+    Finding #17 対応: M1-M3 (FE なし) は prefecture-clustered SE (47 clusters
+    または exclude_pref_codes 除外後 のクラスタ数)。M4/M5 (pref FE 含む) は
+    Fisher-info のまま (pref FE と cluster が冗長 + complete separation で
+    SE 発散するため clustered 化しても意味なし)。Table 2 pooled 行と
+    Table 4 M3 行の数値一貫性を保つため。
+
+    Finding #12 対応: exclude_pref_codes で Tokyo 等 non-host outlier の除外
+    sensitivity 実行可能 (default None = 全県)。
     """
-    df = build_analysis_frame(year_min=year_min, year_max=year_max, cup=cup)
+    df = build_analysis_frame(year_min=year_min, year_max=year_max, cup=cup,
+                              exclude_pref_codes=exclude_pref_codes)
     fitter = fit_staged_ordered_logit if dv == "rank_ordinal" else fit_staged_logit_top1
     pref_clusters = df["pref_code"]
     results = []

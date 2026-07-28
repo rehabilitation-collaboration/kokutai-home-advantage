@@ -50,6 +50,7 @@ def build_analysis_frame(
     year_min: int = 2012,
     year_max: int = 2022,
     cup: Cup = "tennou",
+    exclude_pref_codes: list[int] | None = None,
 ) -> pd.DataFrame:
     """主モデル用の分析フレーム構築
 
@@ -58,6 +59,8 @@ def build_analysis_frame(
     - cup で filter (both は tennou+kougou 統合・cup dummy を追加可)
     - rank NA → RANK_OUTSIDE (9)・top1/top8 派生
     - log_pop/log_gdp not NA 保証
+    - exclude_pref_codes: 指定の prefecture code を全て除外 (Finding #12 Tokyo=13
+      exclusion sensitivity 用・None なら全県)
     """
     if panel is None:
         panel = merge_confounders()
@@ -71,6 +74,8 @@ def build_analysis_frame(
     )
     if cup != "both":
         mask &= panel["cup"] == cup
+    if exclude_pref_codes:
+        mask &= ~panel["pref_code"].isin(exclude_pref_codes)
     df = panel[mask].copy()
     df["rank_ordinal"] = df["rank"].fillna(RANK_OUTSIDE).astype(int)
     df["top1"] = (df["rank"] == 1).astype(int)
