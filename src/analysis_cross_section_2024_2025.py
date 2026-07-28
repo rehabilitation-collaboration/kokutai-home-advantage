@@ -63,6 +63,7 @@ def build_cross_section_frame(
     targets: list[tuple[int, str]] | None = None,
     include_winter: bool = True,
     drop_unclassified: bool = True,
+    category_variant: str = "default",
 ) -> pd.DataFrame:
     """4 dataset を stack + Balmer2003 3 分類を付与
 
@@ -70,6 +71,9 @@ def build_cross_section_frame(
         targets: (kai_num, cup) の list。省略時は 78+79 × tennou+kougou の 4件
         include_winter: 冬季3競技を含めるか (default True・Balmer2003 は Winter/Summer 別分析だが本論では pooled)
         drop_unclassified: sport_classifier で分類不能な競技行を除外するか
+        category_variant: 分類 variant (default / pure_judged / no_combat / combat_to_semi)
+            GPT round-1 Finding #6 感度分析用。詳細は sport_classifier.get_category 参照。
+            "no_combat" は combat sport 9 を意図的に None 返却 = 除外対象。
 
     Returns:
         long format DataFrame・以下の列を持つ:
@@ -95,14 +99,20 @@ def build_cross_section_frame(
     if not include_winter:
         stacked = stacked[~stacked["is_winter"]]
 
-    stacked["category"] = stacked["sport"].map(get_category)
+    stacked["category"] = stacked["sport"].map(
+        lambda s: get_category(s, variant=category_variant)
+    )
     if drop_unclassified:
         unclassified = stacked["category"].isna()
         if unclassified.any():
-            missing = sorted(stacked.loc[unclassified, "sport"].unique().tolist())
-            raise ValueError(
-                f"Unclassified sports found (add to sport_classifier.SPORT_CATEGORIES): {missing}"
-            )
+            if category_variant == "no_combat":
+                # no_combat variant では combat sport 9 の意図的除外 = drop で正しい挙動
+                stacked = stacked[stacked["category"].notna()].reset_index(drop=True)
+            else:
+                missing = sorted(stacked.loc[unclassified, "sport"].unique().tolist())
+                raise ValueError(
+                    f"Unclassified sports found (add to sport_classifier.SPORT_CATEGORIES): {missing}"
+                )
 
     stacked["is_subjective"] = (stacked["category"] == "subjective").astype(int)
     stacked["is_semi"] = (stacked["category"] == "semi_subjective").astype(int)
@@ -244,6 +254,34 @@ def run_cross_section_models(include_winter: bool = True) -> list[CrossSectionRe
         fit_cross_section_ols(df, dv="score", with_semi_interaction=True, name="cross_section_with_semi"),
         fit_cross_section_ols(df, dv="log_score", with_semi_interaction=False, name="cross_section_log_baseline"),
     ]
+
+
+def run_cross_section_models_by_variant(
+    variants: tuple[str, ...] = ("pure_judged", "no_combat", "combat_to_semi"),
+    include_winter: bool = True,
+) -> dict[str, CrossSectionResult]:
+    """GPT round-1 Finding #6 応答: 各 variant で primary spec (semi 除外・obj-vs-subj pure)
+    を再推定して β_HS の分類 sensitivity を検証する。
+
+    Table 5d の 3 行分の数値を返す。default variant は run_cross_section_models で提供済み
+    (primary +20.27・SE 9.15・p 0.027・n 4744)。
+
+    Args:
+        variants: 対象 variant 名 tuple (sport_classifier._VARIANT_OVERRIDES キー)
+        include_winter: 冬季3競技を含めるか
+    """
+    results = {}
+    for v in variants:
+        df = build_cross_section_frame(include_winter=include_winter, category_variant=v)
+        df_obj_subj = df[df["is_semi"] == 0].reset_index(drop=True)
+        result = fit_cross_section_ols(
+            df_obj_subj,
+            dv="score",
+            with_semi_interaction=False,
+            name=f"cross_section_primary_{v}",
+        )
+        results[v] = result
+    return results
 
 
 def wild_cluster_bootstrap(

@@ -316,3 +316,79 @@ class TestSportCupInteraction:
         )
         assert result_sport_cup.coef_interaction > 0  # direction preserved
         assert abs(result_sport_cup.coef_interaction - result_primary.coef_interaction) < 5.0
+
+
+class TestSportCategoryVariants:
+    """GPT round-1 Finding #6 応答: 3 variant × primary spec 分類感度分析
+
+    default (Balmer2003 準拠 subj=11) の subjective 定義への感度を検証する 3 variant:
+    - pure_judged: subjective を「純粋採点」のみに narrow (subj=4)・combat 7 は objective 降格
+    - no_combat: combat sport 9 を分析除外 (subj=体操+馬術=2 のみ)
+    - combat_to_semi: フェンシング/レスリング/相撲 を semi_subjective 化 (subj=8)
+    """
+
+    def test_pure_judged_narrows_subjective_to_4(self):
+        from src.sport_classifier import get_category
+        # 純粋採点 4: 体操 + 空手道 + なぎなた + 馬術
+        for sport in ("体操", "空手道", "なぎなた", "馬術"):
+            assert get_category(sport, variant="pure_judged") == "subjective"
+        # combat 7 は objective 降格
+        for sport in ("剣道", "柔道", "銃剣道", "ボクシング", "フェンシング", "レスリング", "相撲"):
+            assert get_category(sport, variant="pure_judged") == "objective"
+
+    def test_no_combat_drops_9_combat_sports(self):
+        from src.sport_classifier import get_category
+        # combat 9 は None 返却 (分析除外)
+        for sport in ("剣道", "柔道", "空手道", "銃剣道", "なぎなた",
+                      "ボクシング", "フェンシング", "レスリング", "相撲"):
+            assert get_category(sport, variant="no_combat") is None
+        # 残り subjective は体操 + 馬術 のみ
+        assert get_category("体操", variant="no_combat") == "subjective"
+        assert get_category("馬術", variant="no_combat") == "subjective"
+
+    def test_combat_to_semi_moves_3_sports_to_semi(self):
+        from src.sport_classifier import get_category
+        # fencing/wrestling/sumo → semi_subjective
+        for sport in ("フェンシング", "レスリング", "相撲"):
+            assert get_category(sport, variant="combat_to_semi") == "semi_subjective"
+        # 他の combat 6 は subjective のまま
+        for sport in ("剣道", "柔道", "空手道", "銃剣道", "なぎなた", "ボクシング"):
+            assert get_category(sport, variant="combat_to_semi") == "subjective"
+
+    def test_default_variant_unchanged_regression(self):
+        # 既存 SPORT_CATEGORIES が variant="default" 経由で完全再現される
+        from src.sport_classifier import get_category, SPORT_CATEGORIES
+        for sport in SPORT_CATEGORIES:
+            assert get_category(sport, variant="default") == SPORT_CATEGORIES[sport]
+
+    def test_build_cross_section_frame_variant_no_combat_drops_rows(self):
+        # no_combat variant は combat 9 sport の行を drop する
+        df_default = build_cross_section_frame(category_variant="default")
+        df_no_combat = build_cross_section_frame(category_variant="no_combat")
+        assert len(df_no_combat) < len(df_default)
+        combat_sports = {"剣道", "柔道", "空手道", "銃剣道", "なぎなた",
+                         "ボクシング", "フェンシング", "レスリング", "相撲"}
+        assert set(df_no_combat["sport"].unique()).isdisjoint(combat_sports)
+
+
+class TestRunCrossSectionModelsByVariant:
+    """3 variant × primary spec で β_HS 方向頑健性を検証"""
+
+    def test_returns_3_variants(self):
+        from src.analysis_cross_section_2024_2025 import run_cross_section_models_by_variant
+        results = run_cross_section_models_by_variant()
+        assert set(results.keys()) == {"pure_judged", "no_combat", "combat_to_semi"}
+
+    def test_all_variants_positive_beta_HxS_direction(self):
+        # 全 3 variant で β_HS > 0 (primary と direction 一致)
+        from src.analysis_cross_section_2024_2025 import run_cross_section_models_by_variant
+        results = run_cross_section_models_by_variant()
+        for v, r in results.items():
+            assert r.coef_interaction > 0, f"{v}: coef_HxS={r.coef_interaction}"
+
+    def test_no_combat_has_smaller_n(self):
+        # no_combat variant は combat sport drop で n が最小
+        from src.analysis_cross_section_2024_2025 import run_cross_section_models_by_variant
+        results = run_cross_section_models_by_variant()
+        assert results["no_combat"].n_obs < results["pure_judged"].n_obs
+        assert results["no_combat"].n_obs < results["combat_to_semi"].n_obs

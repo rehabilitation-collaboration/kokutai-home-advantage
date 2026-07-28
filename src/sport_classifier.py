@@ -84,10 +84,69 @@ SPORT_ALIASES: dict[str, str] = {
 # 冬季3競技 (別集計・冬季小計/冬季順位を持つ)
 WINTER_SPORTS: frozenset[str] = frozenset({"スキー競技", "スケート競技", "アイスホッケー"})
 
+# --- GPT round-1 Finding #6 応答: 分類感度分析 3 variant -----------------------
+# default = 現行 SPORT_CATEGORIES (Balmer2003 3 分類・subjective 11 = combat 込)
+# 追加 3 variant は default からの override / drop で表現し、default 辞書は破壊しない。
+#
+# combat sport = subjective のうち格闘系 9 競技 (剣道/柔道/空手道/銃剣道/なぎなた/
+#   ボクシング/フェンシング/レスリング/相撲)。GPT round-1 Finding #6 3 案:
+#   (1) pure_judged   : subjective を "純粋採点"(体操/空手道/なぎなた/馬術) のみに narrow
+#                        combat 7 (剣道/柔道/銃剣道/ボクシング/フェンシング/レスリング/相撲)
+#                        は objective 降格 (勝敗が審判判定でも "採点" ではない)
+#   (2) no_combat     : combat 9 を分析除外 (subjective = 体操+馬術 の 2 のみで β_HS を測る)
+#   (3) combat_to_semi: フェンシング/レスリング/相撲 を semi_subjective に移す
+#                        (ポイント制・電子審判等でルール明確・戦闘的要素あり = semi 相当)
+_COMBAT_SPORTS: frozenset[str] = frozenset({
+    "剣道", "柔道", "空手道", "銃剣道", "なぎなた",
+    "ボクシング", "フェンシング", "レスリング", "相撲",
+})
 
-def get_category(sport_name: str) -> Category | None:
-    """競技名 → カテゴリ (alias 経由で解決)。未登録は None を返す"""
+# Variant 1 (pure_judged): subjective を純粋採点のみに narrow
+# combat 7 (空手道/なぎなた 除く) を objective 降格
+SPORT_CATEGORIES_PURE_JUDGED: dict[str, Category] = {
+    "剣道": "objective",
+    "柔道": "objective",
+    "銃剣道": "objective",
+    "ボクシング": "objective",
+    "フェンシング": "objective",
+    "レスリング": "objective",
+    "相撲": "objective",
+}
+
+# Variant 2 (no_combat): combat 9 を分析除外 (get_category 返り値 = None)
+_NO_COMBAT_DROP: frozenset[str] = _COMBAT_SPORTS
+
+# Variant 3 (combat_to_semi): フェンシング/レスリング/相撲 を semi_subjective 化
+SPORT_CATEGORIES_COMBAT_TO_SEMI: dict[str, Category] = {
+    "フェンシング": "semi_subjective",
+    "レスリング": "semi_subjective",
+    "相撲": "semi_subjective",
+}
+
+_VARIANT_OVERRIDES: dict[str, dict[str, Category]] = {
+    "default": {},
+    "pure_judged": SPORT_CATEGORIES_PURE_JUDGED,
+    "no_combat": {},  # override 経路でなく drop 経路で処理 (下の get_category 分岐)
+    "combat_to_semi": SPORT_CATEGORIES_COMBAT_TO_SEMI,
+}
+
+VariantName = Literal["default", "pure_judged", "no_combat", "combat_to_semi"]
+
+
+def get_category(sport_name: str, variant: str = "default") -> Category | None:
+    """競技名 → カテゴリ (alias 経由で解決)。未登録は None を返す
+
+    Args:
+        sport_name: JSPO xls の競技名 (alias 前提)
+        variant: 分類 variant (default / pure_judged / no_combat / combat_to_semi)
+            GPT round-1 Finding #6 感度分析用。詳細は _VARIANT_OVERRIDES 上のコメント参照
+    """
     canonical = SPORT_ALIASES.get(sport_name, sport_name)
+    if variant == "no_combat" and canonical in _NO_COMBAT_DROP:
+        return None
+    overrides = _VARIANT_OVERRIDES.get(variant, {})
+    if canonical in overrides:
+        return overrides[canonical]
     return SPORT_CATEGORIES.get(canonical)
 
 
