@@ -1,0 +1,14 @@
+beautifulsoup4==4.15.0
+markdown==3.10.2
+matplotlib==3.11.1
+lxml==6.1.1
+numpy==2.5.1
+pandas==3.0.5
+patsy==1.0.2
+pdfplumber==0.11.10
+pytest==9.1.1
+python-calamine==0.8.2
+requests==2.34.2
+scipy==1.18.0
+statsmodels==0.14.6
+weasyprint==69.0

@@ -1,0 +1,390 @@
+[
+  {
+    "ref_number": 1,
+    "status": "MATCH",
+    "raw_text": "Balmer NJ, Nevill AM, Williams AM. Home advantage in the Winter Olympics (1908-1998). *J Sports Sci*. 2001;19(2):129-139. doi:10.1080/026404101300036334",
+    "mismatched_fields": [],
+    "manuscript_data": {
+      "authors": "Balmer NJ, Nevill AM, Williams AM",
+      "title": "Home advantage in the Winter Olympics (1908-1998)",
+      "journal": "",
+      "year": "2001",
+      "volume": "19",
+      "pages": "129-139",
+      "doi": "10.1080/026404101300036334"
+    },
+    "crossref_data": {
+      "title": "Home advantage in the Winter Olympics (1908-1998)",
+      "journal": "Journal of Sports Sciences",
+      "year": "2001",
+      "volume": "19",
+      "page": "129-139",
+      "doi": "10.1080/026404101300036334",
+      "authors": "Balmer NJ, Nevill AM, Williams AM"
+    },
+    "crossref_doi": "10.1080/026404101300036334",
+    "corrected_citation": "Balmer NJ, Nevill AM, Williams AM. Home advantage in the Winter Olympics (1908-1998). Journal of Sports Sciences. 2001;19:129-139. doi:10.1080/026404101300036334.",
+    "is_retracted": false,
+    "retraction_doi": "",
+    "url_status": 0,
+    "notes": [
+      "Resolved via DOI (high confidence)"
+    ]
+  },
+  {
+    "ref_number": 2,
+    "status": "MATCH",
+    "raw_text": "Wilson D, Ramchandani G. A comparative analysis of home advantage in the Olympic and Paralympic Games 1988-2018. *J Global Sport Manage*. 2021;6(2):170-184. doi:10.1080/24704067.2018.1537676",
+    "mismatched_fields": [],
+    "manuscript_data": {
+      "authors": "Wilson D, Ramchandani G",
+      "title": "A comparative analysis of home advantage in the Olympic and Paralympic Games 1988-2018",
+      "journal": "",
+      "year": "2021",
+      "volume": "6",
+      "pages": "170-184",
+      "doi": "10.1080/24704067.2018.1537676"
+    },
+    "crossref_data": {
+      "title": "A Comparative Analysis of Home Advantage in the Olympic and Paralympic Games 1988–2018",
+      "journal": "Journal of Global Sport Management",
+      "year": "2021",
+      "volume": "6",
+      "page": "170-184",
+      "doi": "10.1080/24704067.2018.1537676",
+      "authors": "Wilson D, Ramchandani G"
+    },
+    "crossref_doi": "10.1080/24704067.2018.1537676",
+    "corrected_citation": "Wilson D, Ramchandani G. A Comparative Analysis of Home Advantage in the Olympic and Paralympic Games 1988–2018. Journal of Global Sport Management. 2021;6:170-184. doi:10.1080/24704067.2018.1537676.",
+    "is_retracted": false,
+    "retraction_doi": "",
+    "url_status": 0,
+    "notes": [
+      "Resolved via DOI (high confidence)"
+    ]
+  },
+  {
+    "ref_number": 3,
+    "status": "MATCH",
+    "raw_text": "Balmer NJ, Nevill AM, Williams AM. Modelling home advantage in the Summer Olympic Games. *J Sports Sci*. 2003;21(6):469-478. doi:10.1080/0264041031000101890",
+    "mismatched_fields": [],
+    "manuscript_data": {
+      "authors": "Balmer NJ, Nevill AM, Williams AM",
+      "title": "Modelling home advantage in the Summer Olympic Games",
+      "journal": "",
+      "year": "2003",
+      "volume": "21",
+      "pages": "469-478",
+      "doi": "10.1080/0264041031000101890"
+    },
+    "crossref_data": {
+      "title": "Modelling home advantage in the Summer Olympic Games",
+      "journal": "Journal of Sports Sciences",
+      "year": "2003",
+      "volume": "21",
+      "page": "469-478",
+      "doi": "10.1080/0264041031000101890",
+      "authors": "BALMER N, NEVILL A, WILLIAMS A"
+    },
+    "crossref_doi": "10.1080/0264041031000101890",
+    "corrected_citation": "BALMER N, NEVILL A, WILLIAMS A. Modelling home advantage in the Summer Olympic Games. Journal of Sports Sciences. 2003;21:469-478. doi:10.1080/0264041031000101890.",
+    "is_retracted": false,
+    "retraction_doi": "",
+    "url_status": 0,
+    "notes": [
+      "Resolved via DOI (high confidence)"
+    ]
+  },
+  {
+    "ref_number": 4,
+    "status": "MISMATCH",
+    "raw_text": "Suetsugu M. [Issues emerging from the karate competition results of the National Sports Festival]. *Bulletin of the Institute of Liberal Arts and Sciences, Komazawa University*. 2024;18:137-153. CiNii: https://cir.nii.ac.jp/crid/1390303254959134848 (Article in Japanese; not indexed on Crossref).",
+    "mismatched_fields": [
+      "title",
+      "year",
+      "pages",
+      "author_1_surname"
+    ],
+    "manuscript_data": {
+      "authors": "Suetsugu M",
+      "title": "[Issues emerging from the karate competition results of the National Sports Festival]",
+      "journal": "",
+      "year": "2024",
+      "volume": "18",
+      "pages": "137-153",
+      "doi": ""
+    },
+    "crossref_data": {
+      "title": "The Competition Regime: Issues Emerging from Enforcement of Competition Law in Vietnam",
+      "journal": "Economic Competition Regime: Raising Issues and Lessons from Germany",
+      "year": "2014",
+      "volume": "",
+      "page": "27-42",
+      "doi": "10.5771/9783845257105_27",
+      "authors": "Nghia Tang V"
+    },
+    "crossref_doi": "10.5771/9783845257105_27",
+    "corrected_citation": "Nghia Tang V. The Competition Regime: Issues Emerging from Enforcement of Competition Law in Vietnam. Economic Competition Regime: Raising Issues and Lessons from Germany. 2014:27-42. doi:10.5771/9783845257105_27.",
+    "is_retracted": false,
+    "retraction_doi": "",
+    "url_status": 0,
+    "notes": [
+      "Resolved via title search (lower confidence)"
+    ]
+  },
+  {
+    "ref_number": 5,
+    "status": "MISMATCH",
+    "raw_text": "Suetsugu M. [Visualization and structural analysis of the issues in karate competition at the National Sports Festival]. *Bulletin of the Institute of Liberal Arts and Sciences, Komazawa University*. 2025;19:103-117. doi:10.69200/0002033886 (Article in Japanese; Komazawa institutional DOI, not indexed on Crossref).",
+    "mismatched_fields": [
+      "title",
+      "year",
+      "volume",
+      "pages",
+      "author_count",
+      "author_1_surname"
+    ],
+    "manuscript_data": {
+      "authors": "Suetsugu M",
+      "title": "[Visualization and structural analysis of the issues in karate competition at the National Sports Festival]",
+      "journal": "",
+      "year": "2025",
+      "volume": "19",
+      "pages": "103-117",
+      "doi": "10.69200/0002033886"
+    },
+    "crossref_data": {
+      "title": "An Analysis on the Competition Performance of Korean Traditional Sports \"Taekkyon\" in the Korean National Sports Festival",
+      "journal": "Korean Journal of Sports Science",
+      "year": "2020",
+      "volume": "29",
+      "page": "523-538",
+      "doi": "10.35159/kjss.2020.10.29.5.523",
+      "authors": "An J, Jang K, Lee S"
+    },
+    "crossref_doi": "10.35159/kjss.2020.10.29.5.523",
+    "corrected_citation": "An J, Jang K, Lee S. An Analysis on the Competition Performance of Korean Traditional Sports \"Taekkyon\" in the Korean National Sports Festival. Korean Journal of Sports Science. 2020;29:523-538. doi:10.35159/kjss.2020.10.29.5.523.",
+    "is_retracted": false,
+    "retraction_doi": "",
+    "url_status": 0,
+    "notes": [
+      "Resolved via title search (lower confidence)"
+    ]
+  },
+  {
+    "ref_number": 6,
+    "status": "MATCH",
+    "raw_text": "Funahashi H, Hibino M, Ishiguro E, Mano Y. Determinants of success at the National Sports Festival. *Japanese Journal of Sport Management*. 2016;8(1):17-33. doi:10.5225/jjsm.2016-002 (Article in Japanese; English title from J-STAGE record).",
+    "mismatched_fields": [],
+    "manuscript_data": {
+      "authors": "Funahashi H, Hibino M, Ishiguro E, Mano Y",
+      "title": "Determinants of success at the National Sports Festival",
+      "journal": "",
+      "year": "2016",
+      "volume": "8",
+      "pages": "17-33",
+      "doi": "10.5225/jjsm.2016-002"
+    },
+    "crossref_data": {
+      "title": "Determinants of Success at the National Sports Festival",
+      "journal": "Japanese Journal of Sport Management",
+      "year": "2016",
+      "volume": "8",
+      "page": "17-33",
+      "doi": "10.5225/jjsm.2016-002",
+      "authors": "Funahashi H, Hibino M, Ishiguro E, Mano Y"
+    },
+    "crossref_doi": "10.5225/jjsm.2016-002",
+    "corrected_citation": "Funahashi H, Hibino M, Ishiguro E, Mano Y. Determinants of Success at the National Sports Festival. Japanese Journal of Sport Management. 2016;8:17-33. doi:10.5225/jjsm.2016-002.",
+    "is_retracted": false,
+    "retraction_doi": "",
+    "url_status": 0,
+    "notes": [
+      "Resolved via DOI (high confidence)"
+    ]
+  },
+  {
+    "ref_number": 7,
+    "status": "MANUAL",
+    "raw_text": "Chiba T. [Factors underlying host-prefecture victories at the National Athletic Meet]. *Proceedings of the Japanese Society of Physical Education*. 1987;38a:204. doi:10.20693/jspeconf.38a.0_204 (Japanese).",
+    "mismatched_fields": [],
+    "manuscript_data": {
+      "authors": "Chiba T",
+      "title": "[Factors underlying host-prefecture victories at the National Athletic Meet]",
+      "journal": "",
+      "year": "1987",
+      "volume": "38",
+      "pages": "",
+      "doi": "10.20693/jspeconf.38a.0_204"
+    },
+    "crossref_data": {},
+    "crossref_doi": "",
+    "corrected_citation": "",
+    "is_retracted": false,
+    "retraction_doi": "",
+    "url_status": 0,
+    "notes": [
+      "Title search returned low-confidence match (overlap=17%). Manual check required."
+    ]
+  },
+  {
+    "ref_number": 8,
+    "status": "MANUAL",
+    "raw_text": "Kim T. [KSOC national comprehensive sports competition host-city 20% bonus regulation]. *Munhwa Ilbo*. Published 2025-10-13. https://v.daum.net/v/20251013192536045 (Korean).",
+    "mismatched_fields": [],
+    "manuscript_data": {
+      "authors": "Kim T",
+      "title": "[KSOC national comprehensive sports competition host-city 20% bonus regulation]",
+      "journal": "",
+      "year": "2025",
+      "volume": "",
+      "pages": "",
+      "doi": ""
+    },
+    "crossref_data": {},
+    "crossref_doi": "",
+    "corrected_citation": "",
+    "is_retracted": false,
+    "retraction_doi": "",
+    "url_status": 0,
+    "notes": [
+      "Title search returned low-confidence match (overlap=20%). Manual check required."
+    ]
+  },
+  {
+    "ref_number": 9,
+    "status": "MATCH",
+    "raw_text": "Csurilla G, Fertő I. The less obvious effect of hosting the Olympics on sporting performance. *Scientific Reports*. 2023;13:819. doi:10.1038/s41598-022-27259-8",
+    "mismatched_fields": [],
+    "manuscript_data": {
+      "authors": "Csurilla G, Fertő I",
+      "title": "The less obvious effect of hosting the Olympics on sporting performance",
+      "journal": "",
+      "year": "2023",
+      "volume": "13",
+      "pages": "",
+      "doi": "10.1038/s41598-022-27259-8"
+    },
+    "crossref_data": {
+      "title": "The less obvious effect of hosting the Olympics on sporting performance",
+      "journal": "Scientific Reports",
+      "year": "2023",
+      "volume": "13",
+      "page": "819",
+      "doi": "10.1038/s41598-022-27259-8",
+      "authors": "Csurilla G, Fertő I"
+    },
+    "crossref_doi": "10.1038/s41598-022-27259-8",
+    "corrected_citation": "Csurilla G, Fertő I. The less obvious effect of hosting the Olympics on sporting performance. Scientific Reports. 2023;13:819. doi:10.1038/s41598-022-27259-8.",
+    "is_retracted": false,
+    "retraction_doi": "",
+    "url_status": 0,
+    "notes": [
+      "Resolved via DOI (high confidence)"
+    ]
+  },
+  {
+    "ref_number": 10,
+    "status": "MATCH",
+    "raw_text": "Nomura R. Influence of crowd size on home advantage in the Japanese football league. *Frontiers in Sports and Active Living*. 2022;4:927774. doi:10.3389/fspor.2022.927774",
+    "mismatched_fields": [],
+    "manuscript_data": {
+      "authors": "Nomura R",
+      "title": "Influence of crowd size on home advantage in the Japanese football league",
+      "journal": "",
+      "year": "2022",
+      "volume": "4",
+      "pages": "",
+      "doi": "10.3389/fspor.2022.927774"
+    },
+    "crossref_data": {
+      "title": "Influence of crowd size on home advantage in the Japanese football league",
+      "journal": "Frontiers in Sports and Active Living",
+      "year": "2022",
+      "volume": "4",
+      "page": "927774",
+      "doi": "10.3389/fspor.2022.927774",
+      "authors": "Nomura R"
+    },
+    "crossref_doi": "10.3389/fspor.2022.927774",
+    "corrected_citation": "Nomura R. Influence of crowd size on home advantage in the Japanese football league. Frontiers in Sports and Active Living. 2022;4:927774. doi:10.3389/fspor.2022.927774.",
+    "is_retracted": false,
+    "retraction_doi": "",
+    "url_status": 0,
+    "notes": [
+      "Resolved via DOI (high confidence)"
+    ]
+  },
+  {
+    "ref_number": 11,
+    "status": "MISMATCH",
+    "raw_text": "Lan T, Yu X. [Theoretical and empirical research on the characteristics of the host effect at the National Games of China]. *Journal of Shenyang Sport University*. 2012;31(4):1-5. Abstract retrieved from https://m.fx361.com/news/2012/1109/12534183.html (Article in Chinese; Chinese-local journal, not indexed on Crossref; primary text not accessible outside Chinese academic networks).",
+    "mismatched_fields": [
+      "title",
+      "year",
+      "volume",
+      "pages",
+      "author_count",
+      "author_1_surname",
+      "author_2_surname"
+    ],
+    "manuscript_data": {
+      "authors": "Lan T, Yu X",
+      "title": "[Theoretical and empirical research on the characteristics of the host effect at the National Games of China]",
+      "journal": "",
+      "year": "2012",
+      "volume": "31",
+      "pages": "1-5",
+      "doi": ""
+    },
+    "crossref_data": {
+      "title": "A Theoretical Exploration and Empirical Research on the Fellow-Townsman Reference Effect in China",
+      "journal": "Advances in Psychological Science",
+      "year": "2013",
+      "volume": "20",
+      "page": "1237-1242",
+      "doi": "10.3724/sp.j.1042.2012.01237",
+      "authors": "JIANG Y, ZHANG H, ZHANG P"
+    },
+    "crossref_doi": "10.3724/sp.j.1042.2012.01237",
+    "corrected_citation": "JIANG Y, ZHANG H, ZHANG P. A Theoretical Exploration and Empirical Research on the Fellow-Townsman Reference Effect in China. Advances in Psychological Science. 2013;20:1237-1242. doi:10.3724/sp.j.1042.2012.01237.",
+    "is_retracted": false,
+    "retraction_doi": "",
+    "url_status": 0,
+    "notes": [
+      "Resolved via title search (lower confidence)"
+    ]
+  },
+  {
+    "ref_number": 12,
+    "status": "MATCH",
+    "raw_text": "Zitzewitz E. Nationalism in winter sports judging and its lessons for organizational decision making. *J Econ Manage Strategy*. 2006;15(1):67-99. doi:10.1111/j.1530-9134.2006.00092.x\n\n---",
+    "mismatched_fields": [],
+    "manuscript_data": {
+      "authors": "Zitzewitz E",
+      "title": "Nationalism in winter sports judging and its lessons for organizational decision making",
+      "journal": "",
+      "year": "2006",
+      "volume": "15",
+      "pages": "67-99",
+      "doi": "10.1111/j.1530-9134.2006.00092.x"
+    },
+    "crossref_data": {
+      "title": "<scp>Nationalism in Winter Sports Judging and Its Lessons for Organizational Decision Making</scp>",
+      "journal": "Journal of Economics &amp; Management Strategy",
+      "year": "2006",
+      "volume": "15",
+      "page": "67-99",
+      "doi": "10.1111/j.1530-9134.2006.00092.x",
+      "authors": "Zitzewitz E"
+    },
+    "crossref_doi": "10.1111/j.1530-9134.2006.00092.x",
+    "corrected_citation": "Zitzewitz E. <scp>Nationalism in Winter Sports Judging and Its Lessons for Organizational Decision Making</scp>. Journal of Economics &amp; Management Strategy. 2006;15:67-99. doi:10.1111/j.1530-9134.2006.00092.x.",
+    "is_retracted": false,
+    "retraction_doi": "",
+    "url_status": 0,
+    "notes": [
+      "Resolved via DOI (high confidence)"
+    ]
+  }
+]

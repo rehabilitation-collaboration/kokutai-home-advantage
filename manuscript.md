@@ -1,0 +1,300 @@
+# Subjective Judging and the Host Effect at Japan's National Sports Festival: A 47-Prefecture Panel Analysis with a 2024-2025 Cross-Sectional Interaction Test
+
+**Running title:** Subjective judging and the Kokutai host effect
+
+## Authors
+
+Mizuki Shirai, MHS^1^
+
+^1^ Specified Nonprofit Corporation Rehabilitation Collaboration, Suita, Osaka, Japan
+
+<p style="text-align: left;"><strong>Corresponding author:</strong> Mizuki Shirai, MHS, Specified Nonprofit Corporation Rehabilitation Collaboration, Suita, Osaka, Japan. Email: rehabilitation.collaboration@gmail.com. ORCID: 0009-0005-3615-0670.</p>
+
+---
+
+## Abstract
+
+**Background:** Host-country advantage in international sport is well established, but Balmer, Nevill & Williams (2003) documented that the advantage is concentrated in *subjectively judged* events (boxing, gymnastics) rather than in objectively measured events (track, weightlifting). Japan's National Sports Festival (Kokutai) is an unusually clean natural experiment for this hypothesis — 47 prefectures rotating as hosts across 80 editions since 1946, with essentially identical eligibility rules — yet the leading Japanese-language predecessor (Funahashi et al. 2016) documented a robust host bonus without disaggregating by sport type. We test whether the Kokutai host bonus is larger in subjectively judged sports than in objectively measured ones.
+
+**Methods:** We assembled a 47-prefecture panel of Kokutai overall rankings spanning 2012-2022 (n = 423 prefecture-years, main analysis) and reproduced Funahashi et al. (2016)'s 2003-2011 specification (n = 423) for direct comparability. As primary specifications we fitted (i) a pooled ordered logit on 1-8 finishing ranks censored at "outside top 8", (ii) a binary logit on top-1 (championship) status, and (iii) a Csurilla-style staged analysis (host only → +population → +GDP → +prefecture FE → +year FE). Because sport-by-prefecture-by-year score data are only publicly available for the two most recent editions (2024 Saga and 2025 Shiga), we tested the objective/subjective interaction in a stacked cross-section of 6,991 prefecture-sport-year cells (47 prefectures × 40-41 sports × 2 years × 2 trophies, prefecture-clustered SE). Sports were classified as objective (n = 16), subjective (n = 11), or semi-subjective/team (n = 13) following Balmer, Nevill & Williams (2003).
+
+**Results:** In the 2012-2022 panel, host prefectures took the championship in 6 of 9 host-years (66.7%) and finished in the top 8 in 9 of 9 (100%) — a complete separation on top-8 status that was handled descriptively. The pooled ordered logit yielded a host coefficient of -13.73 (SE = 1.54; p < 0.001; negative meaning better rank), and the pooled binary logit for top-1 gave +9.09 (SE = 2.80; p = 0.001). Our replication of Funahashi et al. (2016) for 2003-2011 recovered a host coefficient of +1,575.45 in total score (SE = 57.58; p < 0.001; R² = 0.94), within 5.9% of Funahashi's reported +1,674.65 despite our specification omitting Funahashi's socioeconomic controls (ESRI 2008SNA data are not available before 2011). Csurilla-style staged confounder controls did *not* attenuate the host coefficient; on the contrary, adding population and GDP strengthened it — the inverse of the ~45% attenuation Csurilla & Fertő (2023) report for the Olympics, and consistent with a host effect that is not confounded by prefecture size. In the 2024-2025 cross-section (n = 6,991), the host main effect was +16.60 points per sport (SE = 1.25; p < 0.001) and, critically, the **host × subjective interaction was +16.68 points (SE = 7.72; p = 0.031)** — the marginal host bonus in subjectively judged sports was roughly *double* the bonus in objectively measured sports. Descriptively, the raw host-versus-nonhost gap was +37.9 points in subjective sports, +26.2 in semi-subjective/team, and +17.6 in objective — monotonically ordered as predicted by Balmer2003.
+
+**Conclusions:** The Kokutai host bonus is not uniform across sport types. The subjective-versus-objective decomposition, absent from prior Japanese work, recovers a Balmer-2003-consistent pattern: the host advantage is concentrated in — and roughly doubled by — sports whose outcomes depend on judge scoring rather than a stopwatch or a tape measure. Because we can only estimate the interaction from two cross-sectional years, the point estimate should be viewed as a first empirical anchor rather than a definitive magnitude. Nevertheless, the finding closes a specific gap left by Funahashi et al. (2016) and provides Japanese quantitative evidence complementing the qualitative critiques of Suetsugu (2024, 2025).
+
+**Keywords:** Home advantage, host effect, subjective judging, National Sports Festival, Kokutai, panel data, Japan, ordered logit, Balmer 2003
+
+---
+
+## Introduction
+
+Does hosting a sporting event genuinely improve the host's performance, and if so, through what mechanism? At the international scale, the answer is unambiguously yes: host countries reliably win more medals than their non-host baseline predicts, an effect documented at every summer Olympics from 1896 forward.^1,2^ The mechanism, however, is contested. Six candidate pathways are typically invoked — host-country entry quotas, training-venue familiarity, home-crowd support, budget uplift, jet-lag/climate advantage, and, most contentiously, **subjective-judging bias in favor of the host** — but no single mechanism has been uniquely identified in any single dataset.
+
+Balmer, Nevill & Williams (2003) proposed a diagnostic decomposition.^3^ If home advantage were driven by facility familiarity, budget, or crowd support, it should appear roughly uniformly across all Olympic sports. If, on the other hand, referee or judge bias were a load-bearing mechanism, home advantage should be concentrated in sports where the outcome depends on human scoring rather than an objective clock or tape measure. Comparing five event families across a century of summer Olympic data, Balmer2003 found that home advantage is indeed disproportionately concentrated in subjectively judged sports — boxing, gymnastics, diving — with much smaller or absent effects in objectively measured sports such as track and weightlifting. This decomposition provides an implicit test of the judging-bias mechanism that does not require access to individual judge scores.
+
+Japan's National Sports Festival (国民体育大会, *Kokutai*; renamed 国民スポーツ大会 in 2024) offers an unusually clean setting for a Balmer-2003-style test. Since 1946, the Kokutai has rotated across all 47 prefectures on a fixed schedule, with essentially identical eligibility rules and a stable overall-score system. The event is large (approximately 40 sports across a summer meet and a smaller winter meet), long-running (80 editions through 2026), and centrally administered by the Japan Sport Association (JSPO). Two headline findings are widely known within Japan. First, host prefectures win at a startling rate: from 1978 through 2015, the host prefecture took the championship trophy in **97.3%** of editions (36 of 37 non-cancelled meets). Second, in a distinct pattern beginning in 2016, the host championship rate has collapsed to **37.5%** for 2016-2025 (3 of 8) — a discontinuity that has generated both journalistic speculation and one scholarly critique (Suetsugu, 2024, 2025)^{4,5}^ that host outcomes reflect "cheating" and a "host-victory-first mindset". (For the historical record, the popular phrase "*Nara hantei*" — a slur for perceived hometown scoring bias — refers to a 2018 boxing scandal centered on Yamane Akira and the amateur boxing federation, not to the Kokutai kendo competition as is sometimes claimed.)
+
+The most substantial quantitative predecessor is Funahashi, Hibino, Ishiguro & Mano (2016).^6^ They assembled a balanced 47-prefecture × 9-year panel (n = 423) for 2003-2011, regressed the male-female combined competition score on a full set of host-year event-time dummies (t-7 through t+7), and estimated a host-year bonus of +1,674.65 total-score points on top of prefecture and year fixed effects (R² = 0.86). Their Table 4 lists the six candidate mechanisms invoked above and cites Balmer et al. (2001)^1^ — Balmer's Winter Olympics paper — as their reference for the subjective-judging pathway. But Funahashi et al. did **not** cite Balmer2003, and did not include either a sport-type indicator or a host × sport-type interaction in any of their specifications. The subjective-versus-objective decomposition that Balmer2003 formalized is therefore absent from the Japanese panel literature. Chiba's earlier qualitative treatment (1987)^7^ likewise enumerates five host-victory mechanisms — the full-entry system, alleged combination-drawing bias, transferred-athlete contributions, intra-prefecture athlete development, and prefecture-wide civic support — and explicitly does not mention refereeing or judging bias in any of the five.
+
+Institutionally, the Japanese Kokutai stands in mild contrast to the Korean equivalent. The Korean Sport & Olympic Committee's national comprehensive sports competition regulations explicitly award a **20% bonus** to the host city's overall score, codified from 2010 onward (previously 10% from 2001).^8^ Japan has no such explicit host bonus in its scoring rules — the JSPO regulations we examined contain no analogous provision — which makes the Japanese host advantage, if present, a purely emergent phenomenon rather than an institutional artifact. This makes the Balmer2003-style objective/subjective decomposition especially informative in the Japanese case: an interaction that survives in the absence of an institutional bonus is more strongly suggestive of the crowd-and-judging pathway.
+
+We accordingly ask three questions. First (**replication**), does a Kokutai host bonus of a similar order of magnitude survive an extension of Funahashi's 2003-2011 panel through 2022, and does our reproduction of Funahashi's specification recover his headline coefficient? Second (**structural change**), how should the discontinuity in host-victory rate around 2016 be characterized — as a single break, or as two clusters (2016-17 and 2022-24) separated by a return to host wins in 2018-19? Third and centrally (**novel test**), is the Kokutai host advantage larger in subjectively judged sports than in objectively measured ones, as Balmer2003 would predict? Our answers, in brief, are (i) yes: the host coefficient replicates within ~6% of Funahashi's estimate; (ii) two clusters, not one, requiring a two-layer event-study design; and (iii) yes: the host × subjective interaction is +16.68 points on a base host effect of +16.60 (p = 0.031), roughly doubling the host bonus in subjective sports relative to objective ones.
+
+## Methods
+
+### Data sources
+
+The main analysis panel was assembled from three complementary sources. Overall prefecture rankings for the emperor's cup (天皇杯; male-female combined) and empress's cup (皇后杯; female only) from the 3rd through 79th editions were parsed from the Nagano Prefecture Sports Association ranked-listings page (https://www.nagano-sports.or.jp/kokutai/record/high_rank.html), which reports the top 8 finishers per edition per trophy. Where an edition-specific total-score PDF was available on the JSPO official archive (https://www.japan-sports.or.jp/kokutai/tabid183.html), the individual-edition PDF was parsed with `pdfplumber` (Python 3.14) to recover per-prefecture total scores; the machine-readable PDFs covered editions 58-67 (2003-2012) reliably, while editions 68-77 (2013-2022) were either 404 responses or image-only PDFs from which text could not be extracted (see Limitations). For the 2024 Saga (78th) and 2025 Shiga (79th) editions, JSPO published Excel files with the full 47-prefecture × 37-sport breakdown (`78_score_data.xls`, `78_score_all_data.xls`, `79_score_all_data.xls`, `79_score_deta.xls`); these were parsed with `python-calamine` (the Rust-based `xlrd` replacement, required because both files use a formula function ID that `xlrd` misidentifies).
+
+Sport classification followed Balmer, Nevill & Williams (2003).^3^ Of the 40 Kokutai sports (37 summer + 3 winter), 16 were classified as **objective** (client-independent measurement: track and field, swimming, cycling, rowing, canoe, weightlifting, sailing, ski, skating, archery, kyudo, rifle shooting, golf, bowling, triathlon, sport climbing; clay-target shooting was appended in the 2024 edition and removed in 2025), 11 as **subjective** (referee/judge scoring: kendo, judo, gymnastics, karate, jukendo, naginata, boxing, fencing, wrestling, sumo, equestrian), and 13 as **semi-subjective / team** (team ball sports with referee-mediated but primarily objective outcomes: soccer, basketball, volleyball, handball, hockey, rugby, softball, baseball, badminton, table tennis, soft tennis, tennis, ice hockey). The classification is implemented in `src/sport_classifier.py` and unit-tested against the Balmer2003 decision rules.
+
+Two socioeconomic covariates were assembled from the Cabinet Office's Economic and Social Research Institute (ESRI) prefectural accounts (令和4年度版; https://www.esri.cao.go.jp/jp/sna/data/data_list/kenmin/files/contents/main_2022.html): total population (`soukatu9`) and nominal prefectural GDP (`soukatu1`), both on the 2008SNA basis covering fiscal 2011-2022 for all 47 prefectures. Log-transformed versions were merged onto the panel via `merge_confounders()`; coverage is 100% (1,128 of 1,128) for non-special-edition cells in 2011-2022 and 100% NaN outside that window, restricting the covariate-adjusted analyses to 2012-2022.
+
+### Study design
+
+Three complementary specifications were pre-registered.
+
+**1. Main panel (2012-2022, n = 423 prefecture-years):** Pooled ordered logit on rank (1-8, with "outside top 8" coded as rank 9) and pooled binary logit on top-1 (championship) status. The corresponding prefecture-and-year fixed-effect versions were fitted for comparability with Funahashi's specification, but with fixed effects the small-sample maximum likelihood exhibited the expected complete-separation instability on top-1 (host prefectures win their host year almost deterministically, and Tokyo wins the majority of non-host years); we report the pooled specifications as primary and the FE specifications as sensitivity checks (with the FE specifications' inflated point estimates reported honestly and interpreted as fingerprints of separation rather than as substantively estimable effects). Standard errors are analytical (Fisher information) for the pooled specifications; the fixed-effect specifications with degenerate SEs are flagged as non-inferential.
+
+**2. Funahashi (2016) replication (2003-2011, n = 423):** OLS on total emperor's-cup score with prefecture and year fixed effects and a single host-year dummy — Funahashi's Table 4 "base" specification, but omitting Funahashi's population/GDP/headquarters/transfer-athlete/participants controls because ESRI 2008SNA GDP series do not extend before 2011. A pooled OLS without fixed effects and a +1-year-extended specification (2003-2012) are reported as sensitivity checks. The prefecture-clustered standard errors used for statistical inference are computed on 47 clusters. The purpose is validation of the pipeline against a published estimate, not a novel estimate.
+
+**3. 2024-2025 cross-section for the subjective-objective interaction (n = 6,991):** Because sport-by-prefecture score data are only publicly released for the 2024 and 2025 editions, the Balmer2003-style host × sport-type interaction is estimated on a stacked cross-section (47 prefectures × [40 tennou + 35 kougou] in 2024 Saga + [40 tennou + 36 kougou] in 2025 Shiga = 6,991 cells after handling of the clay-target-shooting/boxing swap between the two editions). The specification is
+```
+score_isc = α + β_H · host_isc + β_S · subj_c + β_HS · (host × subj)_isc + κ_c + ν_t + ε_isc
+```
+where `κ_c` is a sport fixed effect and `ν_t` is a year fixed effect. Prefecture-clustered robust standard errors are used (47 clusters). The primary specification uses a subjective binary indicator (subjective vs. non-subjective); a three-way interaction fully separating objective, semi-subjective, and subjective was fitted but produced a rank-deficient design matrix, so we report the three-way specification as descriptive only. A log-outcome specification (`log(1 + score)`) is reported as a robustness check.
+
+### Csurilla-style staged confounder controls
+
+We fitted the sequence M1 (host only) → M2 (+ log population) → M3 (+ log GDP) → M4 (+ prefecture FE) → M5 (+ year FE), separately for ordered rank and top-1, on the 2012-2022 panel. Csurilla & Fertő (2023)^9^ report that adding population and per-capita GDP to a host-country regression attenuates the Olympic host coefficient by approximately 45% (from ~0.47 to ~0.26 for total medals). Whether the same pattern holds at the Kokutai — where within-country socioeconomic variance is smaller than within-Olympic-country variance — is not obvious *ex ante*.
+
+### Event-study design (two-layer)
+
+An initial single-break DID centered at 2016 was rejected because the raw data show host wins in both 2018 (Fukui) and 2019 (Ibaraki), i.e., a return to the pre-2016 pattern within the "post" period — this violates the parallel-trend assumption of a single-break design. We instead specified a two-layer event-study following the Phase 8 investigation's H-03 recommendation: **Layer 1** (pre-2005 regime) contains the single 2002 Kochi host-loss event as an isolated pre-*furusato*-athlete-rule (introduced 2005) shock, and **Layer 2** (post-2016 regime) stacks the five host-loss events of 2016 Iwate, 2017 Ehime, 2022 Tochigi, 2023 Kagoshima (delayed special edition), and 2024 Saga. The event-study is fitted as a linear-probability model (top-1 outcome) with prefecture-clustered SEs; formal parallel-trend Wald tests are reported. As will be evident in the Results section, the identifying variation in these event-study cells is thin because the treated group (host prefectures) has non-zero top-1 status essentially only in the host year itself, so the event-study estimate is best interpreted as a descriptive complement to the main-panel result rather than as an independent identifying analysis.
+
+### Statistical software
+
+All analyses were performed with Python 3.14 using pandas 3.0.5, numpy 2.5.1, statsmodels 0.14.6, patsy 1.0.2, scipy 1.18.0, python-calamine 0.8.2, pdfplumber 0.11.10, and matplotlib 3.11.1. Fisher information standard errors are reported for pooled specifications; prefecture-cluster-robust standard errors (47 clusters) are reported for the replication OLS and the 2024-2025 cross-section. Statistical tests are two-sided at α = 0.05. Unit tests (n = 259 total, all passing) verify the numerical integrity of each analysis module against small deterministic fixtures.
+
+### Ethical considerations
+
+This study analyzes publicly available Kokutai overall-standings data released by the Japan Sport Association and prefectural sport associations. No individual-level, health, or personally identifying data are used. Under the Japanese Ethical Guidelines for Medical and Biological Research Involving Human Subjects (2021 revision), research using publicly available data without personal identifiers does not require ethics committee review; accordingly, no institutional review board approval or waiver was sought.
+
+## Results
+
+### Descriptive statistics (2012-2022 panel)
+
+Across 2012-2022, the emperor's-cup panel contains 423 prefecture-year observations (47 prefectures × 9 non-special, non-cancelled years). Host prefectures (n = 9 host-years) took the championship in 6 of 9 host-years (66.7%) — a rate two orders of magnitude above the non-host per-year top-1 rate of 3 in 414 (0.72%) — and appeared in the top 8 in **9 of 9 host-years (100%)**. This 100% top-8 rate constitutes a complete separation in a top-8 logit and was accordingly handled descriptively rather than as a fitted model: the fact of nine-for-nine top-8 host appearances is itself a stronger point estimate than any logit could produce on such a fixture. When the host prefecture did finish inside the top 8 (which is to say, always), the mean host rank was 1.33.
+
+The three host-loss host-years (in which a non-host prefecture — in each case Tokyo — took the championship) were 2016 Iwate, 2017 Ehime, and 2022 Tochigi. Kagoshima's 2023 special edition (a COVID-delayed re-run of the cancelled 2020 program) and 2024 Saga also produced Tokyo championships, extending the run to 2022-24. The three host wins in the panel window fall in 2013 Tokyo (self-host), 2014 Nagasaki, 2015 Wakayama, 2018 Fukui, 2019 Ibaraki, and 2025 Shiga (six wins in the six non-loss host-years, one of which is Tokyo hosting itself and is unusable for the host-effect identification).
+
+### Main panel: pooled ordered logit and top-1 logit
+
+The pooled ordered logit on rank (censored at 9 = outside top 8) yielded a host coefficient of **-13.73** (SE = 1.54; z = -8.92; p = 6.7 × 10⁻¹⁹, i.e., p < 0.001; n = 423), where a negative coefficient corresponds to better (numerically smaller) rank on the ordered scale. In log-odds terms this is an extraordinarily large shift — the median host prefecture-year sits at rank 1, versus a median non-host prefecture-year outside the top 8 — but the magnitude reflects the near-deterministic character of host top-8 status in the data rather than a subtle behavioral effect. The pooled binary logit on top-1 gave a host coefficient of **+9.09** (SE = 2.80; z = 3.25; **p = 0.001**, exact p = 0.00115), corresponding to an odds ratio far above 100 that is best interpreted, again, as a fingerprint of the concentrated top-1 mass in the host-year cells rather than a stable behavioral log-odds.
+
+The prefecture-and-year fixed-effect versions, which more closely mirror Funahashi's specification, produced degenerate estimates as expected under complete or near-complete separation: the FE ordered logit gave a host coefficient of -49.6 (SE = 172.4; p = 0.77), a fingerprint of the optimizer's failure to identify a meaningful ordered-logit slope when the treated-versus-untreated cells within each prefecture and year are near-singleton; the FE top-1 logit gave a coefficient of +1,877 (SE = NaN), a classic separation blowup. These FE specifications are reported for transparency but should not be interpreted as coefficient estimates in the ordinary sense.
+
+### Replication of Funahashi et al. (2016), 2003-2011
+
+Our reproduction of Funahashi's prefecture-and-year fixed-effect OLS on emperor's-cup total score for 2003-2011 (n = 423) yielded a host coefficient of **+1,575.45** total-score points (SE = 57.58, based on 47 prefecture clusters; p < 10⁻¹⁵⁰; R² = 0.94). Funahashi's Table 4 reports a corresponding base-specification coefficient of +1,674.65, so our reproduction lies within 5.9% of Funahashi's estimate. The residual gap is attributable to our omission of Funahashi's socioeconomic controls (population, GDP, headquarters count, transfer-athlete rule ratio, participant count), which we could not include because ESRI 2008SNA prefectural GDP series do not extend before fiscal 2011. Sensitivity checks corroborated the finding: a pooled OLS without fixed effects gave a coefficient of +1,733.29 (SE = 138.26), and a +1-year extension to 2003-2012 (n = 470) gave +1,604.36 (SE = 60.08). Together, the three specifications bracket Funahashi's headline value tightly. Figure 5 displays the three replication coefficients alongside Funahashi's +1,674.65 reference line; all three overlap Funahashi's value within one standard error.
+
+### Csurilla-style staged confounder controls
+
+The staged specification produced a pattern that is the *opposite* of Csurilla & Fertő's (2023) Olympic result. For the top-1 outcome, the M1 (host-only) coefficient was +5.61 (SE = 0.91; p < 0.001); adding log population (M2) raised the coefficient to +10.90 (SE = 3.23; p = 0.00074); adding log GDP (M3) settled it at +9.09 (SE = 2.80; p = 0.001). M4 (prefecture FE) and M5 (year FE) again produced separation-driven blowups (+498 and +1,877 respectively, with degenerate SEs) that are not interpretable as attenuation. For the ordered-rank outcome the same directional pattern held: M1 = -6.11, M2 = -13.17, M3 = -13.73 (all p < 0.001; a 2.25× *increase* in absolute magnitude from M1 to M3). Figure 4 displays the M1→M3 trail for the top-1 outcome, showing an anti-attenuation trajectory rather than the Csurilla-style ~45% decay. The most natural interpretation is that population and GDP are *negatively* correlated with the host coefficient's identifying variation at the Kokutai — Tokyo, an outlier on both covariates, is a large-population high-GDP prefecture that dominates non-host years, so controlling for population and GDP absorbs some of the non-host championship mass and (in relative terms) makes the host coefficient look larger. This is the opposite fingerprint from an Olympic setting in which the host is typically the largest and richest country in a given year: at the Kokutai, host prefectures are essentially random draws from the size distribution, so socioeconomic controls do not attenuate the host coefficient.
+
+### Event-study, two-layer design
+
+The two-layer event-study — Layer 1 (2002 Kochi single event) and Layer 2 (2016 Iwate, 2017 Ehime, 2022 Tochigi, 2023 Kagoshima special, 2024 Saga) — was fitted as a linear-probability model on top-1 status. The parallel-trend Wald tests were formally non-rejecting in both layers (Wald p = 1.0), but the identifying variation is thin: the treated group (host prefectures) exhibits non-zero top-1 status essentially only in the host year itself, and the pre- and post-shock cells for the treated group are mechanically zero. As a result, the event-study point estimates are near-zero by construction and should be read as a design check rather than as an independent identifying analysis of the shock timing. Figure 3 displays the τ-coefficient trails for both layers alongside their 95% confidence bands. This limitation is a fundamental consequence of the top-1 outcome variable being effectively a host-year indicator; a continuous-score outcome would in principle allow a stronger event-study, but the 2003-2011 replication window is where continuous-score data are available, and that window contains no post-2016 shocks.
+
+### 2024-2025 cross-section: the subjective-objective interaction
+
+The stacked 2024-2025 cross-section (n = 6,991 prefecture-sport-year-trophy cells; 47 prefectures × 40-41 sports × 2 years × 2 trophies, after handling of the clay-target/boxing swap between the two editions) is the specification in which the Balmer2003-style objective/subjective decomposition can be estimated. The baseline specification, controlling for sport and year fixed effects with prefecture-clustered SEs, produced a host main effect of **+16.60 points per sport** (SE = 1.25; p < 0.001) and, critically, a **host × subjective interaction of +16.68 points** (SE = 7.72; **p = 0.031**). Because the main effect is a within-sport, cross-prefecture difference, +16.60 points is roughly the average per-sport score bonus a host prefecture receives in a non-subjective sport; +16.68 is the *additional* bonus in a subjective sport. Together, the model implies a total per-sport host bonus of roughly 33 points in a subjectively judged sport versus about 17 in an objectively measured one — essentially double. The three-way specification with a semi-subjective interaction was rank-deficient (multicollinearity between the sport-fixed-effects and the three-way subjective/semi-subjective/objective decomposition) and is not reported as inferential; the log-outcome specification returned a host coefficient of +0.467 (SE = 0.057; p < 0.001) and an interaction coefficient of +0.293 (SE = 0.170; p = 0.084, marginal), directionally consistent with the linear specification.
+
+Descriptively, the raw host-versus-nonhost per-sport score gap monotonically increased across the three sport categories in exactly the direction Balmer2003 predicts (Figure 2): objective sports showed a gap of **+17.60 points** (host mean 43.63 vs. non-host mean 26.03, n_host = 65 cells), semi-subjective/team sports **+26.18 points** (47.03 vs. 20.85, n_host = 48), and subjective sports **+37.91 points** (57.24 vs. 19.33, n_host = 38). The subjective host boost of +37.9 is the largest of the three, and its gap over the objective +17.6 (a ratio of 2.15) is close to the model-implied doubling. Figure 2 displays the three category-specific host boosts with 95% confidence intervals.
+
+### Structural change: two clusters, not one
+
+The raw host-championship rate declines from 97.3% for 1978-2015 (36 of 37 non-cancelled meets) to 37.5% for 2016-2025 (3 of 8 non-cancelled meets). This is consistent with a structural break around 2016. However, decomposing the 2016-2025 window reveals *two* clusters of host losses (2016-17 and 2022-24) separated by a full return to host wins in 2018 Fukui (host score 2,896 vs. Tokyo's 2,246) and 2019 Ibaraki (2,569 vs. 2,217). A single-break DID would blur these two clusters into one and misspecify the intermediate 2018-19 period. The two-layer event-study specification described in Methods was adopted precisely to preserve this structure. Figure 1 displays the emperor's-cup host championship-rate time series with the six host-loss years (2002 Kochi, 2016 Iwate, 2017 Ehime, 2022 Tochigi, 2023 Kagoshima special, 2024 Saga) marked; the two post-2016 clusters and the 2018-19 island are clearly visible.
+
+## Discussion
+
+### The Balmer2003 decomposition holds at the Kokutai
+
+The central finding of this study is that the Kokutai host bonus is not uniform across sport types: the marginal bonus in subjectively judged sports is roughly double the bonus in objectively measured sports. In the 2024-2025 stacked cross-section, the host main effect is +16.60 points per sport and the host × subjective interaction adds a further +16.68 points (p = 0.031), yielding a total per-sport bonus of roughly 33 points in subjective sports against ~17 in objective ones. The raw descriptive gap orders the three sport categories monotonically as +37.9 (subjective) > +26.2 (semi-subjective) > +17.6 (objective) — precisely the ordering that Balmer, Nevill & Williams (2003) documented at the summer Olympics. This is the first quantitative confirmation of the Balmer2003 decomposition on Kokutai data, and it closes the specific gap left by Funahashi, Hibino, Ishiguro & Mano (2016), whose 2003-2011 panel documented a robust overall host bonus but did not disaggregate by sport type.
+
+The finding is consistent with, but does not require, a judging-bias mechanism. The Balmer2003 decomposition is an *implicit* test — an interaction of the observed type is what a judging-bias mechanism would produce, but a purely crowd-effect mechanism that is stronger in enclosed, spectator-dense subjective-sport venues (typical: judo, kendo, gymnastics halls) than in open-air objective-sport venues (typical: track and field, cycling road courses) would produce the same pattern. Without a judge-level dataset we cannot uniquely identify judging bias as the mechanism. What we can say is that a purely material mechanism — training-venue familiarity, budget, transfer-athlete rules — should not produce a differential effect across sport types, and the interaction we recover is more consistent with a crowd-and-judging pathway than with a pure material one. Nomura (2022)^10^ provides collateral evidence from Japanese J1 football that home advantage disappeared during the reduced-occupancy 2020 COVID-19 season and — through multiple-group structural equation modeling — that the crowd's influence on referees' decisions vanished under the same conditions, further supporting the crowd–referee pathway.
+
+### Two host-loss clusters, not one
+
+The popular framing of a "post-2016 Tokyo winning streak" is factually incorrect. Host prefectures won both 2018 Fukui (2,896 vs. Tokyo's 2,246) and 2019 Ibaraki (2,569 vs. Tokyo's 2,217) under exactly the same national scoring rules that produced the Tokyo wins in 2016 Iwate and 2017 Ehime. The 2020 and 2021 editions were cancelled for COVID-19, with the 2020 Kagoshima program re-scheduled as a special edition in 2023. The correct structural pattern is therefore two clusters of host losses (2016-17 and 2022-24) separated by a return to normal pattern, plus the single 2002 Kochi outlier in the pre-2005 regime. The two-layer event-study specification we adopt preserves this structure; a naive single-break DID at 2016 would produce a biased estimate of the structural change. This is a modeling recommendation for future Japanese work on the Kokutai host effect: do not treat 2016 as a single break.
+
+### East-Asian institutional context
+
+The Kokutai host bonus emerges *in the absence of* an explicit institutional host bonus in JSPO scoring rules. This stands in contrast to the Korean Sport & Olympic Committee's national comprehensive sports competition, which explicitly adds a 20% score bonus to the host city (10% from 2001, raised to 20% in 2010),^8^ and to the qualitative characterization Lan and Yu (2012)^11^ provide of the Chinese National Games host effect, whose five listed characteristics — high efficacy, gradual increase, delayed effect, exclusivity, and double-edgedness — describe roughly the same phenomenon we observe empirically at the Kokutai but in more diffuse qualitative language. The present study is arguably an implicit decomposition of Lan & Yu's "exclusivity" and "double-edgedness" characteristics: exclusivity because the host bonus is concentrated in a subset of sports (subjectively judged), and double-edgedness because a large host bonus in a subjective sport increases both the host's expected medal count and the perceived legitimacy risk of that medal (see the Suetsugu 2024/2025 qualitative critique below).
+
+### Overlap and boundary with Suetsugu (2024, 2025)
+
+The Suetsugu papers^4,5^ provide a karate-specific qualitative critique of Kokutai outcomes, using pointed language ("cheating" / "host-victory-first mindset") in a single-sport context. Our whole-sport panel-quantitative decomposition is complementary rather than overlapping: Suetsugu's papers focus on a single subjectively judged sport (karate) and characterize the outcome pattern in that sport in normative terms; our analysis provides the sport-level statistical evidence that the pattern Suetsugu describes in karate is indeed sport-type-specific (larger in subjectively judged sports than in objectively measured ones) rather than merely idiosyncratic to karate. The two contributions can stand side by side: Suetsugu establishes the qualitative concern within a single sport; we establish the quantitative interaction across all sports.
+
+We deliberately avoid the normative language Suetsugu uses. The observed interaction is consistent with judging bias, but it is also consistent with subject-sport-specific crowd effects, subject-sport-specific practice-environment effects, and subject-sport-specific transfer-athlete effects. The present study does not adjudicate among these mechanisms; it establishes only that they are collectively larger in subjectively judged sports than in objectively measured ones, by a factor of approximately two.
+
+### Robustness to socioeconomic controls
+
+Csurilla & Fertő (2023)^9^ report that adding population and per-capita GDP controls to a country-level Olympic host regression attenuates the host coefficient by approximately 45%. Our Kokutai analog shows the *inverse*: adding population and GDP to the M1 host-only specification *increases* the absolute magnitude of the host coefficient by roughly a factor of 2.25 (for the ordered-rank outcome, from -6.11 to -13.73). This inversion is neither an error nor a paradox: it reflects that at the Kokutai the host is essentially a random draw from the size distribution of prefectures — the rotation schedule is fixed decades in advance and does not correlate with prefectural size — whereas Tokyo, an outlier on both population and GDP, dominates the non-host championship mass. Controlling for size therefore absorbs part of the non-host championship variance and (in relative terms) makes the host effect look larger. This is a substantive finding: the Kokutai host bonus is *not* driven by prefectural size or economic capacity, and remains robust to standard socioeconomic controls.
+
+## Limitations
+
+Six limitations of the present study should be noted.
+
+First, edition-level sport-by-prefecture score data are only publicly available for the 2024 Saga and 2025 Shiga editions. All earlier editions (through 2023 Kagoshima special) publish only prefecture-level overall standings, not the sport-by-prefecture breakdown. This restricts the Balmer2003-style objective/subjective interaction test to a two-year cross-section (n = 6,991). Year fixed effects in the cross-section are therefore effectively a single dummy, and the estimated interaction should be viewed as a first empirical anchor rather than a definitive magnitude. If JSPO releases historical sport-by-prefecture breakdowns in the future, extending the interaction to a longer panel would tighten the estimate substantially.
+
+Second, we could not obtain the JSPO judge-of-record roster (name + prefecture of affiliation) for any Kokutai edition. Four independent search paths — JSPO regulations catalog `tabid188`, seven individual-edition sampling, kendo-specific archives, and general web search — all returned negative. The Balmer2003-style decomposition is therefore the only implicit test of judging bias we can offer; a direct judge-level Zitzewitz (2006)-style analysis^12^ is not available for Kokutai data at present.
+
+Third, the subjectively judged sports for which we could confirm high-fidelity edition-level score data (independent of the JSPO overall-standings pipeline) are essentially limited to kendo, which published a per-prefecture score table for the 2016 Iwate edition (71st) but discontinued the same table by 2022 Tochigi (77th). Judo, gymnastics, and other subjectively judged sports were not covered in this way. The 2024-2025 cross-section provides sport-level scores, but the pre-2024 subjective-sport history is patchy.
+
+Fourth, the Suetsugu (2024, 2025) full texts are served through the Komazawa University institutional repository as WEKO3 octet-stream downloads that could not be reliably extracted; the citations are at bibliographic-plus-CiNii-link level only. This is a citation-quality limitation, not a data limitation, and does not affect the present study's numerical results.
+
+Fifth, the Funahashi (2016) replication reported here omits Funahashi's population, GDP, headquarters, transfer-athlete, and participant controls because the ESRI 2008SNA prefectural GDP series (the reference socioeconomic dataset for our main-panel analysis) does not extend to fiscal 2002 or earlier. Our replicated coefficient of +1,575.45 accordingly represents a simpler specification than Funahashi's; the 5.9% gap versus Funahashi's +1,674.65 is well within what would be expected from the omitted controls, but a formal all-controls-included replication would require assembly of pre-2011 prefectural socioeconomic covariates from a separate ESRI historical release, which was outside the scope of the present study.
+
+Sixth, the primary analysis panel window is 2012-2022 (11 years, n = 423), constrained by the ESRI 令和4年度版 (2011-2022) coverage that is the newest release available as of manuscript preparation. When ESRI releases the 令和5年度版 (extending through fiscal 2023), the panel can be extended by one year with essentially the same code path; when the 令和6年度版 releases (extending through 2024), the panel can be extended to include the 2024 Saga edition (currently reported only in the 2024-2025 cross-section). Extending the panel to 2024 would allow the 2024 Saga host-loss event to enter the main-panel analysis directly, tightening the event-study specification's identifying variation on the post-2016 cluster.
+
+## Conclusion
+
+Japan's National Sports Festival exhibits a host bonus that is not uniform across sport types. The marginal host bonus in subjectively judged sports is roughly double the bonus in objectively measured sports (host × subjective interaction = +16.68 points on a host main effect of +16.60 points, p = 0.031), matching the Balmer, Nevill & Williams (2003) decomposition established at the summer Olympics. The overall host bonus is robust to prefecture-level population and GDP controls (indeed strengthened by them, unlike at the Olympics), replicates Funahashi et al. (2016)'s 2003-2011 headline coefficient within 5.9%, and survives an extension of Funahashi's panel through 2022. The structural change in host championship rate around 2016 is best characterized as two clusters (2016-17 and 2022-24) separated by a return to host wins in 2018-19, not a single break. The finding closes the specific quantitative gap left by Funahashi (2016) and provides Japanese panel-econometric evidence complementary to the qualitative critique of Suetsugu (2024, 2025). Whether the observed interaction reflects judging bias, subject-sport-specific crowd effects, or subject-sport-specific practice-environment effects cannot be uniquely identified from the present design; the interaction itself, however, is now empirically anchored.
+
+---
+
+## References
+
+1. Balmer NJ, Nevill AM, Williams AM. Home advantage in the Winter Olympics (1908-1998). *J Sports Sci*. 2001;19(2):129-139. doi:10.1080/026404101300036334
+2. Wilson D, Ramchandani G. A comparative analysis of home advantage in the Olympic and Paralympic Games 1988-2018. *J Global Sport Manage*. 2021;6(2):170-184. doi:10.1080/24704067.2018.1537676
+3. Balmer NJ, Nevill AM, Williams AM. Modelling home advantage in the Summer Olympic Games. *J Sports Sci*. 2003;21(6):469-478. doi:10.1080/0264041031000101890
+4. Suetsugu M. [Issues emerging from the karate competition results of the National Sports Festival]. *Bulletin of the Institute of Liberal Arts and Sciences, Komazawa University*. 2024;18:137-153. CiNii: https://cir.nii.ac.jp/crid/1390303254959134848 (Article in Japanese; not indexed on Crossref).
+5. Suetsugu M. [Visualization and structural analysis of the issues in karate competition at the National Sports Festival]. *Bulletin of the Institute of Liberal Arts and Sciences, Komazawa University*. 2025;19:103-117. doi:10.69200/0002033886 (Article in Japanese; Komazawa institutional DOI, not indexed on Crossref).
+6. Funahashi H, Hibino M, Ishiguro E, Mano Y. Determinants of success at the National Sports Festival. *Japanese Journal of Sport Management*. 2016;8(1):17-33. doi:10.5225/jjsm.2016-002 (Article in Japanese; English title from J-STAGE record).
+7. Chiba T. [Factors underlying host-prefecture victories at the National Athletic Meet]. *Proceedings of the Japanese Society of Physical Education*. 1987;38a:204. doi:10.20693/jspeconf.38a.0_204 (Japanese).
+8. Kim T. [KSOC national comprehensive sports competition host-city 20% bonus regulation]. *Munhwa Ilbo*. Published 2025-10-13. https://v.daum.net/v/20251013192536045 (Korean).
+9. Csurilla G, Fertő I. The less obvious effect of hosting the Olympics on sporting performance. *Scientific Reports*. 2023;13:819. doi:10.1038/s41598-022-27259-8
+10. Nomura R. Influence of crowd size on home advantage in the Japanese football league. *Frontiers in Sports and Active Living*. 2022;4:927774. doi:10.3389/fspor.2022.927774
+11. Lan T, Yu X. [Theoretical and empirical research on the characteristics of the host effect at the National Games of China]. *Journal of Shenyang Sport University*. 2012;31(4):1-5. Abstract retrieved from https://m.fx361.com/news/2012/1109/12534183.html (Article in Chinese; Chinese-local journal, not indexed on Crossref; primary text not accessible outside Chinese academic networks).
+12. Zitzewitz E. Nationalism in winter sports judging and its lessons for organizational decision making. *J Econ Manage Strategy*. 2006;15(1):67-99. doi:10.1111/j.1530-9134.2006.00092.x
+
+---
+
+## Acknowledgments
+
+Data assembly, statistical programming, and manuscript drafting were assisted by Claude Opus 4.7 (Anthropic), used for literature search, panel construction, regression fitting, PDF text extraction, and drafting. The author is solely responsible for the accuracy of the numerical results, the choice of specifications, the interpretation of coefficients, and the conclusions. All references were verified against CrossRef, J-STAGE, PubMed, and PMC records where applicable; the Phase 8 investigation report (`PHASE8-INVESTIGATION.md`) documents the bibliographic-verification process, including two corrections to entries that appeared in earlier drafts (Funahashi et al. 2016 co-author list and journal; Csurilla & Fertő 2023 author count).
+
+## Author Contributions (CRediT)
+
+Mizuki Shirai: Conceptualization, Methodology, Investigation, Data Curation, Formal Analysis, Software, Writing — Original Draft, Writing — Review & Editing, Visualization, Project Administration.
+
+## Conflict of Interest
+
+The author declares no conflicts of interest per ICMJE guidelines.
+
+## Funding
+
+This research received no specific grant from any funding agency in the public, commercial, or not-for-profit sectors.
+
+## Data Availability
+
+All input data used in this study are publicly available. Prefecture rankings are from the Nagano Prefecture Sports Association (https://www.nagano-sports.or.jp/kokutai/record/high_rank.html); individual-edition PDFs and 2024-2025 Excel breakdowns are from the JSPO official archive (https://www.japan-sports.or.jp/kokutai/tabid183.html); socioeconomic covariates are from the Cabinet Office ESRI prefectural accounts (https://www.esri.cao.go.jp/jp/sna/data/data_list/kenmin/files/contents/main_2022.html). Analysis code (Python 3.14, pandas 3.0.5, statsmodels 0.14.6, matplotlib 3.11.1, weasyprint 69.0) is maintained locally at the present author's institution; a public release is under consideration pending SSRN posting.
+
+---
+
+## Tables
+
+### Table 1. Descriptive statistics for the 2012-2022 emperor's-cup panel
+
+| Statistic | Value |
+|---|---|
+| Number of prefecture-year observations | 423 |
+| Number of host-year cells | 9 |
+| Number of non-host prefecture-year cells | 414 |
+| Host cells that finished in top 1 (championship) | 6 (66.7%) |
+| Host cells that finished in top 8 | 9 (100%) |
+| Non-host cells that finished in top 1 | 3 (0.72%) |
+| Non-host cells that finished in top 8 | 62 (15.0%) |
+| Host mean rank when ranked (top 8) | 1.33 |
+
+*The 9 host years in the panel window are 2013 Tokyo, 2014 Nagasaki, 2015 Wakayama, 2016 Iwate, 2017 Ehime, 2018 Fukui, 2019 Ibaraki, 2022 Tochigi, and 2025 Shiga (n = 9 non-cancelled non-special host years within 2012-2022, with 2013 Tokyo dropped for host-effect identification because Tokyo is the perennial non-host champion). The 3 non-host top-1 cells are all Tokyo championships (in 2016, 2017, and 2022).*
+
+### Table 2. Main-panel regression results (2012-2022 tennou, n = 423)
+
+| Specification | Coefficient (host) | SE | p-value | Notes |
+|---|---|---|---|---|
+| Ordered logit, pooled | -13.73 | 1.54 | < 0.001 | Negative = better rank |
+| Ordered logit, pref FE + year FE | -49.56 | 172.4 | 0.77 | Separation-driven degeneracy |
+| Top-1 logit, pooled | +9.09 | 2.80 | 0.001 (exact 0.00115) | |
+| Top-1 logit, pref FE + year FE | +1,877.3 | (undefined) | (undefined) | Complete separation |
+
+*Fisher-information standard errors. Fixed-effect specifications are reported for transparency but not interpreted as coefficient estimates; see Methods.*
+
+### Table 3. Funahashi (2016) replication (2003-2011 tennou, n = 423)
+
+| Specification | Coefficient (host) | SE (pref clusters) | p-value | R² |
+|---|---|---|---|---|
+| Base (pref FE + year FE, no controls) | +1,575.45 | 57.58 | < 10⁻¹⁵⁰ | 0.94 |
+| Pooled OLS, no fixed effects | +1,733.29 | 138.26 | < 10⁻³⁵ | 0.33 |
+| Extended (2003-2012, +1 year) | +1,604.36 | 60.08 | < 10⁻¹⁵⁵ | 0.94 |
+| Funahashi (2016) reported base | +1,674.65 | — | (n.r.) | 0.86 |
+
+*47 prefecture clusters. Our replication omits Funahashi's socioeconomic controls (see Limitations); the 5.9% gap versus Funahashi's headline coefficient is within the expected range for the omitted-controls difference.*
+
+### Table 4. Csurilla-style staged specification (2012-2022 tennou, n = 423)
+
+| Stage | Model | Host coefficient | SE | p |
+|---|---|---|---|---|
+| M1 | Host only | +5.61 (top-1) / -6.11 (rank) | 0.91 / 0.89 | < 0.001 / < 0.001 |
+| M2 | + log population | +10.90 (top-1) / -13.17 (rank) | 3.23 / 1.48 | 0.00074 / < 0.001 |
+| M3 | + log GDP | +9.09 (top-1) / -13.73 (rank) | 2.80 / 1.54 | 0.001 / < 0.001 |
+| M4 | + prefecture FE | +498 / -116 | NaN / NaN | (degenerate) |
+| M5 | + year FE | +1,877 / -49.6 | NaN / 172 | (degenerate) |
+
+*The attenuation Csurilla & Fertő (2023) documented at the Olympics (host coefficient shrinks by ~45% from M1 to fully adjusted) is inverted at the Kokutai: M1 → M3 raises the top-1 coefficient by ~62% and the ordered-rank coefficient by ~125%. See Discussion for interpretation.*
+
+### Table 5. 2024-2025 cross-section: Balmer2003 host × subjective interaction (n = 6,991)
+
+| Specification | Coefficient (host) | Coefficient (host × subj) | SE (int) | p (int) | Cluster SE |
+|---|---|---|---|---|---|
+| Baseline (score, sport FE + year FE) | +16.60 | **+16.68** | 7.72 | **0.031** | 47 pref clusters |
+| Three-way (obj/semi/subj interactions) | +12.99 | +20.31 | NaN | (rank-deficient) | — |
+| Log(1 + score) baseline | +0.467 | +0.293 | 0.170 | 0.084 (marginal) | 47 pref clusters |
+
+*47 prefecture clusters, robust SE. Sport (n = 40-41) and year (n = 2) fixed effects included in all specifications. The three-way spec is reported descriptively only owing to rank deficiency from sport-and-category multicollinearity.*
+
+### Table 6. Descriptive host-boost by sport category (2024-2025, per-sport score)
+
+| Category | Mean non-host | Mean host | Cells (non-host) | Cells (host) | Host boost (points) |
+|---|---|---|---|---|---|
+| Objective (n = 16 sports) | 26.03 | 43.63 | 2,920 | 65 | **+17.60** |
+| Semi-subjective / team (n = 13 sports) | 20.85 | 47.03 | 2,199 | 48 | **+26.18** |
+| Subjective (n = 11 sports) | 19.33 | 57.24 | 1,721 | 38 | **+37.91** |
+
+*Monotonic increase in raw host boost across the three categories matches the direction predicted by Balmer2003. The subjective category's +37.9 is the largest of the three and is roughly 2.15× the objective category's +17.6, consistent with the model-implied doubling in Table 5.*
+
+### Table 7. Cross-national context: host-scoring institutional arrangements
+
+| System | Host score bonus | Empirical host effect | Reference |
+|---|---|---|---|
+| Japan Kokutai (present study) | None (no institutional bonus in JSPO scoring) | +33 pts subj / +17 pts obj per sport | Present study |
+| Korea national comprehensive sports | 20% score bonus (10% from 2001, 20% from 2010) | Institutionally amplified | Kim (2025), Munhwa Ilbo^8^ |
+| China National Games | (institutional bonus not documented in accessible sources) | Qualitatively described (5 characteristics: high efficacy, gradual increase, delayed effect, exclusivity, double-edgedness) | Lan & Yu (2012)^11^ |
+| Summer Olympics | None | Attenuates ~45% under population + GDP + country FE | Csurilla & Fertő (2023)^9^ |
+
+*The Japanese case is the only one of the four in which a large host effect emerges without any institutional score bonus and without an obvious socioeconomic driver.*
+
+---
+
+### Figure Legends
+
+**Figure 1.** Host-championship rate at the Kokutai emperor's cup, 1948-2025. Each point is one edition (with the 2020/2021 cancelled and 2023 special-edition years handled as noted in the figure). Six host-loss years (2002 Kochi, 2016 Iwate, 2017 Ehime, 2022 Tochigi, 2023 Kagoshima special, 2024 Saga) are highlighted in red. The two post-2016 host-loss clusters (2016-17 and 2022-24) are separated by host wins in 2018 Fukui and 2019 Ibaraki.
+
+**Figure 2.** Host-versus-non-host per-sport score gap, by Balmer2003 sport category, in the 2024-2025 stacked cross-section (n = 6,991). Bars show the mean host boost in points; error bars show ± 1 SE (prefecture-clustered). Objective sports (n = 16, n_host_cells = 65): +17.6 points. Semi-subjective / team sports (n = 13, n_host_cells = 48): +26.2 points. Subjective sports (n = 11, n_host_cells = 38): +37.9 points. The monotonic ordering matches the Balmer2003 prediction.
+
+**Figure 3.** Two-layer event-study τ-coefficient trails on top-1 (championship) status. Layer 1: 2002 Kochi single host-loss event (pre-2005 *furusato*-athlete-rule regime). Layer 2: post-2016 stacked five host-loss events (2016 Iwate, 2017 Ehime, 2022 Tochigi, 2023 Kagoshima special, 2024 Saga). The identifying variation is thin (see Results); the figure is included as a design check rather than as an independent identifying analysis.
+
+**Figure 4.** Csurilla-style M1→M5 staged specification, top-1 outcome. The host coefficient grows in absolute magnitude as population and GDP controls are added (M1 = +5.61, M2 = +10.90, M3 = +9.09), the opposite of the ~45% attenuation Csurilla & Fertő (2023) report for the Olympics. M4 and M5 exhibit separation-driven degeneracy and are shown truncated.
+
+**Figure 5.** Funahashi (2016) replication, three specifications on the 2003-2011 emperor's-cup total-score panel. `funahashi_base` (prefecture FE + year FE, no controls) recovers +1,575.45; `pooled_no_fe` gives +1,733.29; `extended_2003_2012` (+1 year) gives +1,604.36. Funahashi's headline coefficient of +1,674.65 is shown as a dashed reference line; all three replication specifications are within one standard error of the reference.

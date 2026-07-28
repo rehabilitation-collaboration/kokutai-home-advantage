@@ -1,0 +1,576 @@
+[
+  {
+    "kai_raw": "第80回大会",
+    "kai_num": 80,
+    "year": 2026,
+    "tabid": 1476,
+    "host_raw": "－"
+  },
+  {
+    "kai_raw": "第79回大会",
+    "kai_num": 79,
+    "year": 2025,
+    "tabid": 1462,
+    "host_raw": "滋賀県"
+  },
+  {
+    "kai_raw": "第78回大会",
+    "kai_num": 78,
+    "year": 2024,
+    "tabid": 1449,
+    "host_raw": "佐賀県"
+  },
+  {
+    "kai_raw": "特別大会",
+    "kai_num": null,
+    "year": 2023,
+    "tabid": 1417,
+    "host_raw": "鹿児島県"
+  },
+  {
+    "kai_raw": "第77回大会",
+    "kai_num": 77,
+    "year": 2022,
+    "tabid": 1385,
+    "host_raw": "栃木県"
+  },
+  {
+    "kai_raw": "第76回大会",
+    "kai_num": 76,
+    "year": 2021,
+    "tabid": 1341,
+    "host_raw": "三重県※中止"
+  },
+  {
+    "kai_raw": "第75回大会",
+    "kai_num": 75,
+    "year": 2020,
+    "tabid": 1317,
+    "host_raw": "鹿児島県※中止"
+  },
+  {
+    "kai_raw": "第74回大会",
+    "kai_num": 74,
+    "year": 2019,
+    "tabid": 1283,
+    "host_raw": "茨城県"
+  },
+  {
+    "kai_raw": "第73回大会",
+    "kai_num": 73,
+    "year": 2018,
+    "tabid": 1215,
+    "host_raw": "福井県"
+  },
+  {
+    "kai_raw": "第72回大会",
+    "kai_num": 72,
+    "year": 2017,
+    "tabid": 1129,
+    "host_raw": "愛媛県"
+  },
+  {
+    "kai_raw": "第71回大会",
+    "kai_num": 71,
+    "year": 2016,
+    "tabid": 1101,
+    "host_raw": "岩手県"
+  },
+  {
+    "kai_raw": "第70回大会",
+    "kai_num": 70,
+    "year": 2015,
+    "tabid": 1064,
+    "host_raw": "和歌山県"
+  },
+  {
+    "kai_raw": "第69回大会",
+    "kai_num": 69,
+    "year": 2014,
+    "tabid": 984,
+    "host_raw": "長崎県"
+  },
+  {
+    "kai_raw": "第68回大会",
+    "kai_num": 68,
+    "year": 2013,
+    "tabid": 938,
+    "host_raw": "東京都"
+  },
+  {
+    "kai_raw": "第67回大会",
+    "kai_num": 67,
+    "year": 2012,
+    "tabid": 877,
+    "host_raw": "岐阜県"
+  },
+  {
+    "kai_raw": "第66回大会",
+    "kai_num": 66,
+    "year": 2011,
+    "tabid": 683,
+    "host_raw": "山口県"
+  },
+  {
+    "kai_raw": "第65回大会",
+    "kai_num": 65,
+    "year": 2010,
+    "tabid": 684,
+    "host_raw": "千葉県"
+  },
+  {
+    "kai_raw": "第64回大会",
+    "kai_num": 64,
+    "year": 2009,
+    "tabid": 685,
+    "host_raw": "新潟県"
+  },
+  {
+    "kai_raw": "第63回大会",
+    "kai_num": 63,
+    "year": 2008,
+    "tabid": 686,
+    "host_raw": "大分県"
+  },
+  {
+    "kai_raw": "第62回大会",
+    "kai_num": 62,
+    "year": 2007,
+    "tabid": 687,
+    "host_raw": "秋田県"
+  },
+  {
+    "kai_raw": "第61回大会",
+    "kai_num": 61,
+    "year": 2006,
+    "tabid": 688,
+    "host_raw": "兵庫県"
+  },
+  {
+    "kai_raw": "第60回大会",
+    "kai_num": 60,
+    "year": 2005,
+    "tabid": 689,
+    "host_raw": "岡山県"
+  },
+  {
+    "kai_raw": "第59回大会",
+    "kai_num": 59,
+    "year": 2004,
+    "tabid": 690,
+    "host_raw": "埼玉県"
+  },
+  {
+    "kai_raw": "第58回大会",
+    "kai_num": 58,
+    "year": 2003,
+    "tabid": 691,
+    "host_raw": "静岡県"
+  },
+  {
+    "kai_raw": "第57回大会",
+    "kai_num": 57,
+    "year": 2002,
+    "tabid": 692,
+    "host_raw": "高知県"
+  },
+  {
+    "kai_raw": "第56回大会",
+    "kai_num": 56,
+    "year": 2001,
+    "tabid": 693,
+    "host_raw": "宮城県"
+  },
+  {
+    "kai_raw": "第55回大会",
+    "kai_num": 55,
+    "year": 2000,
+    "tabid": 694,
+    "host_raw": "富山県"
+  },
+  {
+    "kai_raw": "第54回大会",
+    "kai_num": 54,
+    "year": 1999,
+    "tabid": 695,
+    "host_raw": "熊本県"
+  },
+  {
+    "kai_raw": "第53回大会",
+    "kai_num": 53,
+    "year": 1998,
+    "tabid": 696,
+    "host_raw": "神奈川県"
+  },
+  {
+    "kai_raw": "第52回大会",
+    "kai_num": 52,
+    "year": 1997,
+    "tabid": 697,
+    "host_raw": "大阪府"
+  },
+  {
+    "kai_raw": "第51回大会",
+    "kai_num": 51,
+    "year": 1996,
+    "tabid": 698,
+    "host_raw": "広島県"
+  },
+  {
+    "kai_raw": "第50回大会",
+    "kai_num": 50,
+    "year": 1995,
+    "tabid": 699,
+    "host_raw": "福島県"
+  },
+  {
+    "kai_raw": "第49回大会",
+    "kai_num": 49,
+    "year": 1994,
+    "tabid": 700,
+    "host_raw": "愛知県"
+  },
+  {
+    "kai_raw": "第48回大会",
+    "kai_num": 48,
+    "year": 1993,
+    "tabid": 701,
+    "host_raw": "香川県 徳島県"
+  },
+  {
+    "kai_raw": "第47回大会",
+    "kai_num": 47,
+    "year": 1992,
+    "tabid": 702,
+    "host_raw": "山形県"
+  },
+  {
+    "kai_raw": "第46回大会",
+    "kai_num": 46,
+    "year": 1991,
+    "tabid": 703,
+    "host_raw": "石川県"
+  },
+  {
+    "kai_raw": "第45回大会",
+    "kai_num": 45,
+    "year": 1990,
+    "tabid": 704,
+    "host_raw": "福岡県"
+  },
+  {
+    "kai_raw": "第44回大会",
+    "kai_num": 44,
+    "year": 1989,
+    "tabid": 705,
+    "host_raw": "北海道"
+  },
+  {
+    "kai_raw": "第43回大会",
+    "kai_num": 43,
+    "year": 1988,
+    "tabid": 706,
+    "host_raw": "京都府"
+  },
+  {
+    "kai_raw": "第42回大会",
+    "kai_num": 42,
+    "year": 1987,
+    "tabid": 707,
+    "host_raw": "沖縄県"
+  },
+  {
+    "kai_raw": "第41回大会",
+    "kai_num": 41,
+    "year": 1986,
+    "tabid": 708,
+    "host_raw": "山梨県"
+  },
+  {
+    "kai_raw": "第40回大会",
+    "kai_num": 40,
+    "year": 1985,
+    "tabid": 709,
+    "host_raw": "鳥取県"
+  },
+  {
+    "kai_raw": "第39回大会",
+    "kai_num": 39,
+    "year": 1984,
+    "tabid": 710,
+    "host_raw": "奈良県"
+  },
+  {
+    "kai_raw": "第38回大会",
+    "kai_num": 38,
+    "year": 1983,
+    "tabid": 711,
+    "host_raw": "群馬県"
+  },
+  {
+    "kai_raw": "第37回大会",
+    "kai_num": 37,
+    "year": 1982,
+    "tabid": 712,
+    "host_raw": "島根県"
+  },
+  {
+    "kai_raw": "第36回大会",
+    "kai_num": 36,
+    "year": 1981,
+    "tabid": 713,
+    "host_raw": "滋賀県"
+  },
+  {
+    "kai_raw": "第35回大会",
+    "kai_num": 35,
+    "year": 1980,
+    "tabid": 714,
+    "host_raw": "栃木県"
+  },
+  {
+    "kai_raw": "第34回大会",
+    "kai_num": 34,
+    "year": 1979,
+    "tabid": 715,
+    "host_raw": "宮崎県"
+  },
+  {
+    "kai_raw": "第33回大会",
+    "kai_num": 33,
+    "year": 1978,
+    "tabid": 716,
+    "host_raw": "長野県"
+  },
+  {
+    "kai_raw": "第32回大会",
+    "kai_num": 32,
+    "year": 1977,
+    "tabid": 717,
+    "host_raw": "青森県"
+  },
+  {
+    "kai_raw": "第31回大会",
+    "kai_num": 31,
+    "year": 1976,
+    "tabid": 718,
+    "host_raw": "佐賀県"
+  },
+  {
+    "kai_raw": "第30回大会",
+    "kai_num": 30,
+    "year": 1975,
+    "tabid": 719,
+    "host_raw": "三重県"
+  },
+  {
+    "kai_raw": "第29回大会",
+    "kai_num": 29,
+    "year": 1974,
+    "tabid": 720,
+    "host_raw": "茨城県"
+  },
+  {
+    "kai_raw": "第28回大会",
+    "kai_num": 28,
+    "year": 1973,
+    "tabid": 721,
+    "host_raw": "千葉県"
+  },
+  {
+    "kai_raw": "特別国体",
+    "kai_num": null,
+    "year": 1973,
+    "tabid": 749,
+    "host_raw": "沖縄県"
+  },
+  {
+    "kai_raw": "第27回大会",
+    "kai_num": 27,
+    "year": 1972,
+    "tabid": 722,
+    "host_raw": "鹿児島県"
+  },
+  {
+    "kai_raw": "第26回大会",
+    "kai_num": 26,
+    "year": 1971,
+    "tabid": 723,
+    "host_raw": "和歌山県"
+  },
+  {
+    "kai_raw": "第25回大会",
+    "kai_num": 25,
+    "year": 1970,
+    "tabid": 724,
+    "host_raw": "岩手県"
+  },
+  {
+    "kai_raw": "第24回大会",
+    "kai_num": 24,
+    "year": 1969,
+    "tabid": 725,
+    "host_raw": "長崎県"
+  },
+  {
+    "kai_raw": "第23回大会",
+    "kai_num": 23,
+    "year": 1968,
+    "tabid": 726,
+    "host_raw": "福井県"
+  },
+  {
+    "kai_raw": "第22回大会",
+    "kai_num": 22,
+    "year": 1967,
+    "tabid": 727,
+    "host_raw": "埼玉県"
+  },
+  {
+    "kai_raw": "第21回大会",
+    "kai_num": 21,
+    "year": 1966,
+    "tabid": 728,
+    "host_raw": "大分県"
+  },
+  {
+    "kai_raw": "第20回大会",
+    "kai_num": 20,
+    "year": 1965,
+    "tabid": 729,
+    "host_raw": "岐阜県"
+  },
+  {
+    "kai_raw": "第19回大会",
+    "kai_num": 19,
+    "year": 1964,
+    "tabid": 730,
+    "host_raw": "新潟県"
+  },
+  {
+    "kai_raw": "第18回大会",
+    "kai_num": 18,
+    "year": 1963,
+    "tabid": 731,
+    "host_raw": "山口県"
+  },
+  {
+    "kai_raw": "第17回大会",
+    "kai_num": 17,
+    "year": 1962,
+    "tabid": 732,
+    "host_raw": "岡山県"
+  },
+  {
+    "kai_raw": "第16回大会",
+    "kai_num": 16,
+    "year": 1961,
+    "tabid": 733,
+    "host_raw": "秋田県"
+  },
+  {
+    "kai_raw": "第15回大会",
+    "kai_num": 15,
+    "year": 1960,
+    "tabid": 734,
+    "host_raw": "熊本県"
+  },
+  {
+    "kai_raw": "第14回大会",
+    "kai_num": 14,
+    "year": 1959,
+    "tabid": 735,
+    "host_raw": "東京都"
+  },
+  {
+    "kai_raw": "第13回大会",
+    "kai_num": 13,
+    "year": 1958,
+    "tabid": 736,
+    "host_raw": "富山県"
+  },
+  {
+    "kai_raw": "第12回大会",
+    "kai_num": 12,
+    "year": 1957,
+    "tabid": 737,
+    "host_raw": "静岡県"
+  },
+  {
+    "kai_raw": "第11回大会",
+    "kai_num": 11,
+    "year": 1956,
+    "tabid": 738,
+    "host_raw": "兵庫県"
+  },
+  {
+    "kai_raw": "第10回大会",
+    "kai_num": 10,
+    "year": 1955,
+    "tabid": 739,
+    "host_raw": "神奈川県"
+  },
+  {
+    "kai_raw": "第9回大会",
+    "kai_num": 9,
+    "year": 1954,
+    "tabid": 740,
+    "host_raw": "北海道"
+  },
+  {
+    "kai_raw": "第8回大会",
+    "kai_num": 8,
+    "year": 1953,
+    "tabid": 741,
+    "host_raw": "愛媛県 香川県 徳島県 高知県"
+  },
+  {
+    "kai_raw": "第7回大会",
+    "kai_num": 7,
+    "year": 1952,
+    "tabid": 742,
+    "host_raw": "福島県 宮城県 山形県"
+  },
+  {
+    "kai_raw": "第6回大会",
+    "kai_num": 6,
+    "year": 1951,
+    "tabid": 743,
+    "host_raw": "広島県"
+  },
+  {
+    "kai_raw": "第5回大会",
+    "kai_num": 5,
+    "year": 1950,
+    "tabid": 744,
+    "host_raw": "愛知県"
+  },
+  {
+    "kai_raw": "第4回大会",
+    "kai_num": 4,
+    "year": 1949,
+    "tabid": 745,
+    "host_raw": "東京都"
+  },
+  {
+    "kai_raw": "第3回大会",
+    "kai_num": 3,
+    "year": 1948,
+    "tabid": 746,
+    "host_raw": "福岡県"
+  },
+  {
+    "kai_raw": "第2回大会",
+    "kai_num": 2,
+    "year": 1947,
+    "tabid": 747,
+    "host_raw": "石川県"
+  },
+  {
+    "kai_raw": "第1回大会",
+    "kai_num": 1,
+    "year": 1946,
+    "tabid": 748,
+    "host_raw": "京阪神地域を 中心に近畿地区"
+  }
+]

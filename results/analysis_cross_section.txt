@@ -1,0 +1,51 @@
+================================================================================
+analysis_cross_section_2024_2025.py — 2024佐賀 + 2025滋賀 断面
+Subj×Host 交互作用 (novelty core)
+================================================================================
+
+[descriptive_by_category — 3分類 host boost]
+          category  mean_nonhost  mean_host  count_nonhost  count_host  diff_mean_host_minus_nonhost
+0        objective     26.029445  43.630769         2920.0        65.0                     17.601324
+1  semi_subjective     20.847885  47.031250         2199.0        48.0                     26.183365
+2       subjective     19.331784  57.236842         1721.0        38.0                     37.905058
+
+[run_cross_section_models — 3 spec]
+  cross_section_baseline.name            cross_section_baseline
+  cross_section_baseline.dv              score
+  cross_section_baseline.coef_is_host    16.602075911470287
+  cross_section_baseline.se_is_host      1.2504801316284895
+  cross_section_baseline.p_is_host       3.1660335404340418e-40
+  cross_section_baseline.coef_interaction 16.683694075745333
+  cross_section_baseline.se_interaction  7.722305799612529
+  cross_section_baseline.p_interaction   0.030737464640059758
+  cross_section_baseline.n_obs           6991
+  cross_section_baseline.n_params        92
+  cross_section_baseline.n_clusters      47
+  cross_section_baseline.r2              0.2437999485649962
+
+  cross_section_with_semi.name           cross_section_with_semi
+  cross_section_with_semi.dv             score
+  cross_section_with_semi.coef_is_host   12.992926646505328
+  cross_section_with_semi.se_is_host     nan
+  cross_section_with_semi.p_is_host      nan
+  cross_section_with_semi.coef_interaction 20.305381167922654
+  cross_section_with_semi.se_interaction nan
+  cross_section_with_semi.p_interaction  nan
+  cross_section_with_semi.n_obs          6991
+  cross_section_with_semi.n_params       94
+  cross_section_with_semi.n_clusters     47
+  cross_section_with_semi.r2             0.2442367321357286
+
+  cross_section_log_baseline.name        cross_section_log_baseline
+  cross_section_log_baseline.dv          log_score
+  cross_section_log_baseline.coef_is_host 0.46712985616869285
+  cross_section_log_baseline.se_is_host  0.056876937311499724
+  cross_section_log_baseline.p_is_host   2.1574313562496015e-16
+  cross_section_log_baseline.coef_interaction 0.2926476022210591
+  cross_section_log_baseline.se_interaction 0.1695572773074926
+  cross_section_log_baseline.p_interaction 0.08435617548713861
+  cross_section_log_baseline.n_obs       6991
+  cross_section_log_baseline.n_params    92
+  cross_section_log_baseline.n_clusters  47
+  cross_section_log_baseline.r2          0.27919535640777426
+

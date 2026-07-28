@@ -1,0 +1,30 @@
+================================================================================
+analysis_main.py — 主モデル (2012-2022 tennou・n<=423)
+================================================================================
+
+[descriptive_host_summary — tennou 2012-2022]
+n_obs                                    423
+n_host                                   9
+n_nonhost                                414
+n_host_top1                              6
+n_host_top8                              9
+n_nonhost_top1                           3
+n_nonhost_top8                           62
+host_top1_rate                           0.6666666666666666
+host_top8_rate                           1.0
+nonhost_top1_rate                        0.007246376811594203
+nonhost_top8_rate                        0.1497584541062802
+host_mean_rank_when_ranked               1.3333333333333333
+
+[run_main_models cup=tennou]
+  ordered_pooled                           coef=-13.726475 se=1.539428 p=0.000000 n=423 converged=True llf=-173.8497
+  ordered_prefFE_yearFE                    coef=-49.564877 se=172.446308 p=0.773789 n=423 converged=True llf=-111.1923
+  logit_top1_pooled                        coef=+9.094158 se=2.796680 p=0.001147 n=423 converged=True llf=-12.7478
+  logit_top1_prefFE_yearFE                 coef=+1877.278833 se=nan p=nan n=423 converged=True llf=-0.0001
+
+[run_main_models cup=kougou]
+  ordered_pooled                           coef=-11.561606 se=1.251577 p=0.000000 n=423 converged=True llf=-188.9096
+  ordered_prefFE_yearFE                    coef=-56.499979 se=23.517797 p=0.016286 n=423 converged=False llf=-133.1568
+  logit_top1_pooled                        coef=+9.187990 se=3.793206 p=0.015426 n=423 converged=True llf=-10.5411
+  logit_top1_prefFE_yearFE                 coef=+20170.194062 se=nan p=nan n=423 converged=True llf=-0.0001
+

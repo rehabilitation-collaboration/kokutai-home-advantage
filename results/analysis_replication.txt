@@ -1,0 +1,102 @@
+================================================================================
+analysis_replication.py — 舟橋2016 再現 (2003-2011)
+================================================================================
+
+[descriptive_host_score_gap cup=tennou]
+n_obs                                    423
+n_host                                   9
+n_nonhost                                414
+host_mean_score                          2785.5
+nonhost_mean_score                       1052.2088647342994
+raw_diff                                 1733.2911352657006
+funahashi_2016_reference                 1674.65
+
+[run_replication_models cup=tennou]
+  funahashi_base.name                    funahashi_base
+  funahashi_base.dv                      score
+  funahashi_base.year_min                2003
+  funahashi_base.year_max                2011
+  funahashi_base.coef_is_host            1575.4513888888882
+  funahashi_base.se_is_host              57.58160934663797
+  funahashi_base.p_is_host               8.139316281209402e-165
+  funahashi_base.n_obs                   423
+  funahashi_base.n_params                56
+  funahashi_base.n_clusters              47
+  funahashi_base.r2                      0.93881484581624
+  funahashi_base.r2_adj                  0.9296454085407446
+
+  pooled_no_fe.name                      pooled_no_fe
+  pooled_no_fe.dv                        score
+  pooled_no_fe.year_min                  2003
+  pooled_no_fe.year_max                  2011
+  pooled_no_fe.coef_is_host              1733.291135265699
+  pooled_no_fe.se_is_host                138.25924443966457
+  pooled_no_fe.p_is_host                 4.711805573736718e-36
+  pooled_no_fe.n_obs                     423
+  pooled_no_fe.n_params                  2
+  pooled_no_fe.n_clusters                47
+  pooled_no_fe.r2                        0.3308211970589032
+  pooled_no_fe.r2_adj                    0.3292316987146251
+
+  extended_2003_2012.name                extended_2003_2012
+  extended_2003_2012.dv                  score
+  extended_2003_2012.year_min            2003
+  extended_2003_2012.year_max            2012
+  extended_2003_2012.coef_is_host        1604.355555555553
+  extended_2003_2012.se_is_host          60.07981641921657
+  extended_2003_2012.p_is_host           4.2593202479760904e-157
+  extended_2003_2012.n_obs               470
+  extended_2003_2012.n_params            57
+  extended_2003_2012.n_clusters          47
+  extended_2003_2012.r2                  0.9382325889691245
+  extended_2003_2012.r2_adj              0.9298573467954465
+
+[descriptive_host_score_gap cup=kougou]
+n_obs                                    423
+n_host                                   9
+n_nonhost                                414
+host_mean_score                          1223.7222222222222
+nonhost_mean_score                       540.4552898550725
+raw_diff                                 683.2669323671497
+funahashi_2016_reference                 1674.65
+
+[run_replication_models cup=kougou]
+  funahashi_base.name                    funahashi_base
+  funahashi_base.dv                      score
+  funahashi_base.year_min                2003
+  funahashi_base.year_max                2011
+  funahashi_base.coef_is_host            618.3333333333331
+  funahashi_base.se_is_host              20.024108765929856
+  funahashi_base.p_is_host               2.2554374706045258e-209
+  funahashi_base.n_obs                   423
+  funahashi_base.n_params                56
+  funahashi_base.n_clusters              47
+  funahashi_base.r2                      0.9070847274771962
+  funahashi_base.r2_adj                  0.8931600953552501
+
+  pooled_no_fe.name                      pooled_no_fe
+  pooled_no_fe.dv                        score
+  pooled_no_fe.year_min                  2003
+  pooled_no_fe.year_max                  2011
+  pooled_no_fe.coef_is_host              683.2669323671494
+  pooled_no_fe.se_is_host                47.191487234397776
+  pooled_no_fe.p_is_host                 1.6541889761168201e-47
+  pooled_no_fe.n_obs                     423
+  pooled_no_fe.n_params                  2
+  pooled_no_fe.n_clusters                47
+  pooled_no_fe.r2                        0.29281664478752
+  pooled_no_fe.r2_adj                    0.2911368743475854
+
+  extended_2003_2012.name                extended_2003_2012
+  extended_2003_2012.dv                  score
+  extended_2003_2012.year_min            2003
+  extended_2003_2012.year_max            2012
+  extended_2003_2012.coef_is_host        632.5944444444435
+  extended_2003_2012.se_is_host          23.540801557992715
+  extended_2003_2012.p_is_host           4.635269832922217e-159
+  extended_2003_2012.n_obs               470
+  extended_2003_2012.n_params            57
+  extended_2003_2012.n_clusters          47
+  extended_2003_2012.r2                  0.9085581183485437
+  extended_2003_2012.r2_adj              0.8961592191415666
+
