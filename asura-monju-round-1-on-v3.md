@@ -39,11 +39,11 @@
 - **Finding F + M1**: Balmer 2003 "diving" false claim (PubMed abstract で 5 groups = {athletics, weightlifting, boxing, gymnastics, team games}・diving 含まず)
 - **Finding G**: Suetsugu quote 内的矛盾 (L35/L147 quote vs L169 bibliographic-only 自認)
 
-**P2 (7 件)**:
+**P2 (11 件・Finding×8 + Monju×3)**:
 - Finding H (L31 "1896 forward" ref 1 誤引・Winter Olympics)
 - Finding I (Results L115 bootstrap p unlabeled)
 - Finding J (Discussion 見出し "holds" vs 段落末単段落内矛盾)
-- Finding K + Monju M7 (Table 4b M1-M3 separation vs finite SE 矛盾・code trace)
+- Finding K + Monju M7 (Table 4b M1-M3 separation vs finite SE 矛盾・compound で 1 count)
 - Finding L (Table 5d wild-cluster bootstrap 未計算 = selective standard)
 - Finding M (Table 7 primary vs inclusive spec 混在)
 - Finding N (Discussion "establishes" / "approximately two" 一貫性欠如)
@@ -52,10 +52,11 @@
 - Monju M6 (Judge-affiliation bias direction 論議欠如)
 - Monju M8 (Cameron & Miller (2015) attribution が MacKinnon & Webb (2017) より weak)
 
-**P3 (11 件)**:
+**P3 (14 件・Finding×11 + Monju×3)**:
+- **Finding D** (Table 1/6/7 が narrative で番号引用ゼロ・2/2 match だが独立検出扱い)
 - Finding P (Nara hantei citation なし)
 - Finding Q (data_loader.py docstring 算術矛盾・code)
-- Finding R + Monju M4 (wild_cluster_bootstrap code の bare except + p convention 逸脱)
+- Finding R + Monju M4 (wild_cluster_bootstrap code の bare except + p convention 逸脱・compound で 1 count)
 - Finding S (Abstract "FE" + Ethics "MEXT/MHLW" 未展開)
 - Finding T ("Table 4" Funahashi vs 現論文 混用)
 - Finding U (Limitations に event-study 項目なし)
@@ -161,13 +162,13 @@
 **Finding #B12** (P2・GPT round-2 #5・11 years → 9 editions):
 - manuscript.md L173 Limitations "2012-2022 (11 years, n = 423)" → "2012-2022 (calendar span; 9 non-cancelled editions; n = 423)"
 
-**Finding #B13** (P2・Event-study 後景化・GPT round-2 #6):
-- Methods §Event-study design (L71-73) を Supplement §S1 or Appendix A に移動
-- Results §Event-study (L107-109) を Supplement §S1 or Appendix A に移動
+**Finding #B13** (P2・Event-study 後景化・GPT round-2 #6・★命名固定=**Supplement §S1**):
+- Methods §Event-study design (L71-73) を **Supplement §S1** に移動 (命名 = "Supplement" 固定・"Appendix" 表記却下 = 医学系論文で Supplement の方が一般的)
+- Results §Event-study (L107-109) を Supplement §S1 に移動
 - Fig 3 (L345 Figure Legends) を Supplement Figure S1 に格下げ
 - L79 Multiple comparisons 段落から event-study 言及削除 or 大幅短縮
 - Discussion §Two host-loss clusters (L137) の event-study 参照調整
-- generate_pdf.py に Supplement 節ページ追加 (Appendix A: Event-Study Design and Results 見出し)
+- generate_pdf.py に Supplement 節ページ追加 (見出し = "Supplementary Materials §S1: Event-Study Design and Results")
 - ★Phase B 最重量・structural change
 
 **Finding #B14** (P2・Judge-affiliation bias direction discussion・Monju M6):
@@ -319,3 +320,49 @@
 - 査読誌投稿基準 clear の可能性大 (P1 4 件 = 致命的 = 全部潰せば "刺さり所" 消失)
 - GPT round-3 判定は minor revision or accept へ大幅前進の見込み
 - 第9弾 companion paper (Sport-level exploratory screen) 執筆時の本論文引用時に traceability 明確化
+
+---
+
+## ★ID/Finding letter 相互参照表 (REVIEW-REPORT.md ↔ 本ファイル)
+
+REVIEW-REPORT.md の「#」列 (severity 順 serial・1-33) と本ファイルの「Finding letter」(aggregated 順・A-Y) + Monju independent (M1-M12) の対応関係。**初見コールドスタート時の混同回避用**。ID 二重体系 (checklist ID `A-02`/`C-08` 等) と Finding letter は別物なので注意。
+
+| REVIEW-REPORT # | 本 file の Finding | Severity | Issue key |
+|---|---|---|---|
+| 1 | F + Monju M1 | P1 | Balmer 2003 "diving" false claim (L33) |
+| 2 | G | P1 | Suetsugu quote 内的矛盾 (L35/L147 vs L169) |
+| 3 | A | P1 | AI-log leak 18+ 箇所 (R3 追加 L73 含) |
+| 4 | B | P1 | Cameron & Miller ^12→^13 (L163) |
+| 5 | C | P2 | Zero-imputed sensitivity 実装 |
+| 6 | E + Monju M11 | P2 | Conclusion no_combat tone + Methods L79 self-consistency |
+| 7 | H | P2 | Introduction "1896 forward" ^1,2^ citation refactor |
+| 8 | I | P2 | Results L115 bootstrap p disambiguate |
+| 9 | J | P2 | Discussion 見出し L127 "holds" vs 段落末矛盾 |
+| 10 | K + Monju M7 | P2 | Table 4b M1-M3 separation-regime footnote |
+| 11 | L | P2 | Table 5d 4-variant wild-cluster bootstrap 追加 |
+| 12 | M | P2 | Table 7 primary/inclusive spec 混在 footnote |
+| 13 | N | P2 | Discussion "establishes"/"approximately two" 修正 |
+| 14 | O | P2 | Table 5 bootstrap 行 95% CI 追加 |
+| 15 | Monju M3 | P2 | Rademacher weights sensitivity limitation |
+| 16 | Monju M6 | P2 | Judge-affiliation bias direction discussion |
+| 17 | Monju M8 | P2 | MacKinnon & Webb 2017 Ref 15 追加 |
+| 18 | D | P3 | Table 1/6/7 narrative in-text cite (2/2 match) |
+| 19 | P | P3 | Nara hantei citation (L35) |
+| 20 | Q | P3 | data_loader.py docstring 算術矛盾 (L206-208) |
+| 21 | R + Monju M4 | P3 | wild_cluster_bootstrap code (bare except + p convention + n_used 報告) |
+| 22 | S | P3 | Abstract "FE" + Ethics "MEXT/MHLW" 略語展開 |
+| 23 | T | P3 | "Table 4" Funahashi vs 現論文 区別 |
+| 24 | U | P3 | Limitations Ninth (event-study thin variation) 追加 |
+| 25 | V | P3 | "PO" 略語 first-use 定義 |
+| 26 | W | P3 | Sample size availability-driven 節 |
+| 27 | X | P3 | Reviewer-driven "exploratory" re-label |
+| 28 | Y | P3 | 命令調 academic register 修正 (L139) |
+| 29 | Monju M2 | P3 | sport_classifier.py L26 コメント 16→17 |
+| 30 | Monju M5 | P3 | Acknowledgments 数値 verification 手順明記 |
+| 31 | Monju M9 | P3 | Unit tests 297 breakdown |
+| 32 | Monju M10 | P3 | Reference format (Vancouver 略誌名 統一) |
+| 33 | Monju M12 | P3 | Data Availability GitHub URL 配置 (Phase B''' 判断分岐) |
+
+**内訳合計 (再集計・整合済み)**: P1 = 4 件 (#1-4) / P2 = 13 件 (#5-17) / P3 = 16 件 (#18-33) = **合計 33 unique action items**。
+
+★過去 handoff/summary の「P2×12 + P3×17」は集計時期の compound 定義差異による。**本相互参照表を真実源とする** (initial 記述は summary レベルで大まかな内訳・実行時は本 table 33 items を順に潰していく)。
