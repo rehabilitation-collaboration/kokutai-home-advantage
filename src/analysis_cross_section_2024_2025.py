@@ -470,6 +470,43 @@ def wild_cluster_bootstrap(
     }
 
 
+def run_bootstrap_by_variant(
+    variants: tuple[str, ...] = ("default", "pure_judged", "no_combat", "combat_to_semi"),
+    include_winter: bool = True,
+    n_bootstrap: int = 999,
+    seed: int = 20260728,
+) -> dict[str, dict]:
+    """v4 Phase A-2 (GPT round-2 追加応答・Finding L): Table 5d 4 variant 全てで
+    wild-cluster bootstrap を計算し、classification sensitivity の inferential
+    consistency を検証する.
+
+    Table 5d の cluster-robust p だけでは "selective standard" (primary/inclusive
+    は wild-cluster bootstrap で降下・variant は cluster-robust のまま) の疑いあり
+    → 全 4 variant で同一 seed・同一 B で bootstrap を計算して inferential
+    consistency を担保する。
+
+    default variant の bootstrap は Table 5 primary bootstrap (seed=20260728) と
+    bit-identical になる (consistency check として使える)。
+
+    Returns:
+        {variant_name: wild_cluster_bootstrap 返り値 dict} 形式
+    """
+    results = {}
+    for v in variants:
+        df = build_cross_section_frame(include_winter=include_winter, category_variant=v)
+        df_obj_subj = df[df["is_semi"] == 0].reset_index(drop=True)
+        result = wild_cluster_bootstrap(
+            df_obj_subj,
+            dv="score",
+            with_semi_interaction=False,
+            test_coef="host_x_subj",
+            n_bootstrap=n_bootstrap,
+            seed=seed,
+        )
+        results[v] = result
+    return results
+
+
 def descriptive_by_category(df: pd.DataFrame | None = None) -> pd.DataFrame:
     """カテゴリ × host のクロス集計 (Discussion 用)
 

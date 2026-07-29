@@ -432,3 +432,42 @@ class TestZeroImputed:
             f"zero-imputed β_HS={result.coef_interaction:.4f} outside ±5% window "
             f"[{lower:.2f}, {upper:.2f}] of primary +{primary_beta}"
         )
+
+
+class TestBootstrapByVariant:
+    """v4 Phase A-2 (GPT round-2 応答・Finding L): Table 5d 4 variant 全てで
+    wild-cluster bootstrap を計算・selective standard 解消の実測担保.
+    """
+
+    def test_bootstrap_by_variant_returns_all_4(self):
+        """4 variant (default/pure_judged/no_combat/combat_to_semi) 全て返る."""
+        from src.analysis_cross_section_2024_2025 import run_bootstrap_by_variant
+        r = run_bootstrap_by_variant()
+        assert set(r.keys()) == {"default", "pure_judged", "no_combat", "combat_to_semi"}
+
+    def test_bootstrap_default_variant_matches_primary_bootstrap_p(self):
+        """default variant の bootstrap p が Table 5 primary bootstrap p (0.174) と
+        bit-identical (同 seed=20260728 で同 wild_cluster_bootstrap 実装なので一致)."""
+        from src.analysis_cross_section_2024_2025 import run_bootstrap_by_variant
+        r = run_bootstrap_by_variant(seed=20260728)
+        primary_bootstrap_p = 0.174  # Table 5 primary bootstrap row
+        assert abs(r["default"]["bootstrap_p"] - primary_bootstrap_p) < 0.005, (
+            f"default bootstrap p={r['default']['bootstrap_p']} vs "
+            f"primary bootstrap p={primary_bootstrap_p} (should be bit-identical ±0.005)"
+        )
+
+    def test_bootstrap_all_variants_direction_positive(self):
+        """全 4 variant で observed_coef > 0 (β_HS direction 一致)."""
+        from src.analysis_cross_section_2024_2025 import run_bootstrap_by_variant
+        r = run_bootstrap_by_variant()
+        for v, res in r.items():
+            assert res["observed_coef"] > 0, f"{v}: observed_coef={res['observed_coef']}"
+
+    def test_bootstrap_variants_n_used_gt_900(self):
+        """各 variant で n_bootstrap_used > 900 (999 のほとんどが finite return)."""
+        from src.analysis_cross_section_2024_2025 import run_bootstrap_by_variant
+        r = run_bootstrap_by_variant()
+        for v, res in r.items():
+            assert res["n_bootstrap_used"] > 900, (
+                f"{v}: n_bootstrap_used={res['n_bootstrap_used']} (too many bootstrap failures)"
+            )
