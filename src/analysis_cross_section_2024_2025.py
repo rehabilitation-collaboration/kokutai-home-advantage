@@ -455,6 +455,18 @@ def wild_cluster_bootstrap(
     bootstrap_ts_arr = np.array(bootstrap_ts)
     bootstrap_p = float(np.mean(np.abs(bootstrap_ts_arr) >= abs(observed_t))) if len(bootstrap_ts_arr) else float("nan")
 
+    # v4 Phase A-3 (Asura O + GPT round-2 追加応答): pivotal 95% CI
+    # Cameron-Gelbach-Miller (2008) pivotal method:
+    #   CI = [β_hat - t_hi × SE, β_hat - t_lo × SE]
+    # where t_lo, t_hi = percentile(bootstrap_ts under null, [2.5, 97.5])
+    if len(bootstrap_ts_arr) >= 40:  # 2.5% quantile を意味あるものにする最小
+        t_lo, t_hi = np.percentile(bootstrap_ts_arr, [2.5, 97.5])
+        bootstrap_ci_low = observed_coef - t_hi * observed_se
+        bootstrap_ci_high = observed_coef - t_lo * observed_se
+    else:
+        bootstrap_ci_low = float("nan")
+        bootstrap_ci_high = float("nan")
+
     return {
         "test_coef": test_coef,
         "observed_coef": observed_coef,
@@ -462,6 +474,8 @@ def wild_cluster_bootstrap(
         "observed_t": observed_t,
         "cluster_robust_p": cluster_robust_p,
         "bootstrap_p": bootstrap_p,
+        "bootstrap_ci_low_95": bootstrap_ci_low,
+        "bootstrap_ci_high_95": bootstrap_ci_high,
         "n_bootstrap_used": len(bootstrap_ts_arr),
         "n_bootstrap_requested": n_bootstrap,
         "seed": seed,

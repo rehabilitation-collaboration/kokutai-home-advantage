@@ -221,7 +221,9 @@ class TestWildClusterBootstrap:
         out = wild_cluster_bootstrap(df, dv="score", test_coef="host_x_subj", n_bootstrap=49, seed=1)
         expected = {
             "test_coef", "observed_coef", "observed_se", "observed_t",
-            "cluster_robust_p", "bootstrap_p", "n_bootstrap_used",
+            "cluster_robust_p", "bootstrap_p",
+            "bootstrap_ci_low_95", "bootstrap_ci_high_95",  # v4 Phase A-3 追加
+            "n_bootstrap_used",
             "n_bootstrap_requested", "seed", "n_clusters", "treated_clusters",
         }
         assert set(out.keys()) == expected
@@ -470,4 +472,39 @@ class TestBootstrapByVariant:
         for v, res in r.items():
             assert res["n_bootstrap_used"] > 900, (
                 f"{v}: n_bootstrap_used={res['n_bootstrap_used']} (too many bootstrap failures)"
+            )
+
+
+class TestBootstrapCI:
+    """v4 Phase A-3 (Asura O + GPT round-2 追加応答): pivotal 95% CI 計算検証.
+
+    Cameron-Gelbach-Miller (2008) pivotal method:
+      CI = [β - t_hi × SE, β - t_lo × SE]
+    where t_lo, t_hi = percentile(bootstrap_ts under null, [2.5, 97.5]).
+    """
+
+    def test_bootstrap_ci_monotonic(self):
+        """CI lower < upper (trivial validity・pivotal method の性質保証)."""
+        from src.analysis_cross_section_2024_2025 import (
+            build_cross_section_frame, wild_cluster_bootstrap,
+        )
+        df = build_cross_section_frame()
+        df_obj_subj = df[df["is_semi"] == 0].reset_index(drop=True)
+        r = wild_cluster_bootstrap(df_obj_subj)
+        assert r["bootstrap_ci_low_95"] < r["bootstrap_ci_high_95"], (
+            f"CI=[{r['bootstrap_ci_low_95']}, {r['bootstrap_ci_high_95']}] non-monotonic"
+        )
+
+    def test_bootstrap_ci_contains_zero_when_p_greater_than_005(self):
+        """bootstrap p > 0.05 なら CI が 0 を含む (定義上の整合性・pivotal 対応)."""
+        from src.analysis_cross_section_2024_2025 import (
+            build_cross_section_frame, wild_cluster_bootstrap,
+        )
+        df = build_cross_section_frame()
+        df_obj_subj = df[df["is_semi"] == 0].reset_index(drop=True)
+        r = wild_cluster_bootstrap(df_obj_subj)
+        if r["bootstrap_p"] > 0.05:
+            assert r["bootstrap_ci_low_95"] < 0 < r["bootstrap_ci_high_95"], (
+                f"bootstrap p={r['bootstrap_p']:.4f} > 0.05 なのに CI="
+                f"[{r['bootstrap_ci_low_95']:.4f}, {r['bootstrap_ci_high_95']:.4f}] が 0 を含まない"
             )
