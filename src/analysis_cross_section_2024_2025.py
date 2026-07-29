@@ -122,6 +122,79 @@ def build_cross_section_frame(
     return stacked.reset_index(drop=True)
 
 
+def build_cross_section_frame_zero_imputed(
+    include_winter: bool = True,
+    category_variant: str = "default",
+) -> pd.DataFrame:
+    """欠測 106 セル (7,097 - 6,991) を score=0 埋めた full cartesian variant.
+
+    GPT round-2 #3 応答: non-participation vs missing-data の解釈弾力性 sensitivity.
+    prefecture が JSPO overall-standings publication から欠落しているセルを
+    "non-participation → score=0" として扱う仮定で primary spec を再推定する。
+
+    Full cartesian n = 47 prefectures × ([40 tennou + 35 kougou] + [40 tennou + 36 kougou])
+                    = 47 × 151 = 7,097 cells (Table 1 theoretical n と一致)
+    """
+    from src.definitions import get_host_code
+
+    # drop_unclassified=False で分類不能 sport も残す (zero-imputed の対象を広げる)
+    df = build_cross_section_frame(
+        include_winter=include_winter,
+        drop_unclassified=False,
+        category_variant=category_variant,
+    )
+
+    # 各 (kai, cup) の unique sport set を取得
+    stack_sports = df.groupby(["kai_num", "cup"]).agg(
+        year=("year", "first"),
+        sports=("sport", lambda s: sorted(s.unique().tolist())),
+    ).reset_index()
+
+    prefs = sorted(df["pref_code"].unique())
+    pref_names = df.groupby("pref_code")["pref_name"].first().to_dict()
+
+    # full cartesian rows
+    rows = []
+    for _, s in stack_sports.iterrows():
+        for sport in s["sports"]:
+            for pref in prefs:
+                rows.append({
+                    "kai_num": s["kai_num"],
+                    "cup": s["cup"],
+                    "year": s["year"],
+                    "sport": sport,
+                    "pref_code": pref,
+                    "pref_name": pref_names[pref],
+                })
+    full = pd.DataFrame(rows)
+
+    # merge with original scores + is_winter (missing rows = non-participation)
+    merged = full.merge(
+        df[["pref_code", "kai_num", "cup", "sport", "score", "is_winter"]],
+        on=["pref_code", "kai_num", "cup", "sport"],
+        how="left",
+    )
+    merged["score"] = merged["score"].fillna(0)
+    merged["is_winter"] = merged["is_winter"].fillna(False)
+
+    # is_host 再付与 (host_pref は kai から解決)
+    kai_to_host = {int(kai): get_host_code(int(kai)) for kai in merged["kai_num"].unique()}
+    merged["is_host"] = merged.apply(
+        lambda r: r["pref_code"] == kai_to_host[int(r["kai_num"])], axis=1
+    )
+    merged["is_host_int"] = merged["is_host"].astype(int)
+
+    # category 再付与
+    merged["category"] = merged["sport"].map(
+        lambda s: get_category(s, variant=category_variant)
+    )
+    merged["is_subjective"] = (merged["category"] == "subjective").astype(int)
+    merged["is_semi"] = (merged["category"] == "semi_subjective").astype(int)
+    merged["log_score"] = np.log1p(merged["score"])
+
+    return merged.reset_index(drop=True)
+
+
 def _build_design(
     df: pd.DataFrame,
     with_semi_interaction: bool,
@@ -282,6 +355,25 @@ def run_cross_section_models_by_variant(
         )
         results[v] = result
     return results
+
+
+def run_cross_section_zero_imputed(include_winter: bool = True) -> CrossSectionResult:
+    """GPT round-2 #3 応答: 欠測 106 セル (7,097 - 6,991) を score=0 埋めた
+    primary spec (semi 除外・obj-vs-subj pure) の zero-imputed variant.
+
+    non-participation vs missing-data の解釈弾力性 sensitivity check.
+    Table 5 primary (+20.27) との direction 一致 + magnitude 保持を確認する
+    ("results were directionally unchanged" 主張の実測根拠)。
+    """
+    df = build_cross_section_frame_zero_imputed(include_winter=include_winter)
+    # primary spec = semi 除外 (obj vs subj pure)
+    df_obj_subj = df[df["is_semi"] == 0].reset_index(drop=True)
+    return fit_cross_section_ols(
+        df_obj_subj,
+        dv="score",
+        with_semi_interaction=False,
+        name="cross_section_obj_vs_subj_zero_imputed",
+    )
 
 
 def wild_cluster_bootstrap(

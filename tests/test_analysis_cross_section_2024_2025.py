@@ -392,3 +392,43 @@ class TestRunCrossSectionModelsByVariant:
         results = run_cross_section_models_by_variant()
         assert results["no_combat"].n_obs < results["pure_judged"].n_obs
         assert results["no_combat"].n_obs < results["combat_to_semi"].n_obs
+
+
+class TestZeroImputed:
+    """GPT round-2 #3 応答: 欠測 106 セル score=0 埋め sensitivity check.
+
+    non-participation vs missing-data の解釈弾力性を確認。
+    "results were directionally unchanged" 主張の実測根拠テスト。
+    """
+
+    def test_zero_imputed_sample_size_7097(self):
+        """Full cartesian で theoretical n=7,097 (47 pref × 151 sport-stack pairs) 確認."""
+        from src.analysis_cross_section_2024_2025 import build_cross_section_frame_zero_imputed
+        df = build_cross_section_frame_zero_imputed(include_winter=True)
+        assert len(df) == 7097, f"Expected 7097, got {len(df)}"
+
+    def test_zero_imputed_zero_score_cells_106(self):
+        """欠測 106 セルが score=0 で fillna 済みであることを確認."""
+        from src.analysis_cross_section_2024_2025 import build_cross_section_frame_zero_imputed
+        df = build_cross_section_frame_zero_imputed(include_winter=True)
+        assert (df["score"] == 0).sum() == 106
+
+    def test_zero_imputed_primary_beta_HS_direction_positive(self):
+        """primary spec zero-imputed の host×subj interaction が正方向 (directionally unchanged)."""
+        from src.analysis_cross_section_2024_2025 import run_cross_section_zero_imputed
+        result = run_cross_section_zero_imputed(include_winter=True)
+        assert result.coef_interaction is not None
+        assert result.coef_interaction > 0, f"β_HS={result.coef_interaction}"
+
+    def test_zero_imputed_primary_beta_HS_within_5pct_of_primary(self):
+        """zero-imputed β_HS が Table 5 primary (+20.27) の ±5% 範囲内
+        = "results were directionally unchanged" (GPT round-2 #3) の実測根拠."""
+        from src.analysis_cross_section_2024_2025 import run_cross_section_zero_imputed
+        result = run_cross_section_zero_imputed(include_winter=True)
+        primary_beta = 20.27  # from Table 5 primary (baseline)
+        lower = 0.95 * primary_beta  # 19.26
+        upper = 1.05 * primary_beta  # 21.28
+        assert lower <= result.coef_interaction <= upper, (
+            f"zero-imputed β_HS={result.coef_interaction:.4f} outside ±5% window "
+            f"[{lower:.2f}, {upper:.2f}] of primary +{primary_beta}"
+        )
