@@ -23,7 +23,7 @@ Category = Literal["objective", "subjective", "semi_subjective"]
 
 # 競技名 → カテゴリ (JSPO xls の正式名称ベース・alias は SPORT_ALIASES で吸収)
 SPORT_CATEGORIES: dict[str, Category] = {
-    # === objective (客観記録・16競技) ===
+    # === objective (客観記録・17競技) ===
     "陸上競技": "objective",
     "水泳": "objective",
     "自転車": "objective",
