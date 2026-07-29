@@ -299,7 +299,7 @@ Analysis code (Python 3.14, pandas 3.0.5, statsmodels 0.14.6, matplotlib 3.11.1,
 |---|---|---|---|---|---|---|---|
 | **Primary: obj vs subj pure (semi excluded)**, cluster-robust p | n = 4,744 (28 sports: obj + subj only) | +11.18 | **+20.27** | 9.15 | [+2.33, +38.20] | **0.027** | 47 pref clusters |
 | **Primary: obj vs subj pure (semi excluded)**, wild-cluster bootstrap (Rademacher, B = 999, restricted null) | n = 4,744 | +11.18 | +20.27 | 9.15 | **[-0.82, +41.36]** (pivotal 95%) | **0.175** | 47 pref clusters (2 treated) |
-| **Diagnostic only — cluster SE degenerate**: Zero-imputed sensitivity (106 absent cells = 0; non-participation vs missing-data check), obj vs subj pure | n = 4,841 | +11.32 | **+19.86** (β_HS) | (degenerate) | (cluster SE numerically undefined) | (cluster SE numerically undefined) | — |
+| **Exploratory diagnostic — cluster SE degenerate**: Zero-imputed sensitivity (106 absent cells = 0; non-participation vs missing-data check; post-hoc reviewer-driven), obj vs subj pure | n = 4,841 | +11.32 | **+19.86** (β_HS) | (degenerate) | (cluster SE numerically undefined) | (cluster SE numerically undefined) | — |
 | Sensitivity: inclusive (all sports incl. semi-subjective/team), cluster-robust p | n = 6,991 (41 sports) | +16.60 | +16.68 | 7.72 | [+1.55, +31.81] | 0.031 | 47 pref clusters |
 | Sensitivity: inclusive, wild-cluster bootstrap (Rademacher, B = 999, restricted null) | n = 6,991 | +16.60 | +16.68 | 7.72 | **[-0.42, +33.86]** (pivotal 95%) | 0.156 | 47 pref clusters (2 treated) |
 | **Diagnostic only — cluster SE not identified**: Three-way (obj/semi/subj interactions), inclusive | n = 6,991 | +12.99 | +20.31 (β_HS), +8.51 (β_H,semi) | NaN | (cluster SE numerically undefined) | (cluster SE numerically undefined) | — |
