@@ -438,7 +438,10 @@ def wild_cluster_bootstrap(
     clusters = df[cluster_col].values
     unique_clusters = np.unique(clusters)
 
+    # v4 Phase B''4 (Finding R + Monju M4): specific exception + convergence
+    # failure count + Davison & Hinkley (1997) p convention (1+count)/(1+B_used)
     bootstrap_ts = []
+    n_convergence_failures = 0
     for _ in range(n_bootstrap):
         omega = rng.choice([-1.0, 1.0], size=len(unique_clusters))
         omega_map = dict(zip(unique_clusters, omega))
@@ -449,11 +452,21 @@ def wild_cluster_bootstrap(
             t_star = float(result_star.params[test_coef] / result_star.bse[test_coef])
             if np.isfinite(t_star):
                 bootstrap_ts.append(t_star)
-        except Exception:
+            else:
+                n_convergence_failures += 1
+        except (np.linalg.LinAlgError, ValueError):
+            n_convergence_failures += 1
             continue
 
     bootstrap_ts_arr = np.array(bootstrap_ts)
-    bootstrap_p = float(np.mean(np.abs(bootstrap_ts_arr) >= abs(observed_t))) if len(bootstrap_ts_arr) else float("nan")
+    # Davison & Hinkley (1997) p convention: (1 + count) / (1 + B_used)
+    # 回避: raw proportion で count=0 の時に p=0 と degenerate に見える表示
+    # 保証: p の lower bound = 1/(1+B_used) (finite-B correction)
+    if len(bootstrap_ts_arr):
+        count = int(np.sum(np.abs(bootstrap_ts_arr) >= abs(observed_t)))
+        bootstrap_p = float((1 + count) / (1 + len(bootstrap_ts_arr)))
+    else:
+        bootstrap_p = float("nan")
 
     # v4 Phase A-3 (Asura O + GPT round-2 追加応答): pivotal 95% CI
     # Cameron-Gelbach-Miller (2008) pivotal method:
@@ -478,6 +491,7 @@ def wild_cluster_bootstrap(
         "bootstrap_ci_high_95": bootstrap_ci_high,
         "n_bootstrap_used": len(bootstrap_ts_arr),
         "n_bootstrap_requested": n_bootstrap,
+        "n_convergence_failures": n_convergence_failures,  # v4 Phase B''4
         "seed": seed,
         "n_clusters": n_clusters,
         "treated_clusters": treated_clusters,

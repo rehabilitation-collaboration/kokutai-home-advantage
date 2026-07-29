@@ -224,7 +224,9 @@ class TestWildClusterBootstrap:
             "cluster_robust_p", "bootstrap_p",
             "bootstrap_ci_low_95", "bootstrap_ci_high_95",  # v4 Phase A-3 追加
             "n_bootstrap_used",
-            "n_bootstrap_requested", "seed", "n_clusters", "treated_clusters",
+            "n_bootstrap_requested",
+            "n_convergence_failures",  # v4 Phase B''4 追加
+            "seed", "n_clusters", "treated_clusters",
         }
         assert set(out.keys()) == expected
 
@@ -452,7 +454,7 @@ class TestBootstrapByVariant:
         bit-identical (同 seed=20260728 で同 wild_cluster_bootstrap 実装なので一致)."""
         from src.analysis_cross_section_2024_2025 import run_bootstrap_by_variant
         r = run_bootstrap_by_variant(seed=20260728)
-        primary_bootstrap_p = 0.174  # Table 5 primary bootstrap row
+        primary_bootstrap_p = 0.175  # Table 5 primary bootstrap row (v4 Phase B''4 convention: (1+count)/(1+B))
         assert abs(r["default"]["bootstrap_p"] - primary_bootstrap_p) < 0.005, (
             f"default bootstrap p={r['default']['bootstrap_p']} vs "
             f"primary bootstrap p={primary_bootstrap_p} (should be bit-identical ±0.005)"
@@ -508,3 +510,38 @@ class TestBootstrapCI:
                 f"bootstrap p={r['bootstrap_p']:.4f} > 0.05 なのに CI="
                 f"[{r['bootstrap_ci_low_95']:.4f}, {r['bootstrap_ci_high_95']:.4f}] が 0 を含まない"
             )
+
+
+class TestBootstrapConvention:
+    """v4 Phase B''4 (Finding R + Monju M4): Davison-Hinkley p convention +
+    convergence failure count + specific exception handling の検証.
+    """
+
+    def test_bootstrap_p_lower_bound(self):
+        """Davison & Hinkley (1997) convention: p >= 1/(1+B_used) が保証されるべし.
+
+        raw proportion の zero degenerate 回避と finite-B correction の実測確認.
+        """
+        from src.analysis_cross_section_2024_2025 import (
+            build_cross_section_frame, wild_cluster_bootstrap,
+        )
+        df = build_cross_section_frame()
+        r = wild_cluster_bootstrap(df, n_bootstrap=49, seed=1)
+        if r["n_bootstrap_used"] > 0:
+            lower_bound = 1.0 / (1 + r["n_bootstrap_used"])
+            assert r["bootstrap_p"] >= lower_bound, (
+                f"bootstrap_p={r['bootstrap_p']} < lower_bound={lower_bound} "
+                f"(convention (1+count)/(1+B_used) 未適用)"
+            )
+
+    def test_bootstrap_convergence_failures_finite(self):
+        """n_convergence_failures が finite 且つ n_bootstrap_used と合計で
+        n_bootstrap_requested に一致 (drop の会計整合性)."""
+        from src.analysis_cross_section_2024_2025 import (
+            build_cross_section_frame, wild_cluster_bootstrap,
+        )
+        df = build_cross_section_frame()
+        r = wild_cluster_bootstrap(df, n_bootstrap=49, seed=42)
+        assert isinstance(r["n_convergence_failures"], int)
+        assert r["n_convergence_failures"] >= 0
+        assert r["n_bootstrap_used"] + r["n_convergence_failures"] == r["n_bootstrap_requested"]
