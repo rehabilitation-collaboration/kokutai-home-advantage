@@ -30,7 +30,7 @@
 | #5 (11 years → 9 editions) | (asura 独立発見なし) | GPT のみ・v4 で fix |
 | #6 (Event-study 後景化) | (asura 独立発見なし・R2#7 の "Ninth limitation missing" と部分 overlap) | GPT のみ・v4 で structural refactor |
 | #7 (Table 5d p<0.001 強調降下) | Asura E (R2#3) + Monju M11 (Methods L79 との paper 内矛盾を追加検出) | **compound**・v4 で integrate |
-| #8 (GitHub 先出し) | Monju M12 (SSRN posted 済で既に asymmetric-disclosure gap 発生を追加検出) | **compound**・v4 で URL 配置 |
+| #8 (GitHub 先出し) | Monju M12 (~~SSRN posted 済で既に asymmetric-disclosure gap 発生~~ → **★2026-07-29 深夜訂正**: 実物 verify で SSRN 未投稿 M5=⏸ = Monju ハルシ。L224 の commitment 文言で adequately handled 済) | v4 で URL 配置は瑞樹判断・**優先度低**・friday13th precedent (第7弾 SUBMITTED・GitHub なし) 参考・詳細は末尾 §pre-v4 correction record 参照 |
 | #9 (AI 開示言い換え) | Monju M5 (model 版数正確性 + 数値 verification 手順明示 の粒度不足) | **compound**・v4 で refactor |
 
 ### asura/monju 独立検出 (GPT round-2 未検出)
@@ -105,11 +105,14 @@
 - 全 Balmer 2003 引用箇所を grep で確認: L17/L33/L37/L61/L65/L113/L127/L129/L133/L153/L181/L189 = 12+ 箇所で "5 event groups" の specific 記述は L33 のみに集中
 - commit message で PubMed abstract verify 結果 + LITERATURE.md self-admission との整合回復を明記
 
-**Finding #B2** (P1・Suetsugu quote 内的矛盾解消・Finding G):
-- manuscript.md L35 "one scholarly critique... reflect 'cheating' and a 'host-victory-first mindset'" → "one scholarly critique... reflect host-outcome legitimacy concerns (Suetsugu 2024/2025)" 等 hedged framing
-- manuscript.md L147 "using pointed language ('cheating' / 'host-victory-first mindset') in a single-sport context" → "in a single-sport context (specific normative framing as characterized in secondary summaries of the Suetsugu papers)"
-- L169 Limitations の bibliographic-only self-admission と整合性回復
-- LITERATURE.md L86-87 も同時修正 (secondary source note 追加)
+**Finding #B2** (P1・Suetsugu quote 内的矛盾解消・Finding G・★2026-07-29 深夜 narrow 修正):
+- ★実物 verify (2026-07-29 深夜・CiNii metadata 独立確認): Suetsugu 2025 論文タイトル =「国民体育大会　空手道競技の課題の可視化と構造原理の解明」・**タイトル内に「開催地優勝の慣例システム（開催地優勝至上主義）」実在** = "host-victory-first mindset" のタイトル直訳として保持可能。Suetsugu 2024 タイトル =「国民体育大会「空手道競技」の大会成績から見える課題」・"cheating" 相当句なし・abstract 未公開で "cheating" の出所は bibliographic-only では確認不能。
+- ★訂正後の narrow 修正方針 ("cheating" のみ削除・"host-victory-first mindset" は保持):
+  - manuscript.md L35 "reflect 'cheating' and a 'host-victory-first mindset'" → **"cheating" のみ削除**: "reflect what secondary summaries characterize as a 'host-victory-first mindset' (a phrase corresponding to the '開催地優勝至上主義' framing in the title of Suetsugu 2025^5^)" 等
+  - manuscript.md L147 "using pointed language ('cheating' / 'host-victory-first mindset') in a single-sport context" → **同様に "cheating" のみ削除**: "using the 'host-victory-first mindset' framing (per the title of Suetsugu 2025) in a single-sport context"
+- L169 Limitations の bibliographic-only self-admission と整合性回復 ("cheating" 削除で bibliographic-only source からタイトル訳のみを引く整合性が成立)
+- LITERATURE.md L86-87 に Suetsugu 2025 タイトル訳注記追加 ("開催地優勝の慣例システム（開催地優勝至上主義）" = "customary system of host city victory (supremacy of host city victory)")
+- ★スコープ縮小効果: 元「両 quote 削除」→「"cheating" のみ削除」= P1 対応内容 narrow 化・novelty core との衝突減・詳細は末尾 §pre-v4 correction record 参照
 
 **Finding #B3** (P1・AI-log leak 全消し・Finding A・GPT round-2 #1/#9・R3 追加 L73):
 - manuscript.md 内 18+ 箇所 grep-and-replace:
@@ -203,12 +206,14 @@
 **Finding #B'14** (Unit tests 297 breakdown・Monju M9)
 **Finding #B'15** (Reference format 統一・Monju M10)
 
-### Phase B''' (transparency 判断分岐・瑞樹要確認)
+### Phase B''' (transparency 判断分岐・★2026-07-29 深夜訂正で優先度格下げ・v4 では実装しない)
 
 **Finding #B'''1** (GPT round-2 #8 + Monju M12・GitHub 先出し + Zenodo DOI):
-- **判断分岐**: (a) 実 GitHub repo 作成 (github.com/Rehabilitation30/kokutai-home-advantage 等) + Zenodo DOI 取得 → L224 に URL 記載 / (b) 現状「will be released concurrent with SSRN posting」維持 (但し SSRN 既 posted で asymmetric-disclosure gap 既発生)
-- ★推奨 = (a)・理由: (i) Monju M12 で明示された asymmetric-disclosure gap 解消 (ii) SSRN posted 済で「will be」は factually 誤り (iii) 第9弾 companion paper で本論文引用時に URL 参照可能
-- 実装: `git init` → GitHub repo 作成 → push → L224 Data Availability に URL 追記
+- ★実物 verify (2026-07-29 深夜): SSRN 未投稿 (M5=⏸)・git remote 未設定・Rehabilitation30 GitHub アカウント public_repos=0・friday13th (第7弾) precedent = GitHub なしで SSRN SUBMITTED 通ってる。L224 には既に「asymmetric-disclosure gap を明示的に避けるコミット」文言あり = adequately handled 済。
+- **判断分岐**: (a) 実 GitHub repo を SSRN 投稿前に作成 → L224 URL 追記 / (b) 現状「will be released concurrent with SSRN posting」維持で SSRN 投稿時 (M5 着手時) に同時 push
+- ★訂正推奨 = (b)・理由: (i) Monju M12 は SSRN posted 済のハルシ前提で「gap 既発生」= 実物では未投稿で gap は未発生 (ii) L224 の commitment 文言で reviewer に対する透明性は既に確保 (iii) friday13th 第7弾も GitHub なしで SUBMITTED 通ってる = 論文シリーズ precedent 一貫 (iv) 実 repo 作成は SSRN 投稿と同時 push で bandwidth 同等
+- 実装: SSRN 投稿時 (M5 着手時) に `git init` + GitHub repo 作成 + push を同時実施 = **v4 サイクルでは実装しない**
+- v4 commit 数への影響: 推定 41 → **40 commits** (Phase B''' -1)・詳細は末尾 §pre-v4 correction record 参照
 
 ### Phase C (build)
 
@@ -287,7 +292,7 @@
 
 ## Environment State (v4 サイクル前)
 
-- **HEAD**: `217c518` (docs(gpt-reviews): round-2 起票)
+- **HEAD**: `0d9c255` (docs(asura-monju): 初見テスト炙り出し反映) → pre-v4 correction commit で更に +1 (本 commit・末尾 §pre-v4 correction record 参照)
 - **Phase A/B/C 全 10 commits**: `b16795f` (Finding #1) → `5fb2d57` (Finding #5) → `0ddd770` (Finding #6) → `70f780d` (docs) → `9da5030` (Finding #8) → `30e76f3` (Finding #9) → `10fe43d` (Finding #7) → `6537b53` (Finding #4) → `f2e8ad1` (Finding #2) → `798dcc3` (予告文) → `f1b8bb3` (build)
 - **round-2.md 起票**: `217c518`
 - **pytest**: 297 all passing (Phase A/B/C は追加なし・Phase B/C は text-only or build)
@@ -366,3 +371,65 @@ REVIEW-REPORT.md の「#」列 (severity 順 serial・1-33) と本ファイル�
 **内訳合計 (再集計・整合済み)**: P1 = 4 件 (#1-4) / P2 = 13 件 (#5-17) / P3 = 16 件 (#18-33) = **合計 33 unique action items**。
 
 ★過去 handoff/summary の「P2×12 + P3×17」は集計時期の compound 定義差異による。**本相互参照表を真実源とする** (initial 記述は summary レベルで大まかな内訳・実行時は本 table 33 items を順に潰していく)。
+
+---
+
+## ★pre-v4 correction record (2026-07-29 深夜・実物 verify で判明した訂正)
+
+前セッション切断からの復帰後、handoff/レビュー 3 file の記述を実物 (PubMed / CiNii / git remote / GitHub / pytest) と全面突合した結果、以下 4 点を訂正した。text-only correction・code touch なし・pytest 297 all pass 維持。
+
+### 1. REVIEW-REPORT.md L67 内訳訂正
+
+- ❌ 元記述: `P1×4 + P2×12 + P3×17`
+- ✅ 訂正後: `P1×4 + P2×13 + P3×16` (本ファイル L326-364 相互参照表を真実源とする)
+- 原因: `0d9c255` で Finding D の P3 名寄せ + Monju M7/M4 の compound 統合を反映した際、REVIEW-REPORT.md 側の内訳が同期されていなかった
+
+### 2. Environment State HEAD 更新 (L290)
+
+- ❌ 元記述: `HEAD: 217c518` (round-2 起票時点)
+- ✅ 訂正後: `HEAD: 0d9c255` (相互参照表反映後) → pre-v4 correction commit で更に +1
+
+### 3. Monju M12 ハルシネーション訂正 (Phase B''' 優先度格下げ・v4 commit 数 41→40)
+
+- ❌ Monju M12: 「SSRN posted 済で既に asymmetric-disclosure gap 発生」
+- ✅ 実物 verify (2026-07-29 深夜):
+  - PLAN.md M5=⏸ 未着手 (SSRN 投稿前)
+  - git remote 未設定 (ローカルのみ 43 commits)
+  - Rehabilitation30 GitHub アカウント public_repos = 0 (User account・created 2026-02-21)
+  - friday13th (第7弾・7/24 SUBMITTED / Abstract ID 7170660) も GitHub なしで通ってる = 論文シリーズ precedent 一貫
+  - L224 Data Availability には「asymmetric-disclosure gap を明示的に避けるコミット」文言既存 = adequately handled 済
+- ✅ 訂正: Phase B''' は v4 では実装しない・SSRN 投稿時 (M5 着手時) に同時 push
+- v4 commit 数への影響: 推定 41 → **40 commits** (Phase B''' -1)
+
+### 4. Finding G narrow 修正 (P1 対応スコープ縮小)
+
+- ❌ 元指示: L35 + L147 の "cheating" / "host-victory-first mindset" 両 quote 削除 or hedged framing
+- ✅ CiNii verify (Suetsugu 2025 タイトル): 「国民体育大会　空手道競技の課題の可視化と構造原理の解明」・タイトル内に「**開催地優勝の慣例システム（開催地優勝至上主義）**」実在 = "host-victory-first mindset" のタイトル直訳として保持可能
+- ✅ Suetsugu 2024 CiNii verify: 「国民体育大会「空手道競技」の大会成績から見える課題」・"cheating" 相当句なし・abstract 未公開
+- ✅ 訂正後の narrow 修正: **"cheating" のみ削除** ("bibliographic-only" で確認不能) / **"host-victory-first mindset" は Suetsugu 2025 タイトル訳注記付きで保持** (「開催地優勝至上主義」)
+- スコープ効果: 元「両 quote 削除」→「"cheating" のみ削除」= P1 対応内容 narrow 化・novelty core との衝突減・LITERATURE.md にも Suetsugu 2025 タイトル訳注記追加
+
+### 実物 verify 済み根拠一覧 (2026-07-29 深夜)
+
+- **Balmer 2003 PubMed abstract**: 5 event groups = {athletics, weightlifting, boxing, gymnastics, team games} = **diving 含まれず** 独立確認 (Finding F + Monju M1 の 3rd party 独立 verify OK)
+- **Suetsugu 2024/2025 CiNii metadata**: abstract 未公開・タイトル訳のみ verify 可能
+- **git log**: 43 commits・remote 未設定 (`.git/config` に remote entry なし)
+- **pytest**: 297 pass / 109.12 秒 / exit 0 実測 (venv Python 3.14.3 + pytest 9.1.1)
+- **Rehabilitation30 GitHub**: User account (Organization ではない)・public_repos = 0・created 2026-02-21・updated 2026-07-14
+- **manuscript.md AI-log leak**: 実測 17 出現 (GPT r-1 F#1×4 + F#5×5 + F#6×3 + Finding #12×1 + Finding #5-linked×1 + H-03×1 + Phase 8×2) = asura-monju レポートの「18+ 箇所」主張と概ね一致
+- **sport_classifier.py L26 コメント**: 「16競技」だが実装は 17 sports = Monju M2 の code-doc drift 指摘 実物確認 OK
+- **wild_cluster_bootstrap 実装**: bare except (L360) + raw proportion convention (L364) + n_bootstrap_used 返却 = Finding R 実物確認 OK
+- **未コミット差分 (plots/*.pdf/*.png)**: PIL bbox=None = 画像内容一致・matplotlib timestamp のみ = discard 安全
+
+### v4 サイクル着手条件 (訂正後)
+
+- 相互参照表 (L326-364) の 33 items を真実源として順次消化 (P1×4 → P2×13 → P3×16)
+- Phase A (3 commits・code+text・pytest +9)
+- Phase B (16 commits・text-only・Finding #B2 = narrow 修正版で対応)
+- Phase B'' (15 commits・text-only)
+- ~~Phase B''' (1 commit・GitHub 先出し)~~ → **v4 では実装しない**
+- Phase C (6 commits・build)
+- **推定 total: 40 commits** (Phase B''' -1)
+- **pytest 追加: 297 → 309 (+12 tests)**
+
+これら 4 点を反映後、v4 Phase A-1 (zero-imputed sensitivity 実装) から着手する。

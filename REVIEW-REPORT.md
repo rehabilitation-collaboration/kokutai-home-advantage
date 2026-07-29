@@ -64,7 +64,7 @@
 - **Asura**: 49 checklist items × 3 agents = 147 checks・29 raw findings (R1=7 + R2=14 + R3=8)・4 cross-agent overlap で dedup → **25 unique aggregated findings**
 - **Monju verification**: ACCEPT 21 / REFINE 1 / REJECT 0 / Carry-over ACCEPT 3
 - **Monju independent**: 12 new findings (M1-M12・P2×6 + P3×6)
-- **Total v4 action items**: 33 unique (P1×4 + P2×12 + P3×17)
+- **Total v4 action items**: 33 unique (P1×4 + P2×13 + P3×16 — see `asura-monju-round-1-on-v3.md` L326-364 cross-reference table for authoritative counts; the P2/P3 breakdown was corrected in commit `0d9c255` after Finding D was folded into P3 and Monju M7/M4 were merged as compound findings)
 - **Cross-review overlap with GPT round-2**: 4 findings (A/B/C/E) → integrate for v4
 - **Pre-processing**: `verify_refs.py` run (v3 Phase C commit `f1b8bb3`・既知アーティファクト 4 件 [4][5][11][13] は放置判断済み)
 
