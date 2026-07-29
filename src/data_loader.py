@@ -204,7 +204,7 @@ def parse_jspo_xls_long_format(kai_num: int, cup: str = "tennou") -> pd.DataFram
         - 78-tennou: 冬季3 + 本大会37 = 40 sports (クレー射撃あり・ボクシングなし)
         - 78-kougou: 冬季2 + 本大会33 = 35 sports (ボクシングなし)
         - 79-tennou: 冬季3 + 本大会37 = 40 sports (ボクシングあり・クレー射撃廃止)
-        - 79-kougou: 冬季2 + 本大会34 = 36 sports (ボクシング/軟式野球追加)
+        - 79-kougou: 冬季2 + 本大会34 = 36 sports (ボクシング追加)
         78→79 の入れ替え: クレー射撃廃止 + ボクシング追加 (男女とも)
     """
     from src.definitions import KOKUTAI_HOSTS, PREFECTURE_TO_CODE
