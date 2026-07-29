@@ -254,7 +254,7 @@
   {
     "ref_number": 9,
     "status": "MATCH",
-    "raw_text": "Csurilla G, Fertő I. The less obvious effect of hosting the Olympics on sporting performance. *Scientific Reports*. 2023;13:819. doi:10.1038/s41598-022-27259-8",
+    "raw_text": "Csurilla G, Fertő I. The less obvious effect of hosting the Olympics on sporting performance. *Sci Rep*. 2023;13:819. doi:10.1038/s41598-022-27259-8",
     "mismatched_fields": [],
     "manuscript_data": {
       "authors": "Csurilla G, Fertő I",
@@ -286,7 +286,7 @@
   {
     "ref_number": 10,
     "status": "MATCH",
-    "raw_text": "Nomura R. Influence of crowd size on home advantage in the Japanese football league. *Frontiers in Sports and Active Living*. 2022;4:927774. doi:10.3389/fspor.2022.927774",
+    "raw_text": "Nomura R. Influence of crowd size on home advantage in the Japanese football league. *Front Sports Act Living*. 2022;4:927774. doi:10.3389/fspor.2022.927774",
     "mismatched_fields": [],
     "manuscript_data": {
       "authors": "Nomura R",
@@ -424,7 +424,7 @@
   {
     "ref_number": 14,
     "status": "MATCH",
-    "raw_text": "Cameron AC, Gelbach JB, Miller DL. Bootstrap-based improvements for inference with clustered errors. *Rev Econ Stat*. 2008;90(3):414-427. doi:10.1162/rest.90.3.414\n\n---",
+    "raw_text": "Cameron AC, Gelbach JB, Miller DL. Bootstrap-based improvements for inference with clustered errors. *Rev Econ Stat*. 2008;90(3):414-427. doi:10.1162/rest.90.3.414",
     "mismatched_fields": [],
     "manuscript_data": {
       "authors": "Cameron AC, Gelbach JB, Miller DL",
@@ -446,6 +446,38 @@
     },
     "crossref_doi": "10.1162/rest.90.3.414",
     "corrected_citation": "Cameron AC, Gelbach JB, Miller DL. Bootstrap-Based Improvements for Inference with Clustered Errors. Review of Economics and Statistics. 2008;90:414-427. doi:10.1162/rest.90.3.414.",
+    "is_retracted": false,
+    "retraction_doi": "",
+    "url_status": 0,
+    "notes": [
+      "Resolved via DOI (high confidence)"
+    ]
+  },
+  {
+    "ref_number": 15,
+    "status": "MATCH",
+    "raw_text": "MacKinnon JG, Webb MD. Wild bootstrap inference for wildly different cluster sizes. *J Appl Econometrics*. 2017;32(2):233-254. doi:10.1002/jae.2508\n\n---",
+    "mismatched_fields": [],
+    "manuscript_data": {
+      "authors": "MacKinnon JG, Webb MD",
+      "title": "Wild bootstrap inference for wildly different cluster sizes",
+      "journal": "",
+      "year": "2017",
+      "volume": "32",
+      "pages": "233-254",
+      "doi": "10.1002/jae.2508"
+    },
+    "crossref_data": {
+      "title": "Wild Bootstrap Inference for Wildly Different Cluster Sizes",
+      "journal": "Journal of Applied Econometrics",
+      "year": "2017",
+      "volume": "32",
+      "page": "233-254",
+      "doi": "10.1002/jae.2508",
+      "authors": "MacKinnon JG, Webb MD"
+    },
+    "crossref_doi": "10.1002/jae.2508",
+    "corrected_citation": "MacKinnon JG, Webb MD. Wild Bootstrap Inference for Wildly Different Cluster Sizes. Journal of Applied Econometrics. 2017;32:233-254. doi:10.1002/jae.2508.",
     "is_retracted": false,
     "retraction_doi": "",
     "url_status": 0,
