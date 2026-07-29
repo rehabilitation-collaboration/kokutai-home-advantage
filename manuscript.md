@@ -198,8 +198,8 @@ Japan's National Sports Festival shows a host bonus that appears directionally n
 6. Funahashi H, Hibino M, Ishiguro E, Mano Y. Determinants of success at the National Sports Festival. *Japanese Journal of Sport Management*. 2016;8(1):17-33. doi:10.5225/jjsm.2016-002 (Article in Japanese; English title from J-STAGE record).
 7. Chiba T. [Factors underlying host-prefecture victories at the National Athletic Meet]. *Proceedings of the Japanese Society of Physical Education*. 1987;38a:204. doi:10.20693/jspeconf.38a.0_204 (Japanese).
 8. Kim T. [KSOC national comprehensive sports competition host-city 20% bonus regulation]. *Munhwa Ilbo*. Published 2025-10-13. https://v.daum.net/v/20251013192536045 (Korean).
-9. Csurilla G, Fertő I. The less obvious effect of hosting the Olympics on sporting performance. *Scientific Reports*. 2023;13:819. doi:10.1038/s41598-022-27259-8
-10. Nomura R. Influence of crowd size on home advantage in the Japanese football league. *Frontiers in Sports and Active Living*. 2022;4:927774. doi:10.3389/fspor.2022.927774
+9. Csurilla G, Fertő I. The less obvious effect of hosting the Olympics on sporting performance. *Sci Rep*. 2023;13:819. doi:10.1038/s41598-022-27259-8
+10. Nomura R. Influence of crowd size on home advantage in the Japanese football league. *Front Sports Act Living*. 2022;4:927774. doi:10.3389/fspor.2022.927774
 11. Lan T, Yu X. [Theoretical and empirical research on the characteristics of the host effect at the National Games of China]. *Journal of Shenyang Sport University*. 2012;31(4):1-5. Abstract retrieved from https://m.fx361.com/news/2012/1109/12534183.html (Article in Chinese; Chinese-local journal, not indexed on Crossref; primary text not accessible outside Chinese academic networks).
 12. Zitzewitz E. Nationalism in winter sports judging and its lessons for organizational decision making. *J Econ Manage Strategy*. 2006;15(1):67-99. doi:10.1111/j.1530-9134.2006.00092.x
 13. Cameron AC, Miller DL. A practitioner's guide to cluster-robust inference. *J Human Resources*. 2015;50(2):317-372. doi:10.3368/jhr.50.2.317
