@@ -328,7 +328,7 @@ Analysis code (Python 3.14, pandas 3.0.5, statsmodels 0.14.6, matplotlib 3.11.1,
 
 | System | Host score bonus | Empirical host effect | Reference |
 |---|---|---|---|
-| Japan Kokutai (present study) | None (no institutional bonus in JSPO scoring) | +33 pts subj / +17 pts obj per sport | Present study |
+| Japan Kokutai (present study) | None (no institutional bonus in JSPO scoring) | +31 pts subj / +11 pts obj per sport (primary spec; +33/+17 under inclusive sensitivity; see Table 5) | Present study |
 | Korea national comprehensive sports | 20% score bonus (10% from 2001, 20% from 2010) | Institutionally amplified | Kim (2025), Munhwa Ilbo^8^ |
 | China National Games | (institutional bonus not documented in accessible sources) | Qualitatively described (5 characteristics: high efficacy, gradual increase, delayed effect, exclusivity, double-edgedness) | Lan & Yu (2012)^11^ |
 | Summer Olympics | None | Attenuates ~45% under population + GDP + country FE | Csurilla & Fertő (2023)^9^ |
