@@ -82,7 +82,7 @@ Bibliographic corrections applied in Phase 8:
 
 - **Citation**: Suetsugu M. "Issues emerging from the karate competition results of the National Sports Festival." *Bulletin of the Institute of Liberal Arts and Sciences, Komazawa University* 2024; 18:137-153. CiNii: cir.nii.ac.jp/crid/1390303254959134848.
 - **Design**: Karate-specialist qualitative critique of Kokutai karate outcomes.
-- **Framing**: Uses direct language ("cheating"/"host-victory-first mindset") to characterize what the author perceives as biased outcomes in the karate discipline specifically.
+- **Framing**: Characterizes host outcomes with the "host-victory-first mindset" phrase (a translation of the "開催地優勝至上主義" framing appearing in the title of Suetsugu 2025). The "cheating" phrase, which appeared in earlier drafts, was not directly verifiable from CiNii metadata or the abstract-only scope and has been removed to preserve bibliographic hygiene (see pre-v4 correction record in `asura-monju-round-1-on-v3.md`).
 - **Take-away**: Positioned as a parallel qualitative critique from a single-sport perspective; the present study complements Suetsugu's karate-specific critique with a whole-sport panel-quantitative approach. The two are compatible and non-overlapping.
 - **Access limitation**: Full text is served via WEKO3 as an octet-stream and could not be reliably extracted; per author decision (see PHASE8-INVESTIGATION.md Part 7 Consultation-4), the citation is at bibliographic-plus-CiNii-link level only.
 - **Status**: In-scope. Citation only.
@@ -90,6 +90,7 @@ Bibliographic corrections applied in Phase 8:
 ### 10. Suetsugu (2025) — Japan (karate follow-up)
 
 - **Citation**: Suetsugu M. "Visualization and structural analysis of the issues in karate competition at the National Sports Festival." *Bulletin of the Institute of Liberal Arts and Sciences, Komazawa University* 2025; 19:103-117. DOI: 10.69200/0002033886.
+- **Japanese title**: 「国民体育大会　空手道競技の課題の可視化と構造原理の解明」・includes the framing 「開催地優勝の慣例システム（開催地優勝至上主義）」 = "customary system of host city victory (supremacy of host city victory)" — verified via CiNii metadata (2026-07-29 pre-v4 correction phase).
 - **Design**: Follow-up to Suetsugu 2024; same qualitative approach applied to structural-principle analysis.
 - **Take-away**: Same as Suetsugu 2024. Cited in Discussion for framing continuity.
 - **Status**: In-scope. Citation only.
