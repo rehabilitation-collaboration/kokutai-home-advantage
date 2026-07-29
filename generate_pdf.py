@@ -19,7 +19,7 @@ MANUSCRIPT_MD = PROJECT_DIR / "manuscript.md"
 FIGURE_FILES = {
     "Figure 1": "fig1_host_win_rate_timeseries.png",
     "Figure 2": "fig2_subj_vs_obj_host_bias.png",
-    "Figure 3": "fig3_event_study_two_layers.png",
+    "Figure S1": "fig3_event_study_two_layers.png",
     "Figure 4": "fig4_confounders_attenuation.png",
     "Figure 5": "fig5_replication_extended.png",
 }
