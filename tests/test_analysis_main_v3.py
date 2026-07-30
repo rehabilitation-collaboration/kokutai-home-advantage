@@ -99,6 +99,9 @@ class TestOneSampleProportionTest:
         assert r["null_rate"] == pytest.approx(1 / 47, rel=1e-6)
         assert r["p_value_greater"] < 1e-50
         assert r["ci_wilson_low"] > 0.60
+        # 両側 Wilson CI なので上限 < 1.0 (code review P1 regression guard)
+        assert r["ci_wilson_high"] < 1.0
+        assert r["ci_wilson_low"] < r["observed_rate"] < r["ci_wilson_high"]
 
     def test_null_rate_scales_with_threshold(self, panel: pd.DataFrame):
         r1 = one_sample_proportion_test(panel, 1, cup="tennou", era="all")
@@ -128,19 +131,19 @@ class TestOneSampleProportionTest:
 
 
 class TestPermutationTest:
-    def test_top1_tennou_p_zero(self):
+    def test_top1_tennou_p_lower_bound(self):
         r = permutation_test(1, cup="tennou", n_perm=1000, seed=0)
         assert r["n_events"] == 75
         assert r["obs_count"] == 57
-        # 観測 76.0% vs null_mean ~ 2.1% → p=0
-        assert r["p_value_permutation"] == 0.0
+        # Monte Carlo 下限補正 p = 1/(n_perm+1) = 0.000999... (真の 0 は取れない)
+        assert r["p_value_permutation"] == pytest.approx(1 / 1001, abs=1e-9)
         assert r["null_mean"] < 0.10
 
-    def test_top8_kougou_p_zero(self):
+    def test_top8_kougou_p_lower_bound(self):
         r = permutation_test(8, cup="kougou", n_perm=1000, seed=0)
         assert r["obs_rate"] > 0.90
         assert r["null_mean"] < 0.30  # ~ 8/47*factor
-        assert r["p_value_permutation"] == 0.0
+        assert r["p_value_permutation"] == pytest.approx(1 / 1001, abs=1e-9)
 
     def test_null_mean_matches_analytic(self):
         # permutation null_mean ≈ k/47 (with slight variance due to ties)

@@ -42,11 +42,11 @@ ERA_ORDER = ["early", "golden", "shock"]
 
 
 def _classify_era(year: int) -> str:
-    if year <= 1977:
-        return "early"
-    if year <= 2015:
-        return "golden"
-    return "shock"
+    for era in ERA_ORDER:
+        lo, hi = ERA_BOUNDARIES[era]
+        if lo <= year <= hi:
+            return era
+    return ERA_ORDER[-1]
 
 
 def load_v3_panel(parquet_path: Path | str | None = None) -> pd.DataFrame:
@@ -123,7 +123,9 @@ def one_sample_proportion_test(
 
     bt_g = st.binomtest(n_success, n, p=null_rate, alternative="greater")
     bt_t = st.binomtest(n_success, n, p=null_rate, alternative="two-sided")
-    ci = bt_g.proportion_ci(confidence_level=0.95, method="wilson")
+    # Wilson 95%CI は両側の bt_t から取る (片側 bt_g だと上限が 1.0 固定になり
+    # CI として使えない・code review P1)
+    ci = bt_t.proportion_ci(confidence_level=0.95, method="wilson")
 
     return {
         "threshold": threshold,
@@ -151,6 +153,17 @@ def permutation_test(
 
     build_ranking_panel() の 7332 行から (kai, cup) 内の top-k 県セットを抽出。
     n_perm 回、47 県から fake host をランダム選択して null 分布を作る。
+
+    p 値は Monte Carlo 下限補正 `(count + 1) / (n_perm + 1)` を使う (真の 0 は
+    permutation 検定では原理的に取れないため・code review P3a)。
+
+    共催県の扱い: build_ranking_panel の is_host は複数県共催の全共催県=True。
+    ここでは「共催県のいずれかが top-k に入れば成功」で観測を集計する。
+    一方 one_sample_proportion_test の入力 host_rank_panel は
+    build_host_rank_panel で共催県を主催県 (host_prefs[0]) 1 つに正規化済み
+    (第 7 回=福島他 / 第 8 回=愛媛他 のみ該当・現状の実データでは (A) と (C) の
+    obs_count が偶然一致)。将来データ変更時に静かに乖離する可能性あり
+    (code review P3b)。
     """
     from src.panel_builder import build_ranking_panel
 
@@ -194,7 +207,9 @@ def permutation_test(
     null_counts = hits.sum(axis=1)
     null_rates = null_counts / n_events
 
-    p_value = float(np.mean(null_counts >= obs_count))
+    # Monte Carlo 下限補正 p 値 (Phipson & Smyth 2010)
+    extreme = int(np.sum(null_counts >= obs_count))
+    p_value = (extreme + 1) / (n_perm + 1)
 
     return {
         "threshold": threshold,
