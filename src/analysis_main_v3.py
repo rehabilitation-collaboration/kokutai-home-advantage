@@ -165,10 +165,12 @@ def permutation_test(
     共催県の扱い: build_ranking_panel の is_host は複数県共催の全共催県=True。
     ここでは「共催県のいずれかが top-k に入れば成功」で観測を集計する。
     一方 one_sample_proportion_test の入力 host_rank_panel は
-    build_host_rank_panel で共催県を主催県 (host_prefs[0]) 1 つに正規化済み
-    (第 7 回=福島他 / 第 8 回=愛媛他 のみ該当・現状の実データでは (A) と (C) の
-    obs_count が偶然一致)。将来データ変更時に静かに乖離する可能性あり
-    (code review P3b)。
+    build_host_rank_panel で共催県を主催県 (host_prefs[0]) 1 つに正規化済み。
+    現状の実データ (第 3-79 回) に含まれる共催回は 3 大会 (第 7 回=福島他 3 県 /
+    第 8 回=愛媛他 4 県 / 第 48 回=香川・徳島)。第 48 回は primary host 香川が
+    tennou/kougou 両方で top-1 のため両定義とも count に含める点で一致し、第
+    7/8 回も現状の観測範囲で両定義が同じ obs_count を出す。将来データ変更時に
+    静かに乖離する可能性あり (code review P3b)。
     """
     from src.panel_builder import build_ranking_panel
 
