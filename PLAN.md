@@ -336,12 +336,19 @@ tests/
 ### Phase 4: レビュー・査読サイクル
 - **変更対象**: `manuscript.md`, `pdf/kokutai-vN.pdf`, `REVIEW-REPORT.md`
 - **ブリーフ**: asura-monju round-1 + GPT 査読 V1-Vn 反復・Accept 到達まで
-- [ ] asura-monju round-1 実施 (阿修羅3体 + 文殊検証)
-- [ ] asura-monju 指摘事項を manuscript.md に反映 → V2 生成 + pdftotext 自己 QA
-- [ ] GPT 査読 round-1 実施 (V2 → 指摘事項 → V3)
-- [ ] GPT 査読 round-2 実施 (V3 → 指摘事項 → V4)
-- [ ] GPT 査読を Accept 到達まで反復 (friday13th は V1→V10 で 9 サイクル反復・[[feedback-paper-precision-over-effort]])
-- [ ] 各サイクル後に PDF 生成 + pdftotext 自己 QA 100% + REVIEW-REPORT.md 更新
+
+#### ★PDF体裁QAチェックリスト運用ルール (v5 サイクルから適用・2026-07-30 確立)
+各サイクル後 (build 直後・GPT 送信前) に **14 項目チェックリスト全 PASS 必須**。1 件でも FAIL なら回帰・GPT / asura-monju 送信禁止。真実源=`feedback-paper-pdf-selfqa-before-gpt`。運用版=`handoff-kokutai-home-advantage.md` Phase C 節。契機=v4 References 番号浮き行見逃し事案 (pdftotext -layout で 30+ 件検出可・GPT round-3 で最優先指摘)。
+
+- [x] asura-monju round-1 実施 (阿修羅3体 + 文殊検証) — v3 で完遂
+- [x] asura-monju 指摘事項を manuscript.md に反映 → V2 生成 + pdftotext 自己 QA — v3→v4 で完遂 (M12 ハルシネ格下げ + 33 items 全消化)
+- [x] GPT 査読 round-1 実施 (V2 → 指摘事項 → V3) — 完遂
+- [x] GPT 査読 round-2 実施 (V3 → 指摘事項 → V4) — 完遂
+- [x] GPT 査読 round-3 実施 (V4 → 「SSRN OK / 査読誌 Minor-Moderate revision」判定 + 5 必修 + 2 追加) — 完遂 (2026-07-30 深夜)
+- [ ] **v5 サイクル (10 タスク・v5-T1〜T10)**: システム化 + round-3 消化 + PDF体裁QAチェックリスト全 PASS
+- [ ] GPT 査読 round-4 実施 (v5 → Accept 判定目標)
+- [ ] Accept 確定まで反復 (friday13th は V1→V10 で 9 サイクル反復・[[feedback-paper-precision-over-effort]])
+- [ ] 各サイクル後に PDF 生成 + **PDF体裁QAチェックリスト全 14 項目 PASS 確認** + REVIEW-REPORT.md 更新
 
 ### Phase 5: SSRN 投稿 + POSTED 到達
 - **変更対象**: `SUBMISSION-GUIDE.html`, handoff/index/brainstorm 4ファイル
