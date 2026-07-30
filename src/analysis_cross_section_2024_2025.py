@@ -34,6 +34,16 @@ from src.data_loader import parse_jspo_xls_long_format
 from src.sport_classifier import get_category
 
 Category = Literal["objective", "subjective", "semi_subjective"]
+WeightType = Literal["rademacher", "mammen"]
+
+# v5 Phase A-1 (GPT round-3 Finding #6): Mammen (1993) 2-point continuous weights.
+# Rademacher (±1 equal-probability) は E[w^3]=0 で対称エラーに最適だが、asymmetric
+# エラー分布下では歪度を無視する。Mammen weights は E[w]=0, E[w^2]=E[w^3]=1 を満たし、
+# few-treated-clusters regime の robustness sensitivity として GPT round-3 で追加提案。
+_SQRT5 = np.sqrt(5.0)
+_MAMMEN_LOW = -(_SQRT5 - 1.0) / 2.0        # ≈ -0.6180 (golden ratio conjugate, negated)
+_MAMMEN_HIGH = (_SQRT5 + 1.0) / 2.0        # ≈ +1.6180 (golden ratio)
+_MAMMEN_PROB_LOW = (_SQRT5 + 1.0) / (2.0 * _SQRT5)  # ≈ 0.7236 → assigned to _MAMMEN_LOW
 
 # 2 年断面の対象 (kai, cup, host_pref_code は definitions.KOKUTAI_HOSTS で確定)
 _CROSS_SECTION_TARGETS: list[tuple[int, str]] = [
@@ -388,13 +398,22 @@ def wild_cluster_bootstrap(
     test_coef: str = "host_x_subj",
     n_bootstrap: int = 999,
     seed: int = 20260728,
+    weight_type: WeightType = "rademacher",
 ) -> dict:
     """Wild-cluster bootstrap p-value for a single coefficient under a restricted null.
 
-    Implements the Cameron-Gelbach-Miller (2008) wild-cluster bootstrap with Rademacher
-    weights and restricted null (H0: β_{test_coef} = 0). Addresses the Cameron-Miller
-    (2015) few-treated-clusters problem when the cross-section has only 2 treated
-    prefecture clusters (2024 Saga, 2025 Shiga) out of 47.
+    Implements the Cameron-Gelbach-Miller (2008) wild-cluster bootstrap with restricted
+    null (H0: β_{test_coef} = 0). Addresses the Cameron-Miller (2015) few-treated-clusters
+    problem when the cross-section has only 2 treated prefecture clusters (2024 Saga,
+    2025 Shiga) out of 47.
+
+    Weight distribution (`weight_type`):
+    - "rademacher" (default): ±1 with equal probability. E[w]=0, E[w^2]=1, E[w^3]=0.
+    - "mammen": Mammen (1993) two-point continuous distribution.
+      P(w = -(√5-1)/2) = (√5+1)/(2√5) ≈ 0.7236
+      P(w = (√5+1)/2)  = (√5-1)/(2√5) ≈ 0.2764
+      E[w]=0, E[w^2]=E[w^3]=1. Preserves third-moment information under asymmetric errors;
+      added as v5 Phase A-1 sensitivity check per GPT round-3 Finding #6.
 
     Two-sided bootstrap p = share of |t*_b| ≥ |t_observed|.
     """
@@ -443,7 +462,14 @@ def wild_cluster_bootstrap(
     bootstrap_ts = []
     n_convergence_failures = 0
     for _ in range(n_bootstrap):
-        omega = rng.choice([-1.0, 1.0], size=len(unique_clusters))
+        if weight_type == "mammen":
+            omega = rng.choice(
+                [_MAMMEN_LOW, _MAMMEN_HIGH],
+                size=len(unique_clusters),
+                p=[_MAMMEN_PROB_LOW, 1.0 - _MAMMEN_PROB_LOW],
+            )
+        else:
+            omega = rng.choice([-1.0, 1.0], size=len(unique_clusters))
         omega_map = dict(zip(unique_clusters, omega))
         omega_i = np.array([omega_map[c] for c in clusters], dtype=float)
         y_star = y_hat_restricted + residuals_restricted * omega_i
@@ -493,6 +519,7 @@ def wild_cluster_bootstrap(
         "n_bootstrap_requested": n_bootstrap,
         "n_convergence_failures": n_convergence_failures,  # v4 Phase B''4
         "seed": seed,
+        "weight_type": weight_type,  # v5 Phase A-1 (Mammen sensitivity check)
         "n_clusters": n_clusters,
         "treated_clusters": treated_clusters,
     }

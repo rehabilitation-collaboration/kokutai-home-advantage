@@ -226,7 +226,9 @@ class TestWildClusterBootstrap:
             "n_bootstrap_used",
             "n_bootstrap_requested",
             "n_convergence_failures",  # v4 Phase B''4 追加
-            "seed", "n_clusters", "treated_clusters",
+            "seed",
+            "weight_type",  # v5 Phase A-1 (Mammen sensitivity check) 追加
+            "n_clusters", "treated_clusters",
         }
         assert set(out.keys()) == expected
 
@@ -245,6 +247,43 @@ class TestWildClusterBootstrap:
         assert 0.0 <= out["bootstrap_p"] <= 1.0
         # observed_t は既存の cluster-robust fit と整合すべき (headline p=0.031 → |t|>2)
         assert abs(out["observed_t"]) > 1.5
+
+    # v5 Phase A-1 (GPT round-3 Finding #6): Mammen (1993) weights sensitivity check
+    def test_default_weight_type_is_rademacher(self):
+        """Backward compatibility: 既存呼び出しは weight_type 省略で Rademacher default."""
+        from src.analysis_cross_section_2024_2025 import build_cross_section_frame, wild_cluster_bootstrap
+        df = build_cross_section_frame()
+        out = wild_cluster_bootstrap(df, dv="score", test_coef="host_x_subj", n_bootstrap=1, seed=1)
+        assert out["weight_type"] == "rademacher"
+
+    def test_mammen_weight_type_accepted(self):
+        """weight_type='mammen' で dict が返り weight_type='mammen' が return に含まれる."""
+        from src.analysis_cross_section_2024_2025 import build_cross_section_frame, wild_cluster_bootstrap
+        df = build_cross_section_frame()
+        out = wild_cluster_bootstrap(
+            df, dv="score", test_coef="host_x_subj",
+            n_bootstrap=49, seed=1, weight_type="mammen",
+        )
+        assert out["weight_type"] == "mammen"
+        assert 0.0 <= out["bootstrap_p"] <= 1.0
+        # observed_t は weight_type 非依存 (restricted null fit のみに依存)
+        assert abs(out["observed_t"]) > 1.5
+
+    def test_mammen_p_close_to_rademacher_p(self):
+        """同 seed で Mammen p が Rademacher p の ±0.15 内 (few-treated-clusters
+        regime では両 weight とも右裾広くなる傾向・厳密一致は保証されないが同オーダー).
+        primary spec で n_bootstrap=199 (smoke test より重い設定)."""
+        from src.analysis_cross_section_2024_2025 import build_cross_section_frame, wild_cluster_bootstrap
+        df = build_cross_section_frame()
+        p_rade = wild_cluster_bootstrap(
+            df, dv="score", test_coef="host_x_subj",
+            n_bootstrap=199, seed=20260728, weight_type="rademacher",
+        )["bootstrap_p"]
+        p_mamm = wild_cluster_bootstrap(
+            df, dv="score", test_coef="host_x_subj",
+            n_bootstrap=199, seed=20260728, weight_type="mammen",
+        )["bootstrap_p"]
+        assert abs(p_rade - p_mamm) < 0.15, f"Rademacher p={p_rade}, Mammen p={p_mamm}"
 
 
 class TestSportCupInteraction:
