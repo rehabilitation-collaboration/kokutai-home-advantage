@@ -1,3 +1,5 @@
+> ⛔️ **参照は経緯記録用のみ・v7 サイクル計画は廃止 (2026-07-30 4th session)**: 本 round-4 を受けての v7 サイクル計画 (下部の「v7 対応表」+「v7 実施計画」節) は瑞樹指示で全面ピボット。**最新の真実源は `~/claude/analysis/kokutai-home-advantage/PLAN.md` 冒頭 v2 節** (80 大会真偽検定 + 主観/客観分離)。GPT 原文・判定内容は経緯参照用として本文保持。Finding #7 (References 番号浮き) は GPT ハルシネーション確定 (瑞樹目視結果)。
+
 # GPT Review Round-4
 
 - **Date received**: 2026-07-30 (kokutai セッション末・瑞樹貼付)
