@@ -1,14 +1,18 @@
-"""Phase 2 図表: Figure 1-5
+"""図表生成: v3 M4 Figure 1-3 + Supplement + 旧 F1-F5 (M4-H まで併存)
 
-論文本文用 (Phase 3・英語論文執筆) の主要 Figure を生成する。
+論文本文用の主要 Figure を生成する。
 出力先: `plots/fig{N}_*.{png,pdf}` (PNG は 300 dpi・PDF は vector)
 
-Figure 一覧:
-- Fig 1: 開催地優勝率の時系列 (1978-2025) + 開催地敗北6ショック年マーカー
-- Fig 2: 3 分類 (主観 / 客観 / 準主観) の host bias 係数比較 (cross_section 由来・エラーバー)
-- Fig 3: event-study 2層 (Layer1 2002 高知単独 + Layer2 post-2016 5ショック stacked) の τ プロット
-- Fig 4: Csurilla型交絡変数統制の host effect 減衰 (M1_host_only → M5_full_FE)
-- Fig 5: 舟橋2016 再現 (2003-2011) + 2003-2012 拡張 の Host 係数比較 + 舟橋 reference
+v3 Figure (M4-D で新規・主稿用):
+- Fig 1 (v3): Host-rank 1948-2025 era 色分け (early/golden/shock 3 期の非単調変化を可視化)
+- Fig 2 (v3): Top-k rate by era × cup bar chart (top1/3/8 × tennou/kougou × 3 era, 95% CI エラーバー)
+- Fig 3 (v3): Host boost by sport category 2024-2025 (旧 F2 保持・plot_fig2_subj_vs_obj_host_bias)
+
+旧 Figure (v6-final 遺産・M4-H で整理予定・現在 併存):
+- 旧 Fig 1 = plot_fig1_host_win_rate_timeseries (1978-2025・v3 F1 に差替済み)
+- 旧 Fig 3 = plot_fig3_event_study_two_layers (Supp Fig S1 に降格予定)
+- 旧 Fig 4 = plot_fig4_confounders_attenuation (v3 スコープ外・落とし予定)
+- 旧 Fig 5 = plot_fig5_replication_extended (Supp Fig S2 に降格予定)
 
 論文誌 print フレンドリー: グレースケール寄り + 太めの線 + サンセリフフォント。
 """
@@ -28,6 +32,15 @@ from src.analysis_cross_section_2024_2025 import (
 from src.analysis_event_study import (
     build_event_study_frame,
     fit_event_study_lp,
+)
+from src.analysis_main_v3 import (
+    ERA_BOUNDARIES,
+    ERA_ORDER,
+    RANK_OUTSIDE,
+    _classify_era,
+    descriptive_by_era,
+    load_v3_panel,
+    one_sample_proportion_test,
 )
 from src.analysis_replication import (
     FUNAHASHI_2016_HOST_COEF,
@@ -249,6 +262,189 @@ def plot_fig5_replication_extended(cup: str = "tennou") -> tuple[Path, Path]:
               edgecolor="none")
     fig.tight_layout()
     return _save(fig, "fig5_replication_extended")
+
+
+def plot_fig1_v3_host_rank_1948_2025_era() -> tuple[Path, Path]:
+    """Fig 1 (v3): Host-rank 1948-2025 era 色分け (両 cup 重畳・非単調時代パターン可視化)
+
+    - x = year (1948-2025・第 3-79 回・kai 1/2/75/76 除外)
+    - y = host_rank (1-8・top8 圏外は 9 = "out")
+    - color = era (early gray / golden blue / shock red・ERA_BOUNDARIES 準拠)
+    - marker = cup (tennou o / kougou x)
+    - y 軸反転 (rank 1 が上・rank 9 が下)
+    - era 境界破線 (year=1978, 2016) を垂直破線で追加
+    - descriptive_by_era の非単調変化 (early 43.3% → golden 94.7% → shock 42.9%) を視覚化
+    """
+    from matplotlib.lines import Line2D
+
+    panel = load_v3_panel().sort_values(["year", "cup"]).reset_index(drop=True)
+
+    era_colors = {"early": "#888888", "golden": "#0066cc", "shock": "#cc0033"}
+    cup_markers = {"tennou": "o", "kougou": "x"}
+    cup_size = {"tennou": 42, "kougou": 32}
+
+    fig, ax = plt.subplots(figsize=(10, 5.0))
+
+    # Jitter kougou by +0.25 year to reduce over-plotting on the same (year, rank) cell
+    year_offset = {"tennou": -0.15, "kougou": 0.15}
+
+    for c in ["tennou", "kougou"]:
+        for era_name in ERA_ORDER:
+            sub = panel[(panel["cup"] == c) & (panel["era"] == era_name)]
+            xs = sub["year"].to_numpy() + year_offset[c]
+            ys = sub["rank_ordinal"].to_numpy()
+            # tennou = filled circle with black edge; kougou = unfilled x (no edgecolor)
+            if c == "tennou":
+                ax.scatter(xs, ys,
+                           marker=cup_markers[c],
+                           s=cup_size[c],
+                           color=era_colors[era_name],
+                           edgecolor="black",
+                           linewidths=0.5,
+                           alpha=0.85,
+                           zorder=3)
+            else:
+                ax.scatter(xs, ys,
+                           marker=cup_markers[c],
+                           s=cup_size[c],
+                           color=era_colors[era_name],
+                           linewidths=1.0,
+                           alpha=0.85,
+                           zorder=3)
+
+    # era 境界破線
+    for boundary_year in [1978, 2016]:
+        ax.axvline(boundary_year - 0.5, color="#333333", linewidth=0.8,
+                   linestyle="--", alpha=0.6, zorder=1)
+
+    # y 軸反転 (rank 1 が上・rank 9 = out (>8) が下)
+    ax.set_yticks([1, 2, 3, 4, 5, 6, 7, 8, RANK_OUTSIDE])
+    ax.set_yticklabels(["1", "2", "3", "4", "5", "6", "7", "8", "out (>8)"])
+    ax.set_ylim(RANK_OUTSIDE + 0.5, 0.5)
+
+    # era ラベル (chart 内下部の empty space に配置・title と重ならないよう)
+    ax.text(1963, 5.5, "early (1948-1977)\n30 editions/cup\ntop-1: 43.3%",
+            ha="center", va="center",
+            color=era_colors["early"], fontsize=8, fontweight="bold",
+            bbox=dict(facecolor="white", edgecolor=era_colors["early"],
+                      linewidth=0.5, boxstyle="round,pad=0.3"))
+    ax.text(1996, 5.5, "golden (1978-2015)\n38 editions/cup\ntop-1: 94.7%",
+            ha="center", va="center",
+            color=era_colors["golden"], fontsize=8, fontweight="bold",
+            bbox=dict(facecolor="white", edgecolor=era_colors["golden"],
+                      linewidth=0.5, boxstyle="round,pad=0.3"))
+    ax.text(2020.5, 5.5, "shock (2016-2025)\n7 editions/cup\ntop-1: 42.9%",
+            ha="center", va="center",
+            color=era_colors["shock"], fontsize=8, fontweight="bold",
+            bbox=dict(facecolor="white", edgecolor=era_colors["shock"],
+                      linewidth=0.5, boxstyle="round,pad=0.3"))
+
+    ax.set_xlim(1946, 2027)
+    ax.set_xlabel("Year")
+    ax.set_ylabel("Host prefecture rank (1 = won overall; 'out' = >8)")
+    ax.set_title("Host prefecture rank at the Kokutai, 1948-2025 "
+                 "(75 editions × 2 cups; era colour, cup marker)")
+
+    legend_elems = [
+        Line2D([0], [0], marker="o", color="w", markerfacecolor="#555555",
+               markeredgecolor="black", markersize=7, label="tennou (emperor)"),
+        Line2D([0], [0], marker="x", color="#555555", markersize=8,
+               linestyle="None", label="kougou (empress)"),
+    ]
+    ax.legend(handles=legend_elems, loc="lower left", frameon=True,
+              framealpha=0.9, fontsize=8)
+
+    return _save(fig, "fig1_v3_host_rank_1948_2025_era")
+
+
+def plot_fig2_v3_topk_rate_by_era_cup() -> tuple[Path, Path]:
+    """Fig 2 (v3): Top-k rate by era × cup × threshold (bar chart with 95% Wilson CI)
+
+    - 左パネル tennou・右パネル kougou (sharey)
+    - 各 era で 3 bar (top-1 / top-3 / top-8)
+    - 95% CI エラーバー = ci_wilson_low/high from one_sample_proportion_test
+    - null_rate (k=1: 2.13%) の水平点線を参照として追加
+    """
+    panel = load_v3_panel()
+
+    rows = []
+    for era_name in ERA_ORDER:
+        for cup_name in ["tennou", "kougou"]:
+            for threshold in [1, 3, 8]:
+                res = one_sample_proportion_test(panel, threshold=threshold,
+                                                 cup=cup_name, era=era_name)
+                rows.append({
+                    "era": era_name,
+                    "cup": cup_name,
+                    "threshold": threshold,
+                    "n": res["n"],
+                    "rate": res["observed_rate"],
+                    "ci_lo": res["ci_wilson_low"],
+                    "ci_hi": res["ci_wilson_high"],
+                })
+    d = pd.DataFrame(rows)
+
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.5), sharey=True)
+
+    era_x_positions = {"early": 0, "golden": 1, "shock": 2}
+    threshold_colors = {1: "#cc0033", 3: "#0066cc", 8: "#666666"}
+    threshold_offsets = {1: -0.25, 3: 0.0, 8: 0.25}
+    bar_width = 0.22
+    era_n = {"early": 30, "golden": 38, "shock": 7}
+
+    for i, cup_name in enumerate(["tennou", "kougou"]):
+        ax = axes[i]
+        for threshold in [1, 3, 8]:
+            for era_name in ERA_ORDER:
+                sub = d[(d["cup"] == cup_name) & (d["era"] == era_name) &
+                        (d["threshold"] == threshold)]
+                r = sub.iloc[0]
+                x = era_x_positions[era_name] + threshold_offsets[threshold]
+                rate = r["rate"]
+                yerr_lo = max(0.0, rate - r["ci_lo"])
+                yerr_hi = max(0.0, r["ci_hi"] - rate)
+                # Only attach label on the first (leftmost) bar of each threshold group
+                bar_label = f"top-{threshold}" if era_name == "early" else None
+                ax.bar(x, rate,
+                       width=bar_width,
+                       color=threshold_colors[threshold],
+                       edgecolor="black", linewidth=0.5,
+                       alpha=0.82,
+                       yerr=[[yerr_lo], [yerr_hi]],
+                       capsize=3, ecolor="#333333",
+                       label=bar_label)
+
+        ax.set_xticks([0, 1, 2])
+        ax.set_xticklabels([f"early\n(1948-77, n={era_n['early']})",
+                            f"golden\n(1978-2015, n={era_n['golden']})",
+                            f"shock\n(2016-25, n={era_n['shock']})"])
+        ax.set_ylim(0, 1.10)
+        if i == 0:
+            ax.set_ylabel("Host top-k rate (95% Wilson CI)")
+        ax.set_title(f"{cup_name} cup")
+
+        # null rate reference: k=1 case (1/47 ≈ 0.0213) as visual anchor
+        ax.axhline(1 / 47, color="#888888", linewidth=0.6, linestyle=":", alpha=0.7)
+        ax.text(2.42, 1 / 47 + 0.005, "null=1/47", fontsize=7,
+                color="#666666", va="bottom", ha="right")
+
+        if i == 0:
+            ax.legend(loc="upper left", frameon=True, framealpha=0.9,
+                      fontsize=8, title="Threshold")
+
+    fig.suptitle("Host top-k rate by era × cup, with 95% Wilson CI "
+                 "(n = 150 = 75 editions × 2 cups; source: descriptive_by_era)",
+                 y=1.02)
+    return _save(fig, "fig2_v3_topk_rate_by_era_cup")
+
+
+def generate_v3_figures() -> dict[str, tuple[Path, Path]]:
+    """v3 M4-D 主稿用 Figure (F1 era 色分け / F2 top-k rate bar / F3 subj vs obj) を生成"""
+    return {
+        "fig1_v3": plot_fig1_v3_host_rank_1948_2025_era(),
+        "fig2_v3": plot_fig2_v3_topk_rate_by_era_cup(),
+        "fig3_v3": plot_fig2_subj_vs_obj_host_bias(),
+    }
 
 
 def generate_all_figures(cup: str = "tennou") -> dict[str, tuple[Path, Path]]:
