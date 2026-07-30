@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+
+# Mac
+.DS_Store
+
+# Notebooks
+notebooks/
+
+# Internal development docs (excluded from public repository)
+PLAN.md
+REVIEW-REPORT.md
+LITERATURE.md
+PHASE8-INVESTIGATION.md
+PHASE9-SUPPLEMENT.md
+asura-monju-round-1-on-v3.md
+ssrn-submission.html
+socarxiv-submission.html
