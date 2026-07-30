@@ -6,6 +6,7 @@ numpy==2.5.1
 pandas==3.0.5
 patsy==1.0.2
 pdfplumber==0.11.10
+pyarrow==25.0.0
 pytest==9.1.1
 python-calamine==0.8.2
 requests==2.34.2

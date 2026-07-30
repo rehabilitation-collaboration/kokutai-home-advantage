@@ -166,3 +166,103 @@ def merge_confounders(
     merged["log_population"] = np.log(merged["population"].where(merged["population"] > 0))
     merged["log_gdp"] = np.log(merged["gdp_nominal_mil_yen"].where(merged["gdp_nominal_mil_yen"] > 0))
     return merged
+
+
+def build_host_rank_panel(
+    include_special: bool = False,
+    include_cancelled: bool = False,
+) -> pd.DataFrame:
+    """M2 主分析用パネル: host県の順位のみ抽出 (v3 実質77大会 top1/3/8 真偽検定用)
+
+    v3 母集団 = 第3-79回 (77 大会) - 第75/76回 (COVID 中止 2) = **実質 75 大会 × 2 杯 = 150 行**
+    include_special=True で special_2023 (nagano 収録済み) を追加。
+    include_cancelled=True で第75/76 の中止レコードを保持 (host_rank=NA)。
+
+    除外規則:
+    - 第1-2 回 = panel_included=False (nagano カバー外)
+    - 第75 回 = is_winter_only_kai=True (本大会 COVID 中止)
+    - 第76 回 = cancelled=True (COVID 中止)
+    - 第80 回 = panel_included=False (2026 未実施)
+    - special_1973 = nagano 未収録 (KOKUTAI_SPECIAL 定義はあるが実データ不在で自動除外)
+
+    host_pref 正規化:
+    - 単一県: そのまま
+    - 複数県共催 (第7回=福島宮城山形 / 第8回=愛媛香川徳島高知 等) = KOKUTAI_HOSTS["host_prefs"][0] (主催県)
+
+    Returns:
+        DataFrame (long format):
+        - kai_id: str ("3".."79" or "special_YYYY")
+        - kai_num: Int64 (通常大会は int, 特別大会は NA)
+        - year: int
+        - host_pref: str
+        - host_pref_code: int (JIS X0401)
+        - cup: str ("tennou" / "kougou")
+        - host_rank: Int64 (1-8 or NA=top8 圏外・中止年)
+        - top1_flag: bool
+        - top3_flag: bool
+        - top8_flag: bool
+        - is_special: bool
+        - is_cancelled: bool
+        - is_winter_only: bool
+        - is_multi_pref: bool
+    """
+    nagano_df = load_nagano_high_rank()
+
+    records: list[dict] = []
+    for _, row in nagano_df.iterrows():
+        is_special = bool(row["is_special"])
+        year = int(row["year"])
+
+        if is_special:
+            kai_id = f"special_{year}"
+            kai_num_val: object = pd.NA
+            entry = KOKUTAI_SPECIAL.get(kai_id)
+        else:
+            kai_num_int = int(row["kai_num"])
+            kai_id = str(kai_num_int)
+            kai_num_val = kai_num_int
+            entry = KOKUTAI_HOSTS.get(kai_num_int)
+
+        if entry is None:
+            continue
+        if not is_special and not entry["panel_included"]:
+            continue
+        if not entry.get("host_prefs"):
+            continue
+
+        host_pref = entry["host_prefs"][0]
+        host_pref_code = PREFECTURE_TO_CODE[host_pref]
+        is_cancelled = bool(entry.get("cancelled", False))
+        is_winter_only = bool(entry.get("is_winter_only_kai", False))
+        is_multi_pref = bool(entry.get("is_multi_pref", False))
+
+        host_rank: int | None = _rank_from_row(row, host_pref)
+
+        records.append({
+            "kai_id": kai_id,
+            "kai_num": kai_num_val,
+            "year": year,
+            "host_pref": host_pref,
+            "host_pref_code": host_pref_code,
+            "cup": row["cup"],
+            "host_rank": host_rank if host_rank is not None else pd.NA,
+            "top1_flag": host_rank == 1,
+            "top3_flag": host_rank is not None and host_rank <= 3,
+            "top8_flag": host_rank is not None and host_rank <= 8,
+            "is_special": is_special,
+            "is_cancelled": is_cancelled,
+            "is_winter_only": is_winter_only,
+            "is_multi_pref": is_multi_pref,
+        })
+
+    df = pd.DataFrame(records)
+
+    if not include_special:
+        df = df[~df["is_special"]]
+    if not include_cancelled:
+        df = df[~(df["is_cancelled"] | df["is_winter_only"])]
+
+    df = df.reset_index(drop=True)
+    df["kai_num"] = df["kai_num"].astype("Int64")
+    df["host_rank"] = df["host_rank"].astype("Int64")
+    return df
