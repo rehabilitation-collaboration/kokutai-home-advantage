@@ -52,14 +52,26 @@ def parse_japanese_era(era_str: str) -> int | None:
     return _ERA_OFFSETS[era] + int(n_str)
 
 
-def _extract_rank_cells(cells: list[str], has_season_col: bool) -> list[str]:
-    """順位セル (1位-8位) を抽出。「冬・夏・秋」列がある行は1つずらす。"""
-    start = 5 if has_season_col else 4  # 天皇杯行の1位開始インデックス
-    return [c.strip() for c in cells[start:start + 8]]
+# 早期年 (第3-9回) の HTML に現れる季節マーク集合。厳密一致で判定 (host_raw の「・」混入を誤検出しないため)
+_SEASON_MARKS: set[str] = {"冬", "夏・秋", "冬・夏・秋"}
+# 中止マーク (第75回2020鹿児島・第76回2021三重の COVID 中止行に現れる)
+_CANCELLED_MARKS: set[str] = {"中　止", "中止"}
+
+
+def _ranks_from(cells: list[str], start: int) -> dict[str, str | None]:
+    """cells[start:start+8] を rank1-rank8 として返す。"""
+    slice_ = [c.strip() for c in cells[start:start + 8]]
+    return {f"rank{i+1}": slice_[i] if i < len(slice_) else None for i in range(8)}
 
 
 def load_nagano_high_rank(html_path: Path | None = None) -> pd.DataFrame:
-    """長野県体協 high_rank.html をパース
+    """長野県体協 high_rank.html をパース (状態機械版・第3-79回全対応)
+
+    HTML 構造の 3 パターンを扱う:
+    - **第10-79回 + 特別**: `[天皇杯 rank1 rank2 ... rank8]` / `[皇后杯 rank1 ... rank8]` (季節列なし)
+    - **第3-5回**: `[... 天皇杯 冬・夏・秋 rank1 ... rank8]` / `[皇后杯 冬・夏・秋 rank1 ... rank8]` (冬夏秋統合行 1 本)
+    - **第6-9回**: 冬季と本大会が別行に分離。`[... 天皇杯 冬 (冬季rank1-8)]` → `[夏・秋 (本大会rank1-8)]` → `[皇后杯 冬 (冬季rank1-8)]` → `[夏・秋 (本大会rank1-8)]`
+      冬季ランキング (host = 北海道/長野等の冬季常連) は主分析の対象外なので skip し、直後の「夏・秋」独立行を本大会 rank として採用する
 
     Returns:
         DataFrame with columns:
@@ -69,7 +81,7 @@ def load_nagano_high_rank(html_path: Path | None = None) -> pd.DataFrame:
         - year: int (西暦)
         - host_raw: str ("滋賀県", "京阪神地方" 等)
         - cup: str ("tennou" or "kougou")
-        - rank1 - rank8: str (都道府県名)
+        - rank1 - rank8: str (都道府県名) / 中止年は rank1="中　止" + rank2-8=None
     """
     if html_path is None:
         html_path = REFS_DIR / "nagano_high_rank.html"
@@ -83,25 +95,48 @@ def load_nagano_high_rank(html_path: Path | None = None) -> pd.DataFrame:
     if table is None:
         raise ValueError("No <table> in nagano_high_rank.html")
 
-    records = []
-    current_kai_ctx = None  # 天皇杯行から皇后杯行に継承する回情報
+    records: list[dict] = []
+    current_kai_ctx: dict | None = None
+    pending_cup: str | None = None  # 第6-9回で「冬」行を skip して次の「夏・秋」独立行を待ってる cup
 
     for tr in table.find_all("tr"):
         cells = [c.get_text(" ", strip=True) for c in tr.find_all(["td", "th"])]
-        if not cells or cells[0] == "回":  # ヘッダ行 skip
+        if not cells or cells[0] == "回":
             continue
 
         first = cells[0]
-        # 天皇杯行 = 先頭が "回番号" or "特"
+
+        # 独立「夏・秋」行 (第6-9回の本大会ランキング行)
+        if first == "夏・秋":
+            if current_kai_ctx is None or pending_cup is None:
+                continue
+            records.append({
+                **current_kai_ctx,
+                "cup": pending_cup,
+                **_ranks_from(cells, 1),  # cells[0]=夏・秋, cells[1:9]=rank1-8
+            })
+            pending_cup = None
+            continue
+
+        # 皇后杯行
         if first == "皇后杯":
             if current_kai_ctx is None:
                 continue
-            # 皇后杯行は 1位-8位 (cells[1:9])
-            ranks = [c.strip() for c in cells[1:9]]
+            season_val = cells[1] if len(cells) >= 2 else ""
+            if season_val == "冬":
+                # 冬季単独 → 次の「夏・秋」独立行を待つ
+                pending_cup = "kougou"
+                continue
+            if season_val in _SEASON_MARKS:
+                # 冬・夏・秋 (統合) → cells[2:10] が rank1-8
+                start = 2
+            else:
+                # 通常 (第10-79回・特別) → cells[1:9] が rank1-8
+                start = 1
             records.append({
                 **current_kai_ctx,
                 "cup": "kougou",
-                **{f"rank{i+1}": ranks[i] if i < len(ranks) else None for i in range(8)},
+                **_ranks_from(cells, start),
             })
             continue
 
@@ -109,16 +144,13 @@ def load_nagano_high_rank(html_path: Path | None = None) -> pd.DataFrame:
         is_special = first == "特"
         kai_num: int | None = None if is_special else int(first) if first.isdigit() else None
         if kai_num is None and not is_special:
-            continue  # 無効行
+            continue
 
         era_raw = cells[1]
         year = parse_japanese_era(era_raw)
         host_raw = cells[2]
-
-        # 「冬・夏・秋」列があるか (cells[4] = "冬・夏・秋" 等)
-        has_season_col = len(cells) >= 5 and "・" in cells[4]
-
-        ranks = _extract_rank_cells(cells, has_season_col)
+        # cells[3] = "天皇杯"
+        # cells[4] = 季節マーク or rank1 or 中止マーク
 
         current_kai_ctx = {
             "kai_num": kai_num,
@@ -127,10 +159,30 @@ def load_nagano_high_rank(html_path: Path | None = None) -> pd.DataFrame:
             "year": year,
             "host_raw": host_raw,
         }
+
+        season_val = cells[4] if len(cells) >= 5 else ""
+        if season_val in _CANCELLED_MARKS:
+            # 中止年 (第75/76): rank1=中止 + rank2-8=None のレコードを残す (母集団除外は panel_builder で処理)
+            records.append({
+                **current_kai_ctx,
+                "cup": "tennou",
+                **{f"rank{i+1}": season_val if i == 0 else None for i in range(8)},
+            })
+            pending_cup = None
+            continue
+        if season_val == "冬":
+            pending_cup = "tennou"
+            continue
+        if season_val in _SEASON_MARKS:
+            # 冬・夏・秋 (統合) → cells[5:13] が rank1-8
+            start = 5
+        else:
+            # 通常 (第10-79回・特別) → cells[4:12] が rank1-8
+            start = 4
         records.append({
             **current_kai_ctx,
             "cup": "tennou",
-            **{f"rank{i+1}": ranks[i] if i < len(ranks) else None for i in range(8)},
+            **_ranks_from(cells, start),
         })
 
     return pd.DataFrame(records)

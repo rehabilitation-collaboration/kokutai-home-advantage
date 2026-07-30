@@ -88,6 +88,60 @@ class TestNaganoHighRank:
         assert 79 in kai_set
         # 中止年 (75/76) もレコードは残る (順位表は掲載される)
 
+    def test_third_kai_tennou_correct_ranks(self, df):
+        # 第3回 tennou は「冬・夏・秋」統合行から rank1=東京 rank2=福岡
+        row = df[(df.kai_num == 3) & (df.cup == "tennou")].iloc[0]
+        assert row.rank1 == "東京"
+        assert row.rank2 == "福岡"
+        assert row.rank3 == "京都"
+
+    def test_third_kai_kougou_no_season_leak(self, df):
+        # 第3回 kougou は「冬・夏・秋」列を skip して rank1=京都 (旧パーサは rank1="冬・夏・秋" のバグ)
+        row = df[(df.kai_num == 3) & (df.cup == "kougou")].iloc[0]
+        assert row.rank1 == "京都"
+        assert row.rank2 == "東京"
+
+    def test_ninth_kai_uses_honmatsuri_not_winter(self, df):
+        # 第9回は「冬」と「夏・秋」が別行。主分析は本大会 (夏・秋) を採用。冬季ランキング (rank1=北海道) 混入なし
+        row = df[(df.kai_num == 9) & (df.cup == "tennou")].iloc[0]
+        assert row.rank1 == "東京"
+        assert row.rank2 == "愛知"
+        assert row.rank3 == "北海道"  # 本大会で北海道は3位 (冬季1位ではない)
+
+    def test_ninth_kai_kougou_honmatsuri(self, df):
+        # 第9回 kougou も本大会 (夏・秋) を採用
+        row = df[(df.kai_num == 9) & (df.cup == "kougou")].iloc[0]
+        assert row.rank1 == "東京"
+        assert row.rank2 == "愛知"
+
+    def test_no_season_mark_in_rank1(self, df):
+        # rank1 に季節マーク (「冬」「夏・秋」「冬・夏・秋」) が混入していない (v3 パーサ修正の regression guard)
+        season_marks = {"冬", "夏・秋", "冬・夏・秋"}
+        rank1_values = set(df["rank1"].dropna())
+        assert rank1_values.isdisjoint(season_marks)
+
+    def test_cancelled_75_76(self, df):
+        # 第75回2020鹿児島・第76回2021三重は COVID 中止。tennou は rank1="中　止"、kougou は rank1=NaN で残る
+        for kai in (75, 76):
+            tennou = df[(df.kai_num == kai) & (df.cup == "tennou")].iloc[0]
+            assert "中" in str(tennou.rank1)
+            assert pd.isna(tennou.rank2)
+
+    def test_recent_hosts_top1_or_top2(self, df):
+        # 第68-79回の直近 host 順位 (M2 主分析の主要データ・順位ベース regression 対策)
+        expected = {
+            68: ("東京都", "東京"),      # 2013 東京 = host tennou 1位
+            71: ("岩手県", "岩手"),      # 2016 岩手 = 敗北ショック (東京1位・岩手2位)
+            73: ("福井県", "福井"),      # 2018 福井 = host 1位
+            74: ("茨城県", "茨城"),      # 2019 茨城 = host 1位
+            77: ("栃木県", "栃木"),      # 2022 栃木 = 敗北ショック (東京1位・栃木2位)
+        }
+        for kai, (host_str, host_short) in expected.items():
+            row = df[(df.kai_num == kai) & (df.cup == "tennou")].iloc[0]
+            assert row.host_raw == host_str
+            top2 = {row.rank1, row.rank2}
+            assert host_short in top2, f"kai={kai}: host {host_short} not in top2 ({top2})"
+
 
 class TestJspoXls:
     def test_79_tennou(self):
