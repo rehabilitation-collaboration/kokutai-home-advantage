@@ -72,6 +72,24 @@ def main() -> None:
     lines.append("")
 
     lines.append("-" * 80)
+    lines.append("[2b] sensitivity_46_states (M3-T1: 1972 沖縄復帰前 46県帰無・early era 30 大会に一律適用)")
+    lines.append("     ※ 対象=early era 30 大会 (第 3-32 回・1948-1977) 全体を n_states=46 で再計算。")
+    lines.append("     ※ 史実上 46 県は第 3-26 回 24 大会のみ・第 27-32 回 6 大会は 47 県。ここでは保守的な worst-case bound。")
+    lines.append("     ※ null_rate=k/n_states は分母大きいほど小さいため、default 47 は excess を過大評価する方向。")
+    lines.append("-" * 80)
+    lines.append(header)
+    for cup in ["tennou", "kougou", "both"]:
+        for k in [1, 3, 8]:
+            r = one_sample_proportion_test(df, k, cup=cup, era="early", n_states=46)  # type: ignore
+            lines.append(
+                f"  {r['threshold']:>3}  {str(r['cup']):>7}  {str(r['era']):>7}  {r['n']:>3}  "
+                f"{r['n_success']:>3}  {fmt(r['observed_rate'],4):>8}  {fmt(r['null_rate'],4):>9}  "
+                f"{fmt(r['excess'],4):>8}  {fmt(r['p_value_greater'],2):>12}  "
+                f"{fmt(r['ci_wilson_low'],3):>7}  {fmt(r['ci_wilson_high'],3):>7}"
+            )
+    lines.append("")
+
+    lines.append("-" * 80)
     lines.append("[3] permutation_test (host_pref を 47県からランダム再割当・n_perm=10,000)")
     lines.append("-" * 80)
     lines.append(f"  {'threshold':>3}  {'cup':>7}  {'obs_rate':>8}  {'null_mean':>9}  {'null_std':>8}  {'null_p05':>8}  {'null_p95':>8}  {'p_perm':>7}")

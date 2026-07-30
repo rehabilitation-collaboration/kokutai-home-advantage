@@ -91,13 +91,17 @@ def one_sample_proportion_test(
     threshold: int,
     cup: CupMode = "both",
     era: Era = "all",
+    n_states: int = 47,
 ) -> dict:
-    """帰無 = k/47 vs 観測 host top-k 率の exact binomial test + Wilson 95%CI
+    """帰無 = k/n_states vs 観測 host top-k 率の exact binomial test + Wilson 95%CI
 
     Args:
         threshold: 1 / 3 / 8
         cup: "tennou" / "kougou" / "both"
         era: "early" / "golden" / "shock" / "all"
+        n_states: 帰無分母 (default 47)。1972 沖縄復帰前 (第 3-26 回・1948-1971)
+            の 24 大会は 46 県参加のため、sensitivity check として n_states=46 で
+            early era を再計算するのが M3-T1 用途。
     """
     sub = df.copy()
     if cup != "both":
@@ -109,11 +113,11 @@ def one_sample_proportion_test(
     col = f"top{threshold}_flag"
     n_success = int(sub[col].sum())
     observed_rate = n_success / n if n else float("nan")
-    null_rate = threshold / 47
+    null_rate = threshold / n_states
 
     if n == 0:
         return {
-            "threshold": threshold, "cup": cup, "era": era,
+            "threshold": threshold, "cup": cup, "era": era, "n_states": n_states,
             "n": 0, "n_success": 0,
             "observed_rate": float("nan"), "null_rate": null_rate,
             "excess": float("nan"),
@@ -131,6 +135,7 @@ def one_sample_proportion_test(
         "threshold": threshold,
         "cup": cup,
         "era": era,
+        "n_states": n_states,
         "n": n,
         "n_success": n_success,
         "observed_rate": observed_rate,
@@ -355,6 +360,21 @@ def run_all_v3_analyses(seed: int = 0, n_perm: int = 10_000) -> dict:
             for k in [1, 3, 8]:
                 prop_tests.append(one_sample_proportion_test(df, k, cup=cup, era=era))  # type: ignore
     out["one_sample_tests"] = prop_tests
+
+    # M3-T1: 46 vs 47 states sensitivity。1972 沖縄復帰前の 24 大会 (第 3-26 回・
+    # 1948-1971) は 46 県参加。ここでは early era 30 大会 (第 3-32 回・1948-1977)
+    # 全体を一律 n_states=46 で再計算する保守的近似 (worst-case bound) を出す
+    # (第 27-32 回 6 大会は史実上 47 県だが、影響の上限を評価する目的)。
+    # 数学的方向: null_rate = k/n_states は分母大きいほど小さいため、default 47 は
+    # excess を過大評価する方向。46 で再計算すると excess は僅かに小さくなる。
+    # M4 執筆 Limitations 節で影響 marginal (差 < 0.005) を示す素材。
+    sensitivity_46 = []
+    for cup in ["tennou", "kougou", "both"]:
+        for k in [1, 3, 8]:
+            sensitivity_46.append(
+                one_sample_proportion_test(df, k, cup=cup, era="early", n_states=46)  # type: ignore
+            )
+    out["sensitivity_46_states"] = sensitivity_46
 
     perm_tests = []
     for cup in ["tennou", "kougou"]:

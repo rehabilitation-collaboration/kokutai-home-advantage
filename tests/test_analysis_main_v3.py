@@ -129,6 +129,32 @@ class TestOneSampleProportionTest:
         assert r["n"] == 0
         assert math.isnan(r["observed_rate"])
 
+    def test_null_rate_uses_n_states_46(self, panel: pd.DataFrame):
+        # M3-T1: 1972 沖縄復帰前 sensitivity。n_states=46 で null_rate = k/46
+        r1 = one_sample_proportion_test(panel, 1, cup="tennou", era="early", n_states=46)
+        r3 = one_sample_proportion_test(panel, 3, cup="tennou", era="early", n_states=46)
+        r8 = one_sample_proportion_test(panel, 8, cup="tennou", era="early", n_states=46)
+        assert r1["n_states"] == 46
+        assert r1["null_rate"] == pytest.approx(1 / 46)
+        assert r3["null_rate"] == pytest.approx(3 / 46)
+        assert r8["null_rate"] == pytest.approx(8 / 46)
+
+    def test_default_n_states_is_47(self, panel: pd.DataFrame):
+        # n_states 未指定で従来通り 47 が使われる (backward compat regression guard)
+        r = one_sample_proportion_test(panel, 1, cup="tennou", era="all")
+        assert r["n_states"] == 47
+        assert r["null_rate"] == pytest.approx(1 / 47)
+
+    def test_early_era_46_vs_47_marginal_impact(self, panel: pd.DataFrame):
+        # handoff 既知の問題「46/47 沖縄穴」の marginal 性を実データで regression guard。
+        # 46 と 47 の p_value_greater は両方 <0.001 で結論不変・excess 差 <0.02
+        for cup in ["tennou", "kougou"]:
+            r46 = one_sample_proportion_test(panel, 1, cup=cup, era="early", n_states=46)  # type: ignore
+            r47 = one_sample_proportion_test(panel, 1, cup=cup, era="early", n_states=47)  # type: ignore
+            assert r46["p_value_greater"] < 0.001, f"cup={cup} 46 states p not sig"
+            assert r47["p_value_greater"] < 0.001, f"cup={cup} 47 states p not sig"
+            assert abs(r46["excess"] - r47["excess"]) < 0.02, f"cup={cup} excess drift too large"
+
 
 class TestPermutationTest:
     def test_top1_tennou_p_lower_bound(self):
@@ -213,6 +239,7 @@ class TestRunAllV3Analyses:
         assert "permutation_tests" in out
         assert "era_chi_square" in out
         assert "ordered_logit" in out
+        assert "sensitivity_46_states" in out
         # 3 threshold × 4 era × 3 cup = 36 one-sample tests
         assert len(out["one_sample_tests"]) == 36
         # 3 threshold × 2 cup = 6 permutation tests
@@ -221,3 +248,8 @@ class TestRunAllV3Analyses:
         assert len(out["era_chi_square"]) == 9
         # 3 cup mode = 3 ordered logit
         assert len(out["ordered_logit"]) == 3
+        # M3-T1: 3 threshold × 3 cup = 9 sensitivity (early era only, n_states=46)
+        assert len(out["sensitivity_46_states"]) == 9
+        for r in out["sensitivity_46_states"]:
+            assert r["n_states"] == 46
+            assert r["era"] == "early"
