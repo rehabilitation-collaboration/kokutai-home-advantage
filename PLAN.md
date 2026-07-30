@@ -345,7 +345,7 @@ tests/
 - [x] GPT 査読 round-1 実施 (V2 → 指摘事項 → V3) — 完遂
 - [x] GPT 査読 round-2 実施 (V3 → 指摘事項 → V4) — 完遂
 - [x] GPT 査読 round-3 実施 (V4 → 「SSRN OK / 査読誌 Minor-Moderate revision」判定 + 5 必修 + 2 追加) — 完遂 (2026-07-30 深夜)
-- [ ] **v5 サイクル (10 タスク・v5-T1〜T10)**: システム化 + round-3 消化 + PDF体裁QAチェックリスト全 PASS
+- [ ] **v5 サイクル (10 タスク・v5-T1〜T10)**: システム化 + round-3 消化 + PDF体裁QAチェックリスト全 PASS — **T1-T8 完遂 (2026-07-30・kokutai 8 commits・HEAD `cf3983f`・round-3 6/7 finding 消化・pytest 312)**・残 T9 GitHub URL 埋込 (瑞樹 v5 実施確定) + T10 Phase C build + 14 項目全 PASS
 - [ ] GPT 査読 round-4 実施 (v5 → Accept 判定目標)
 - [ ] Accept 確定まで反復 (friday13th は V1→V10 で 9 サイクル反復・[[feedback-paper-precision-over-effort]])
 - [ ] 各サイクル後に PDF 生成 + **PDF体裁QAチェックリスト全 14 項目 PASS 確認** + REVIEW-REPORT.md 更新
