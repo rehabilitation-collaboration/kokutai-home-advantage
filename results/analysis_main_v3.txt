@@ -1,0 +1,128 @@
+================================================================================
+analysis_main_v3.py — v3 M2 主分析 (実質77大会 host top1/3/8 真偽検定)
+================================================================================
+
+panel shape: (150, 16)
+era 分布: {'golden': 76, 'early': 60, 'shock': 14}
+host_rank 分布: {np.int64(1): 104, np.int64(2): 24, np.int64(3): 5, np.int64(4): 3, np.int64(5): 3, np.int64(8): 1, <NA>: 10}
+
+--------------------------------------------------------------------------------
+[1] descriptive_by_era
+--------------------------------------------------------------------------------
+   era    cup  n_kai  n_top1  n_top3  n_top8  rate_top1  rate_top3  rate_top8
+ early tennou     30      17      25      26   0.566667   0.833333   0.866667
+ early kougou     30       9      20      26   0.300000   0.666667   0.866667
+golden tennou     38      37      37      37   0.973684   0.973684   0.973684
+golden kougou     38      35      37      37   0.921053   0.973684   0.973684
+ shock tennou      7       3       7       7   0.428571   1.000000   1.000000
+ shock kougou      7       3       7       7   0.428571   1.000000   1.000000
+   all tennou     75      57      69      70   0.760000   0.920000   0.933333
+   all kougou     75      47      64      70   0.626667   0.853333   0.933333
+
+--------------------------------------------------------------------------------
+[2] one_sample_proportion_test (帰無 = k/47 vs 観測 host top-k 率・exact binomial + Wilson 95%CI)
+--------------------------------------------------------------------------------
+  threshold      cup      era    n  obs  obs_rate  null_rate    excess     p_greater   CI_low  CI_high
+    1   tennou      all   75   57    0.7600     0.0213    0.7387          0.00    0.671    1.000
+    3   tennou      all   75   69    0.9200     0.0638    0.8562          0.00    0.853    1.000
+    8   tennou      all   75   70    0.9333     0.1702    0.7631          0.00    0.869    1.000
+    1   tennou    early   30   17    0.5667     0.0213    0.5454          0.00    0.419    1.000
+    3   tennou    early   30   25    0.8333     0.0638    0.7695          0.00    0.695    1.000
+    8   tennou    early   30   26    0.8667     0.1702    0.6965          0.00    0.734    1.000
+    1   tennou   golden   38   37    0.9737     0.0213    0.9524          0.00    0.890    1.000
+    3   tennou   golden   38   37    0.9737     0.0638    0.9099          0.00    0.890    1.000
+    8   tennou   golden   38   37    0.9737     0.1702    0.8035          0.00    0.890    1.000
+    1   tennou    shock    7    3    0.4286     0.0213    0.4073          0.00    0.186    1.000
+    3   tennou    shock    7    7    1.0000     0.0638    0.9362          0.00    0.721    1.000
+    8   tennou    shock    7    7    1.0000     0.1702    0.8298          0.00    0.721    1.000
+    1   kougou      all   75   47    0.6267     0.0213    0.6054          0.00    0.532    1.000
+    3   kougou      all   75   64    0.8533     0.0638    0.7895          0.00    0.774    1.000
+    8   kougou      all   75   70    0.9333     0.1702    0.7631          0.00    0.869    1.000
+    1   kougou    early   30    9    0.3000     0.0213    0.2787          0.00    0.184    1.000
+    3   kougou    early   30   20    0.6667     0.0638    0.6028          0.00    0.517    1.000
+    8   kougou    early   30   26    0.8667     0.1702    0.6965          0.00    0.734    1.000
+    1   kougou   golden   38   35    0.9211     0.0213    0.8998          0.00    0.818    1.000
+    3   kougou   golden   38   37    0.9737     0.0638    0.9099          0.00    0.890    1.000
+    8   kougou   golden   38   37    0.9737     0.1702    0.8035          0.00    0.890    1.000
+    1   kougou    shock    7    3    0.4286     0.0213    0.4073          0.00    0.186    1.000
+    3   kougou    shock    7    7    1.0000     0.0638    0.9362          0.00    0.721    1.000
+    8   kougou    shock    7    7    1.0000     0.1702    0.8298          0.00    0.721    1.000
+    1     both      all  150  104    0.6933     0.0213    0.6721          0.00    0.628    1.000
+    3     both      all  150  133    0.8867     0.0638    0.8228          0.00    0.837    1.000
+    8     both      all  150  140    0.9333     0.1702    0.7631          0.00    0.892    1.000
+    1     both    early   60   26    0.4333     0.0213    0.4121          0.00    0.333    1.000
+    3     both    early   60   45    0.7500     0.0638    0.6862          0.00    0.649    1.000
+    8     both    early   60   52    0.8667     0.1702    0.6965          0.00    0.778    1.000
+    1     both   golden   76   72    0.9474     0.0213    0.9261          0.00    0.888    1.000
+    3     both   golden   76   74    0.9737     0.0638    0.9099          0.00    0.924    1.000
+    8     both   golden   76   74    0.9737     0.1702    0.8035          0.00    0.924    1.000
+    1     both    shock   14    6    0.4286     0.0213    0.4073          0.00    0.241    1.000
+    3     both    shock   14   14    1.0000     0.0638    0.9362          0.00    0.838    1.000
+    8     both    shock   14   14    1.0000     0.1702    0.8298          0.00    0.838    1.000
+
+--------------------------------------------------------------------------------
+[3] permutation_test (host_pref を 47県からランダム再割当・n_perm=10,000)
+--------------------------------------------------------------------------------
+  threshold      cup  obs_rate  null_mean  null_std  null_p05  null_p95   p_perm
+    1   tennou    0.7600     0.0212    0.0168    0.0000    0.0533   0.0000
+    3   tennou    0.9200     0.0635    0.0282    0.0267    0.1067   0.0000
+    8   tennou    0.9333     0.1690    0.0434    0.1067    0.2400   0.0000
+    1   kougou    0.6267     0.0212    0.0166    0.0000    0.0533   0.0000
+    3   kougou    0.8533     0.0637    0.0283    0.0267    0.1067   0.0000
+    8   kougou    0.9333     0.1660    0.0426    0.0933    0.2400   0.0000
+
+--------------------------------------------------------------------------------
+[4] chi_square_era_comparison (3期間 top-k 率の差 + pairwise Fisher exact)
+--------------------------------------------------------------------------------
+  cup= tennou top1: rates early=0.567 golden=0.974 shock=0.429 | χ²=19.88 dof=2 p=0.0000
+      pairwise Fisher: early_vs_golden=0.0000 golden_vs_shock=0.0011 early_vs_shock=0.6800
+  cup= tennou top3: rates early=0.833 golden=0.974 shock=1.000 | χ²=5.16 dof=2 p=0.0758
+      pairwise Fisher: early_vs_golden=0.0801 golden_vs_shock=1.0000 early_vs_shock=0.5599
+  cup= tennou top8: rates early=0.867 golden=0.974 shock=1.000 | χ²=3.64 dof=2 p=0.1623
+      pairwise Fisher: early_vs_golden=0.1617 golden_vs_shock=1.0000 early_vs_shock=0.5697
+  cup= kougou top1: rates early=0.300 golden=0.921 shock=0.429 | χ²=28.93 dof=2 p=0.0000
+      pairwise Fisher: early_vs_golden=0.0000 golden_vs_shock=0.0068 early_vs_shock=0.6594
+  cup= kougou top3: rates early=0.667 golden=0.974 shock=1.000 | χ²=13.95 dof=2 p=0.0009
+      pairwise Fisher: early_vs_golden=0.0008 golden_vs_shock=1.0000 early_vs_shock=0.1551
+  cup= kougou top8: rates early=0.867 golden=0.974 shock=1.000 | χ²=3.64 dof=2 p=0.1623
+      pairwise Fisher: early_vs_golden=0.1617 golden_vs_shock=1.0000 early_vs_shock=0.5697
+  cup=   both top1: rates early=0.433 golden=0.947 shock=0.429 | χ²=46.76 dof=2 p=0.0000
+      pairwise Fisher: early_vs_golden=0.0000 golden_vs_shock=0.0000 early_vs_shock=1.0000
+  cup=   both top3: rates early=0.750 golden=0.974 shock=1.000 | χ²=18.67 dof=2 p=0.0001
+      pairwise Fisher: early_vs_golden=0.0001 golden_vs_shock=1.0000 early_vs_shock=0.0590
+  cup=   both top8: rates early=0.867 golden=0.974 shock=1.000 | χ²=7.27 dof=2 p=0.0263
+      pairwise Fisher: early_vs_golden=0.0222 golden_vs_shock=1.0000 early_vs_shock=0.3390
+
+--------------------------------------------------------------------------------
+[5] run_ordered_logit_v3 (rank_ordinal ~ C(era) + C(cup)?・cluster SE at host_pref_code)
+--------------------------------------------------------------------------------
+  ref: era=early, cup=kougou (drop_first)
+
+  cup_mode=tennou  n_obs=75  converged=True  cluster=True  llf=-48.193
+              era_golden  coef=   -3.3675  se=  1.2008  p= 0.0050
+               era_shock  coef=    0.0808  se=  0.5816  p= 0.8895
+                     1/2  coef=    0.2210  se=  0.4032  p= 0.5836
+                     2/3  coef=    0.2888  se=  0.2830  p= 0.3076
+                     3/5  coef=   -1.7140  se=  1.0436  p= 0.1005
+                     5/9  coef=   -1.5787  se=  1.0452  p= 0.1309
+
+  cup_mode=kougou  n_obs=75  converged=True  cluster=True  llf=-74.290
+              era_golden  coef=   -3.4494  se=  0.8808  p= 0.0001
+               era_shock  coef=   -1.1526  se=  0.5740  p= 0.0446
+                     1/2  coef=   -1.0027  se=  0.5032  p= 0.0463
+                     2/3  coef=    0.2599  se=  0.2815  p= 0.3559
+                     3/4  coef=   -0.7221  se=  0.5132  p= 0.1594
+                     4/5  coef=   -0.8460  se=  0.6014  p= 0.1595
+                     5/8  coef=   -1.0451  se=  0.7430  p= 0.1595
+                     8/9  coef=   -1.5582  se=  1.0559  p= 0.1400
+
+  cup_mode=pooled  n_obs=150  converged=True  cluster=True  llf=-126.150
+              era_golden  coef=   -3.3320  se=  0.8617  p= 0.0001
+               era_shock  coef=   -0.5397  se=  0.5396  p= 0.3172
+              cup_tennou  coef=   -0.8921  se=  0.2704  p= 0.0010
+                     1/2  coef=   -0.8145  se=  0.4095  p= 0.0467
+                     2/3  coef=    0.2619  se=  0.2369  p= 0.2690
+                     3/4  coef=   -1.0128  se=  0.4674  p= 0.0302
+                     4/5  coef=   -1.3948  se=  0.6319  p= 0.0273
+                     5/8  coef=   -1.2496  se=  0.5598  p= 0.0256
+                     8/9  coef=   -2.2216  se=  0.9731  p= 0.0224
