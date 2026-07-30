@@ -19,8 +19,8 @@ MANUSCRIPT_MD = PROJECT_DIR / "manuscript.md"
 MAIN_FIGURES = {
     "Figure 1": "fig1_host_win_rate_timeseries.png",
     "Figure 2": "fig2_subj_vs_obj_host_bias.png",
-    "Figure 4": "fig4_confounders_attenuation.png",
-    "Figure 5": "fig5_replication_extended.png",
+    "Figure 3": "fig4_confounders_attenuation.png",
+    "Figure 4": "fig5_replication_extended.png",
 }
 
 SUPPLEMENTARY_FIGURES = {
@@ -75,6 +75,15 @@ em { font-style: italic; }
     text-align: justify;
     margin-top: 0.5em;
 }
+.supplementary-section {
+    page-break-before: always;
+}
+.supplementary-section h2.supplementary-figures-heading {
+    page-break-after: avoid;
+}
+.supplementary-section .figure-block:first-of-type {
+    page-break-before: avoid;
+}
 """
 
 
@@ -114,13 +123,19 @@ def build_main_figures_html(legends: dict[str, str]) -> str:
 
 
 def build_supplementary_figures_html(legends: dict[str, str]) -> str:
-    """Build HTML for supplementary figures (Figure S1...) under a dedicated section heading."""
+    """Build HTML for supplementary figures (Figure S1...) under a dedicated section heading.
+
+    Wrapped in `.supplementary-section` so CSS keeps the heading on the same page as
+    the first supplementary figure (avoids orphan heading at the end of the Main Figures page).
+    """
     if not SUPPLEMENTARY_FIGURES:
         return ""
-    html = '<h2 class="supplementary-figures-heading">Supplementary Figures</h2>\n'
+    html = '<div class="supplementary-section">'
+    html += '<h2 class="supplementary-figures-heading">Supplementary Figures</h2>\n'
     for fig_label, fig_file in SUPPLEMENTARY_FIGURES.items():
         caption = legends.get(fig_label, "")
         html += _render_figure_block(fig_label, fig_file, caption, label_prefix="Supplementary ")
+    html += "</div>\n"
     return html
 
 
