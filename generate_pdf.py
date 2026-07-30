@@ -16,12 +16,15 @@ PDF_DIR = PROJECT_DIR / "pdf"
 PDF_DIR.mkdir(exist_ok=True)
 MANUSCRIPT_MD = PROJECT_DIR / "manuscript.md"
 
-FIGURE_FILES = {
+MAIN_FIGURES = {
     "Figure 1": "fig1_host_win_rate_timeseries.png",
     "Figure 2": "fig2_subj_vs_obj_host_bias.png",
-    "Figure S1": "fig3_event_study_two_layers.png",
     "Figure 4": "fig4_confounders_attenuation.png",
     "Figure 5": "fig5_replication_extended.png",
+}
+
+SUPPLEMENTARY_FIGURES = {
+    "Figure S1": "fig3_event_study_two_layers.png",
 }
 
 CSS = """
@@ -78,7 +81,10 @@ em { font-style: italic; }
 def extract_figure_legends(md_text: str) -> dict[str, str]:
     """Extract figure legend text from manuscript."""
     legends = {}
-    pattern = r"\*\*Figure (S?\d+)\.\*\*\s*(.*?)(?=\n\n|\*\*Figure|\Z)"
+    pattern = (
+        r"\*\*(?:Supplementary )?Figure (S?\d+)\.\*\*\s*"
+        r"(.*?)(?=\n\n|\*\*(?:Supplementary )?Figure|\Z)"
+    )
     for m in re.finditer(pattern, md_text, re.DOTALL):
         fig_num = m.group(1)
         text = m.group(2).strip().replace("\n", " ")
@@ -86,19 +92,35 @@ def extract_figure_legends(md_text: str) -> dict[str, str]:
     return legends
 
 
-def build_figures_html(legends: dict[str, str]) -> str:
-    """Build HTML for figures section."""
+def _render_figure_block(fig_label: str, fig_file: str, caption: str, label_prefix: str = "") -> str:
+    fig_path = PLOTS_DIR / fig_file
+    if not fig_path.exists():
+        print(f"[WARN] {fig_path} not found, skipping")
+        return ""
+    html = '<div class="figure-block">'
+    html += f'<img src="file://{fig_path.resolve()}" alt="{label_prefix}{fig_label}">'
+    html += f'<p class="figure-caption"><strong>{label_prefix}{fig_label}.</strong> '
+    html += f"{caption}</p></div>\n"
+    return html
+
+
+def build_main_figures_html(legends: dict[str, str]) -> str:
+    """Build HTML for main figures (Figure 1/2/4/5)."""
     html = ""
-    for fig_label, fig_file in FIGURE_FILES.items():
-        fig_path = PLOTS_DIR / fig_file
-        if not fig_path.exists():
-            print(f"[WARN] {fig_path} not found, skipping")
-            continue
+    for fig_label, fig_file in MAIN_FIGURES.items():
         caption = legends.get(fig_label, "")
-        html += '<div class="figure-block">'
-        html += f'<img src="file://{fig_path.resolve()}" alt="{fig_label}">'
-        html += f'<p class="figure-caption"><strong>{fig_label}.</strong> '
-        html += f"{caption}</p></div>\n"
+        html += _render_figure_block(fig_label, fig_file, caption)
+    return html
+
+
+def build_supplementary_figures_html(legends: dict[str, str]) -> str:
+    """Build HTML for supplementary figures (Figure S1...) under a dedicated section heading."""
+    if not SUPPLEMENTARY_FIGURES:
+        return ""
+    html = '<h2 class="supplementary-figures-heading">Supplementary Figures</h2>\n'
+    for fig_label, fig_file in SUPPLEMENTARY_FIGURES.items():
+        caption = legends.get(fig_label, "")
+        html += _render_figure_block(fig_label, fig_file, caption, label_prefix="Supplementary ")
     return html
 
 
@@ -118,7 +140,7 @@ def convert():
     md_text = re.sub(r"\^([^^]+?)\^", r"<sup>\1</sup>", md_text)
 
     html_body = markdown.markdown(md_text, extensions=["tables", "smarty"])
-    figures_html = build_figures_html(legends)
+    figures_html = build_main_figures_html(legends) + build_supplementary_figures_html(legends)
 
     html = f"""<!DOCTYPE html>
 <html><head><meta charset="utf-8"><style>{CSS}</style></head>
