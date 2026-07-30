@@ -1,0 +1,190 @@
+{
+  "summary": {
+    "match": 20
+  },
+  "records": [
+    {
+      "kai_num": 58,
+      "cup": "tennou",
+      "host_pref": "静岡",
+      "jspo_rank": 1,
+      "jspo_score": 2696.5,
+      "nagano_rank": 1,
+      "status": "match"
+    },
+    {
+      "kai_num": 58,
+      "cup": "kougou",
+      "host_pref": "静岡",
+      "jspo_rank": 1,
+      "jspo_score": 1163.5,
+      "nagano_rank": 1,
+      "status": "match"
+    },
+    {
+      "kai_num": 59,
+      "cup": "tennou",
+      "host_pref": "埼玉",
+      "jspo_rank": 1,
+      "jspo_score": 3742.0,
+      "nagano_rank": 1,
+      "status": "match"
+    },
+    {
+      "kai_num": 59,
+      "cup": "kougou",
+      "host_pref": "埼玉",
+      "jspo_rank": 1,
+      "jspo_score": 1540.5,
+      "nagano_rank": 1,
+      "status": "match"
+    },
+    {
+      "kai_num": 60,
+      "cup": "tennou",
+      "host_pref": "岡山",
+      "jspo_rank": 1,
+      "jspo_score": 2842.0,
+      "nagano_rank": 1,
+      "status": "match"
+    },
+    {
+      "kai_num": 60,
+      "cup": "kougou",
+      "host_pref": "岡山",
+      "jspo_rank": 1,
+      "jspo_score": 1207.0,
+      "nagano_rank": 1,
+      "status": "match"
+    },
+    {
+      "kai_num": 61,
+      "cup": "tennou",
+      "host_pref": "兵庫",
+      "jspo_rank": 1,
+      "jspo_score": 3179.0,
+      "nagano_rank": 1,
+      "status": "match"
+    },
+    {
+      "kai_num": 61,
+      "cup": "kougou",
+      "host_pref": "兵庫",
+      "jspo_rank": 1,
+      "jspo_score": 1366.5,
+      "nagano_rank": 1,
+      "status": "match"
+    },
+    {
+      "kai_num": 62,
+      "cup": "tennou",
+      "host_pref": "秋田",
+      "jspo_rank": 1,
+      "jspo_score": 2673.5,
+      "nagano_rank": 1,
+      "status": "match"
+    },
+    {
+      "kai_num": 62,
+      "cup": "kougou",
+      "host_pref": "秋田",
+      "jspo_rank": 1,
+      "jspo_score": 1148.0,
+      "nagano_rank": 1,
+      "status": "match"
+    },
+    {
+      "kai_num": 63,
+      "cup": "tennou",
+      "host_pref": "大分",
+      "jspo_rank": 1,
+      "jspo_score": 2368.5,
+      "nagano_rank": 1,
+      "status": "match"
+    },
+    {
+      "kai_num": 63,
+      "cup": "kougou",
+      "host_pref": "大分",
+      "jspo_rank": 1,
+      "jspo_score": 1118.5,
+      "nagano_rank": 1,
+      "status": "match"
+    },
+    {
+      "kai_num": 64,
+      "cup": "tennou",
+      "host_pref": "新潟",
+      "jspo_rank": 1,
+      "jspo_score": 2426.0,
+      "nagano_rank": 1,
+      "status": "match"
+    },
+    {
+      "kai_num": 64,
+      "cup": "kougou",
+      "host_pref": "新潟",
+      "jspo_rank": 1,
+      "jspo_score": 1054.5,
+      "nagano_rank": 1,
+      "status": "match"
+    },
+    {
+      "kai_num": 65,
+      "cup": "tennou",
+      "host_pref": "千葉",
+      "jspo_rank": 1,
+      "jspo_score": 2921.5,
+      "nagano_rank": 1,
+      "status": "match"
+    },
+    {
+      "kai_num": 65,
+      "cup": "kougou",
+      "host_pref": "千葉",
+      "jspo_rank": 1,
+      "jspo_score": 1325.5,
+      "nagano_rank": 1,
+      "status": "match"
+    },
+    {
+      "kai_num": 66,
+      "cup": "tennou",
+      "host_pref": "山口",
+      "jspo_rank": 1,
+      "jspo_score": 2220.5,
+      "nagano_rank": 1,
+      "status": "match"
+    },
+    {
+      "kai_num": 66,
+      "cup": "kougou",
+      "host_pref": "山口",
+      "jspo_rank": 1,
+      "jspo_score": 1089.5,
+      "nagano_rank": 1,
+      "status": "match"
+    },
+    {
+      "kai_num": 67,
+      "cup": "tennou",
+      "host_pref": "岐阜",
+      "jspo_rank": 1,
+      "jspo_score": 3028.5,
+      "nagano_rank": 1,
+      "status": "match"
+    },
+    {
+      "kai_num": 67,
+      "cup": "kougou",
+      "host_pref": "岐阜",
+      "jspo_rank": 1,
+      "jspo_score": 1460.0,
+      "nagano_rank": 1,
+      "status": "match"
+    }
+  ],
+  "mismatch_count": 0,
+  "wikipedia_threshold": 5,
+  "wikipedia_triggered": false
+}
