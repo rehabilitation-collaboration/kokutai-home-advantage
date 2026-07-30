@@ -146,7 +146,7 @@ def convert():
 <html><head><meta charset="utf-8"><style>{CSS}</style></head>
 <body>{html_body}{figures_html}</body></html>"""
 
-    out_path = PDF_DIR / "kokutai-v4-final.pdf"
+    out_path = PDF_DIR / "kokutai-v5-final.pdf"
     weasyprint.HTML(string=html, base_url=str(PROJECT_DIR)).write_pdf(str(out_path))
     print(f"[OK] {out_path} ({out_path.stat().st_size / 1024:.0f} KB)")
 
