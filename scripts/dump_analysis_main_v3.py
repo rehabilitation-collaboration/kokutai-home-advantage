@@ -17,8 +17,10 @@ sys.path.insert(0, str(ROOT))
 from src.analysis_main_v3 import (  # noqa: E402
     chi_square_era_comparison,
     descriptive_by_era,
+    era_boundary_sensitivity_grid,
     load_v3_panel,
     one_sample_proportion_test,
+    pairwise_fisher_with_holm,
     permutation_test,
     run_ordered_logit_v3,
 )
@@ -104,10 +106,11 @@ def main() -> None:
     lines.append("")
 
     lines.append("-" * 80)
-    lines.append("[4] chi_square_era_comparison (3期間 top-k 率の差 + Monte Carlo permutation (FFH 近似) + pairwise Fisher exact)")
-    lines.append("     ※ Phase 6A (GPT round-7 major #5): shock 期 n=7 で期待度数不足 → Pearson χ² 漸近条件違反。")
-    lines.append("     ※ Monte Carlo permutation p (Fisher-Freeman-Halton exact の n_perm=10,000 近似) を primary global test に格上げ。")
-    lines.append("     ※ Pearson χ² は sensitivity として保持。")
+    lines.append("[4] chi_square_era_comparison (3期間 top-k 率の差 + conditional exact / MC-perm / Pearson χ² + pairwise Fisher exact)")
+    lines.append("     ※ Phase 7A (GPT round-8 「必須修正 1」): 完全列挙 conditional Pearson χ² exact p を primary global test に格上げ。")
+    lines.append("     ※ 2×3 tables は 100-200 通り程度で列挙可能 → Monte Carlo 近似より精密。")
+    lines.append("     ※ MC-perm p (n_perm=10,000) は下方互換のため保持 (旧 Phase 6A primary)。")
+    lines.append("     ※ Pearson χ² は sensitivity として保持 (shock 期 n=7 で期待度数不足=漸近近似条件違反)。")
     lines.append("-" * 80)
     for cup in ["tennou", "kougou", "both"]:
         for k in [1, 3, 8]:
@@ -115,7 +118,8 @@ def main() -> None:
             lines.append(
                 f"  cup={cup:>7} top{k}: rates early={fmt(r['rates']['early'],3)} "
                 f"golden={fmt(r['rates']['golden'],3)} shock={fmt(r['rates']['shock'],3)} "
-                f"| MC-perm p={fmt(r['mc_permutation_p'],4)} (primary) "
+                f"| exact p={fmt(r['exact_p_conditional'],6)} (primary; N_tables={r['n_tables_enumerated']}) "
+                f"| MC-perm p={fmt(r['mc_permutation_p'],4)} "
                 f"| Pearson χ²={fmt(r['chi2'],2)} dof={r['chi2_dof']} p={fmt(r['chi2_p'],4)} (sensitivity)"
             )
             pw = r["pairwise_fisher"]
@@ -124,6 +128,25 @@ def main() -> None:
                 f"golden_vs_shock={fmt(pw['golden_vs_shock'],4)} "
                 f"early_vs_shock={fmt(pw['early_vs_shock'],4)}"
             )
+    lines.append("")
+
+    lines.append("-" * 80)
+    lines.append("[4b] pairwise_fisher_with_holm (Phase 7A: Table 4 pairwise Fisher に Holm-Bonferroni 補正)")
+    lines.append("-" * 80)
+    for k in [1, 3, 8]:
+        lines.append(f"  threshold=top{k}")
+        holm = pairwise_fisher_with_holm(df, threshold=k)
+        lines.append(holm.to_string(index=False))
+        lines.append("")
+
+    lines.append("-" * 80)
+    lines.append("[4c] era_boundary_sensitivity_grid (Phase 7A: GPT round-8 「必須修正 4」)")
+    lines.append("     ※ golden_start ∈ {1975..1980} × shock_start ∈ {2014..2018} × 2 cups = 60 combinations")
+    lines.append("     ※ 各 combination で per-cup top-1 rate と exact p (conditional Pearson χ²) を再算出")
+    lines.append("     ※ 非単調 top-1 pattern が特定境界に依存しないことを示す")
+    lines.append("-" * 80)
+    grid = era_boundary_sensitivity_grid(df, threshold=1)
+    lines.append(grid.to_string(index=False))
     lines.append("")
 
     lines.append("-" * 80)

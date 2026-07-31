@@ -286,6 +286,44 @@ class TestWildClusterBootstrap:
         assert abs(p_rade - p_mamm) < 0.15, f"Rademacher p={p_rade}, Mammen p={p_mamm}"
 
 
+class TestNormalizedOutcomes:
+    """Phase 7A (GPT round-8 「必須修正 3」): sport-year-cup 内 normalized outcomes."""
+
+    def test_z_score_column_present(self):
+        from src.analysis_cross_section_2024_2025 import build_cross_section_frame
+        df = build_cross_section_frame()
+        assert "z_score" in df.columns
+        assert "pct_rank" in df.columns
+
+    def test_z_score_within_cell_mean_zero(self):
+        """各 sport-year-cup cell 内で z_score の mean が ~0."""
+        from src.analysis_cross_section_2024_2025 import build_cross_section_frame
+        df = build_cross_section_frame()
+        cell_means = df.groupby(["sport", "year", "cup"], observed=True)["z_score"].mean()
+        assert (cell_means.abs() < 1e-9).all()
+
+    def test_pct_rank_within_cell_range_0_1(self):
+        """各 cell 内で pct_rank ∈ [0, 1]."""
+        from src.analysis_cross_section_2024_2025 import build_cross_section_frame
+        df = build_cross_section_frame()
+        assert df["pct_rank"].min() >= 0
+        assert df["pct_rank"].max() <= 1
+
+    def test_run_normalized_returns_two_specs(self):
+        from src.analysis_cross_section_2024_2025 import run_cross_section_normalized
+        results = run_cross_section_normalized()
+        assert len(results) == 2
+        assert results[0].dv == "z_score"
+        assert results[1].dv == "pct_rank"
+
+    def test_z_score_interaction_positive(self):
+        """z_score spec でも host×subj interaction が正方向 = scale artifact でない実証."""
+        from src.analysis_cross_section_2024_2025 import run_cross_section_normalized
+        results = run_cross_section_normalized()
+        z_result = next(r for r in results if r.dv == "z_score")
+        assert z_result.coef_interaction > 0
+
+
 class TestCollinearityFixed:
     """Phase 6A (GPT round-7 major #2): sport FE ↔ is_subjective 主効果 完全共線性 fix
 

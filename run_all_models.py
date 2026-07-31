@@ -143,6 +143,29 @@ def cross_section_models():
             dump_line(f, f"  wild_cluster.{k}", v)
         f.write("\n")
 
+        f.write("[run_cross_section_normalized — Phase 7A GPT round-8 「必須修正 3」: sport-year-cup 内 normalized outcomes]\n")
+        norm_results = csm.run_cross_section_normalized()
+        for r in norm_results:
+            d = r.__dict__
+            for k, v in d.items():
+                if k in ("result_obj",):
+                    continue
+                dump_line(f, f"  {r.name}.{k}", v)
+            f.write("\n")
+
+        f.write("[wild_cluster_bootstrap normalized (z_score) — Phase 7A]\n")
+        df_cs_norm = csm.build_cross_section_frame()
+        wcb_z = csm.wild_cluster_bootstrap(df_cs_norm, dv="z_score", test_coef="host_x_subj", n_bootstrap=999)
+        for k, v in wcb_z.items():
+            dump_line(f, f"  wild_cluster_z.{k}", v)
+        f.write("\n")
+
+        f.write("[wild_cluster_bootstrap normalized (pct_rank) — Phase 7A]\n")
+        wcb_pr = csm.wild_cluster_bootstrap(df_cs_norm, dv="pct_rank", test_coef="host_x_subj", n_bootstrap=999)
+        for k, v in wcb_pr.items():
+            dump_line(f, f"  wild_cluster_pr.{k}", v)
+        f.write("\n")
+
         f.write("[run_cross_section_inclusive_zero_imputed — Table 6 row (v) reproducibility (Phase 6B)]\n")
         zi_result = csm.run_cross_section_inclusive_zero_imputed()
         d = zi_result.__dict__

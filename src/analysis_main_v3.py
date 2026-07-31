@@ -238,9 +238,15 @@ def _mc_permutation_chi2(
     n_perm: int = 10_000,
     seed: int = 0,
 ) -> tuple[float, float]:
-    """Fisher-Freeman-Halton exact test の Monte Carlo 近似 (scipy 未収載回避)
+    """Conditional Monte Carlo exact test using the Pearson χ² statistic (2×K).
 
-    era labels を permutation で shuffle → χ² 統計量分布 → observed 以上の割合を p 値化.
+    Terminology note (Phase 7A・GPT round-8): 前 phase では "Fisher-Freeman-Halton exact test
+    の近似" と表記したが、FFH の「同等以上に極端」定義は複数流儀ある (log-likelihood 統計量
+    or hypergeometric probability 順序 等) ため厳密には別物。本関数は Pearson χ² 統計量を
+    使った conditional exact test の Monte Carlo 近似 = "conditional Monte Carlo exact test
+    using the Pearson χ² statistic" と呼ぶ方が正確。
+
+    era labels を permutation で shuffle → Pearson χ² 統計量分布 → observed 以上の割合を p 値化.
     marginal totals (row/col sums) は permutation で保存されるので Fisher exact test
     と同じ null (independence given marginals) を持つ. Pearson χ² と違い期待度数
     条件 (≥ 5) を要求しない → shock 期 n=7 の Table 4 主要 test に適合.
@@ -288,6 +294,81 @@ def _mc_permutation_chi2(
     return (observed_chi2, mc_p)
 
 
+def _conditional_exact_p_chi2(cont_np: np.ndarray) -> tuple[float, float, int]:
+    """Conditional Pearson χ² exact test on 2×K contingency table (full enumeration).
+
+    Phase 7A (GPT round-8 「必須修正 1」応答): 状態数は top-1 でも 124-204 通り程度なので
+    10,000 iter の Monte Carlo より完全列挙 exact p 値の方が簡単かつ精密。
+
+    全 marginal 保存 tables を列挙 → 各 table の Pearson χ² を計算 → observed 以上の
+    hypergeometric 確率の合計 = exact p 値。Phipson-Smyth 下限補正不要 (真の tail 出せる)。
+
+    Args:
+        cont_np: 2×K contingency table (rows=[False,True], cols=eras)
+
+    Returns:
+        (observed_chi2, exact_p_value, n_tables_enumerated)
+    """
+    from itertools import product
+    from math import lgamma, exp
+
+    row_totals = cont_np.sum(axis=1).astype(int)
+    col_totals = cont_np.sum(axis=0).astype(int)
+    n_total = int(cont_np.sum())
+    K = len(col_totals)
+
+    if n_total == 0 or any(row_totals == 0) or any(col_totals == 0):
+        return (float("nan"), float("nan"), 0)
+
+    expected = np.outer(row_totals, col_totals) / n_total
+    observed_chi2 = float(np.sum((cont_np - expected) ** 2 / expected))
+
+    r0 = int(row_totals[0])
+    r1 = int(row_totals[1])
+
+    # 2×K の 1 行目 (top 行) の各 cell (c0, c1, ..., c_{K-1}) を enumerate:
+    # 各 col j で count[0,j] ∈ [max(0, col_j - r1), min(col_j, r0)]
+    ranges = [
+        range(max(0, int(col_totals[j]) - r1), min(int(col_totals[j]), r0) + 1)
+        for j in range(K)
+    ]
+
+    # log(multivariate hypergeometric): 定数部分 = lgamma(r0+1) + lgamma(r1+1) + Σ lgamma(c_j+1) − lgamma(n+1)
+    log_const = (
+        lgamma(r0 + 1) + lgamma(r1 + 1)
+        + sum(lgamma(int(c) + 1) for c in col_totals)
+        - lgamma(n_total + 1)
+    )
+
+    p_exact = 0.0
+    p_total = 0.0
+    n_tables = 0
+    for combo in product(*ranges):
+        if sum(combo) != r0:
+            continue
+        n_tables += 1
+        top = np.asarray(combo, dtype=float)
+        bot = col_totals.astype(float) - top
+        table = np.vstack([top, bot])
+        chi2 = float(np.sum((table - expected) ** 2 / expected))
+
+        log_denom = (
+            sum(lgamma(int(x) + 1) for x in top)
+            + sum(lgamma(int(x) + 1) for x in bot)
+        )
+        prob = exp(log_const - log_denom)
+        p_total += prob
+        if chi2 >= observed_chi2 - 1e-9:
+            p_exact += prob
+
+    # p_total should be ≈ 1.0 (sanity check・normalize by p_total to guard against
+    # floating-point drift in extremely large tables)
+    if p_total > 0:
+        p_exact = p_exact / p_total
+
+    return (observed_chi2, p_exact, n_tables)
+
+
 def chi_square_era_comparison(
     df: pd.DataFrame,
     threshold: int,
@@ -319,8 +400,11 @@ def chi_square_era_comparison(
 
     chi2, chi2_p, chi2_dof, _ = st.chi2_contingency(cont.values)
 
-    # Monte Carlo permutation (Fisher-Freeman-Halton 近似・GPT round-7 major #5)
+    # Monte Carlo permutation (conditional Monte Carlo exact test using Pearson χ² statistic)
     _, mc_p = _mc_permutation_chi2(cont.values, n_perm=n_perm, seed=seed)
+
+    # Phase 7A (GPT round-8 「必須修正 1」): 完全列挙 exact p (2×3 は 100-200 通り程度で列挙可能)
+    _, exact_p, n_tables = _conditional_exact_p_chi2(cont.values)
 
     pairs = [("early", "golden"), ("golden", "shock"), ("early", "shock")]
     pairwise = {}
@@ -347,8 +431,146 @@ def chi_square_era_comparison(
         "chi2_p": float(chi2_p),
         "mc_permutation_p": float(mc_p),
         "n_perm": int(n_perm),
+        "exact_p_conditional": float(exact_p),
+        "n_tables_enumerated": int(n_tables),
         "pairwise_fisher": pairwise,
     }
+
+
+def era_boundary_sensitivity_grid(
+    df: pd.DataFrame,
+    threshold: int = 1,
+    cups: tuple[str, ...] = ("tennou", "kougou"),
+    golden_starts: tuple[int, ...] = (1975, 1976, 1977, 1978, 1979, 1980),
+    shock_starts: tuple[int, ...] = (2014, 2015, 2016, 2017, 2018),
+) -> pd.DataFrame:
+    """Phase 7A (GPT round-8 「必須修正 4」応答): 時代境界感度分析.
+
+    現行 era boundaries (golden=1978, shock=2016) は outcome-informed で選ばれた
+    (原稿でも明記)。ここでは境界を ±3 年ずらした 6 × 5 = 30 grid で per-cup top-k rate
+    global test を再実行し、非単調パターンが特定境界に依存してないことを示す。
+
+    Args:
+        df: v3 host-rank panel (load_v3_panel の返り値)
+        threshold: 1 / 3 / 8 (default 1 = 主 non-monotonicity test)
+        cups: 対象 cup tuple
+        golden_starts: golden era 開始年の grid
+        shock_starts: shock era 開始年の grid
+
+    Returns:
+        long-format DataFrame (columns = golden_start, shock_start, cup, early_rate,
+        golden_rate, shock_rate, n_early, n_golden, n_shock, exact_p, chi2_p, mc_p)
+    """
+    from itertools import product as iproduct
+
+    col = f"top{threshold}_flag"
+    rows = []
+    for gs, ss, cup in iproduct(golden_starts, shock_starts, cups):
+        if gs >= ss:
+            continue
+        sub = df[df["cup"] == cup].copy()
+        def _era_of(year: int, gs: int = gs, ss: int = ss) -> str:
+            if year < gs:
+                return "early"
+            if year < ss:
+                return "golden"
+            return "shock"
+        sub["era_var"] = sub["year"].map(_era_of)
+
+        cont = pd.crosstab(sub[col], sub["era_var"])
+        for era in ["early", "golden", "shock"]:
+            if era not in cont.columns:
+                cont[era] = 0
+        for flag in [False, True]:
+            if flag not in cont.index:
+                cont.loc[flag] = 0
+        cont = cont.reindex(index=[False, True], columns=["early", "golden", "shock"], fill_value=0)
+
+        n_early = int(cont["early"].sum())
+        n_golden = int(cont["golden"].sum())
+        n_shock = int(cont["shock"].sum())
+        rate_early = (cont.at[True, "early"] / n_early) if n_early else float("nan")
+        rate_golden = (cont.at[True, "golden"] / n_golden) if n_golden else float("nan")
+        rate_shock = (cont.at[True, "shock"] / n_shock) if n_shock else float("nan")
+
+        try:
+            _, chi2_p, _, _ = st.chi2_contingency(cont.values)
+            chi2_p = float(chi2_p)
+        except ValueError:
+            chi2_p = float("nan")
+
+        _, exact_p, _n_tables = _conditional_exact_p_chi2(cont.values)
+
+        rows.append({
+            "golden_start": gs,
+            "shock_start": ss,
+            "cup": cup,
+            "threshold": threshold,
+            "n_early": n_early,
+            "n_golden": n_golden,
+            "n_shock": n_shock,
+            "rate_early": rate_early,
+            "rate_golden": rate_golden,
+            "rate_shock": rate_shock,
+            "chi2_p_asymptotic": chi2_p,
+            "exact_p_conditional": float(exact_p),
+        })
+
+    return pd.DataFrame(rows)
+
+
+def pairwise_fisher_with_holm(
+    df: pd.DataFrame,
+    threshold: int = 1,
+    cups: tuple[str, ...] = ("tennou", "kougou"),
+) -> pd.DataFrame:
+    """Phase 7A (GPT round-8 「統計上の追加修正 1」応答): pairwise Fisher に Holm 補正.
+
+    Table 4 の 6 pairwise Fisher (2 cups × 3 era-pairs) に Holm-Bonferroni 補正を適用。
+    独立して有意な contrast を明示する。
+    """
+    from statsmodels.stats.multitest import multipletests
+
+    col = f"top{threshold}_flag"
+    pairs = [("early", "golden"), ("golden", "shock"), ("early", "shock")]
+    raw = []
+    labels = []
+    for cup in cups:
+        sub = df[df["cup"] == cup]
+        cont = pd.crosstab(sub[col], sub["era"])
+        for era in ERA_ORDER:
+            if era not in cont.columns:
+                cont[era] = 0
+        for flag in [False, True]:
+            if flag not in cont.index:
+                cont.loc[flag] = 0
+        cont = cont.reindex(index=[False, True], columns=ERA_ORDER, fill_value=0)
+        for a, b in pairs:
+            try:
+                res = st.fisher_exact(cont[[a, b]].values)
+                p = float(res.pvalue)
+            except Exception:  # noqa: BLE001
+                p = float("nan")
+            raw.append(p)
+            labels.append((cup, a, b))
+
+    valid = [i for i, p in enumerate(raw) if not np.isnan(p)]
+    valid_p = [raw[i] for i in valid]
+    _rej, holm_p, _, _ = multipletests(valid_p, alpha=0.05, method="holm")
+
+    holm_all = [float("nan")] * len(raw)
+    for k, i in enumerate(valid):
+        holm_all[i] = float(holm_p[k])
+
+    rows = []
+    for (cup, a, b), p_raw, p_holm in zip(labels, raw, holm_all):
+        rows.append({
+            "cup": cup,
+            "contrast": f"{a}_vs_{b}",
+            "p_fisher_raw": p_raw,
+            "p_fisher_holm": p_holm,
+        })
+    return pd.DataFrame(rows)
 
 
 def run_ordered_logit_v3(

@@ -224,6 +224,79 @@ class TestChiSquareEraComparison:
         r = chi_square_era_comparison(panel, 8, cup="tennou", n_perm=10_000, seed=0)
         assert r["mc_permutation_p"] > 0.10
 
+    def test_exact_p_conditional_returned(self, panel: pd.DataFrame):
+        """Phase 7A (GPT round-8 「必須修正 1」): 完全列挙 exact p が dict に含まれる."""
+        r = chi_square_era_comparison(panel, 1, cup="tennou", n_perm=1000, seed=0)
+        assert "exact_p_conditional" in r
+        assert "n_tables_enumerated" in r
+        assert 0 <= r["exact_p_conditional"] <= 1
+        assert r["n_tables_enumerated"] > 0
+
+    def test_exact_p_matches_mc_perm_close(self, panel: pd.DataFrame):
+        """exact p と MC-perm p は同 statistic に基づくため close (top-3 tennou で ~0.08)."""
+        r = chi_square_era_comparison(panel, 3, cup="tennou", n_perm=10_000, seed=0)
+        # exact p ≈ 0.0843, MC-perm p ≈ 0.0865 (n_perm=10,000)
+        assert abs(r["exact_p_conditional"] - r["mc_permutation_p"]) < 0.02
+
+    def test_exact_p_matches_gpt_round8_values(self, panel: pd.DataFrame):
+        """GPT round-8 が独自に完全列挙で計算した exact p 値と一致."""
+        # tennou top-1: 3.63 × 10⁻⁵
+        r = chi_square_era_comparison(panel, 1, cup="tennou", n_perm=100, seed=0)
+        assert abs(r["exact_p_conditional"] - 3.63e-5) < 1e-6
+        # tennou top-3: 0.0843
+        r = chi_square_era_comparison(panel, 3, cup="tennou", n_perm=100, seed=0)
+        assert abs(r["exact_p_conditional"] - 0.0843) < 0.001
+
+
+class TestBoundarySensitivity:
+    """Phase 7A (GPT round-8 「必須修正 4」): 時代境界感度分析."""
+
+    def test_grid_returns_60_combinations(self, panel: pd.DataFrame):
+        """6 golden_starts × 5 shock_starts × 2 cups = 60 rows (全 gs<ss なので全通過)."""
+        from src.analysis_main_v3 import era_boundary_sensitivity_grid
+        grid = era_boundary_sensitivity_grid(panel, threshold=1)
+        # golden_start ∈ {1975..1980}, shock_start ∈ {2014..2018} → 全 gs<ss で 6×5×2=60
+        assert len(grid) == 60
+
+    def test_grid_non_monotonic_pattern_robust(self, panel: pd.DataFrame):
+        """全 boundary で golden > early かつ golden > shock が保たれる = 非単調 pattern 頑健."""
+        from src.analysis_main_v3 import era_boundary_sensitivity_grid
+        grid = era_boundary_sensitivity_grid(panel, threshold=1)
+        assert (grid["rate_golden"] > grid["rate_early"]).all()
+        assert (grid["rate_golden"] > grid["rate_shock"]).all()
+
+    def test_grid_all_significant_at_005(self, panel: pd.DataFrame):
+        """全 boundary で per-cup exact p < 0.05 = 非単調性が特定境界に依存しない."""
+        from src.analysis_main_v3 import era_boundary_sensitivity_grid
+        grid = era_boundary_sensitivity_grid(panel, threshold=1)
+        assert (grid["exact_p_conditional"] < 0.05).all()
+
+
+class TestHolmCorrection:
+    """Phase 7A (GPT round-8 「統計上の追加修正 1」): pairwise Fisher Holm 補正."""
+
+    def test_holm_returns_6_rows_per_threshold(self, panel: pd.DataFrame):
+        """2 cups × 3 pairs = 6 rows."""
+        from src.analysis_main_v3 import pairwise_fisher_with_holm
+        holm = pairwise_fisher_with_holm(panel, threshold=1)
+        assert len(holm) == 6
+
+    def test_holm_p_ge_raw_p(self, panel: pd.DataFrame):
+        """Holm 補正後 p ≥ raw p (補正は monotonic non-decreasing)."""
+        from src.analysis_main_v3 import pairwise_fisher_with_holm
+        holm = pairwise_fisher_with_holm(panel, threshold=1)
+        assert (holm["p_fisher_holm"] >= holm["p_fisher_raw"] - 1e-10).all()
+
+    def test_holm_golden_era_contrasts_stay_significant(self, panel: pd.DataFrame):
+        """主要 4 golden-era contrasts (both cups × [early_vs_golden, golden_vs_shock]) が
+        Holm 後も < 0.05 = GPT round-8 予測「結論は崩れない」を検証."""
+        from src.analysis_main_v3 import pairwise_fisher_with_holm
+        holm = pairwise_fisher_with_holm(panel, threshold=1)
+        golden_contrasts = holm[
+            holm["contrast"].isin(["early_vs_golden", "golden_vs_shock"])
+        ]
+        assert (golden_contrasts["p_fisher_holm"] < 0.05).all()
+
 
 class TestOrderedLogit:
     def test_pooled_converged(self, panel: pd.DataFrame):

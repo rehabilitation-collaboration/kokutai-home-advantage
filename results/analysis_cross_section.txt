@@ -92,6 +92,67 @@ Subj×Host 交互作用 (novelty core)
   wild_cluster.n_clusters                47
   wild_cluster.treated_clusters          2
 
+[run_cross_section_normalized — Phase 7A GPT round-8 「必須修正 3」: sport-year-cup 内 normalized outcomes]
+  cross_section_z_score_within_cell.name cross_section_z_score_within_cell
+  cross_section_z_score_within_cell.dv   z_score
+  cross_section_z_score_within_cell.coef_is_host 0.780707221057374
+  cross_section_z_score_within_cell.se_is_host 0.0574778797927269
+  cross_section_z_score_within_cell.p_is_host 5.069242942838602e-42
+  cross_section_z_score_within_cell.coef_interaction 1.075191238486346
+  cross_section_z_score_within_cell.se_interaction 0.3593271555225541
+  cross_section_z_score_within_cell.p_interaction 0.0027694312154873954
+  cross_section_z_score_within_cell.n_obs 6991
+  cross_section_z_score_within_cell.n_params 91
+  cross_section_z_score_within_cell.n_clusters 47
+  cross_section_z_score_within_cell.r2   0.1451216222981786
+
+  cross_section_pct_rank_within_cell.name cross_section_pct_rank_within_cell
+  cross_section_pct_rank_within_cell.dv  pct_rank
+  cross_section_pct_rank_within_cell.coef_is_host 0.19284439894065347
+  cross_section_pct_rank_within_cell.se_is_host 0.026157153799470985
+  cross_section_pct_rank_within_cell.p_is_host 1.6742000660622965e-13
+  cross_section_pct_rank_within_cell.coef_interaction 0.061606610665110265
+  cross_section_pct_rank_within_cell.se_interaction 0.04703097934836242
+  cross_section_pct_rank_within_cell.p_interaction 0.1902244097637782
+  cross_section_pct_rank_within_cell.n_obs 6991
+  cross_section_pct_rank_within_cell.n_params 91
+  cross_section_pct_rank_within_cell.n_clusters 47
+  cross_section_pct_rank_within_cell.r2  0.12593473405522515
+
+[wild_cluster_bootstrap normalized (z_score) — Phase 7A]
+  wild_cluster_z.test_coef               host_x_subj
+  wild_cluster_z.observed_coef           1.075191238486346
+  wild_cluster_z.observed_se             0.3593271555225541
+  wild_cluster_z.observed_t              2.992234853285
+  wild_cluster_z.cluster_robust_p        0.0027694312154873954
+  wild_cluster_z.bootstrap_p             0.158
+  wild_cluster_z.bootstrap_ci_low_95     -0.024284426563038863
+  wild_cluster_z.bootstrap_ci_high_95    2.171741575287889
+  wild_cluster_z.n_bootstrap_used        999
+  wild_cluster_z.n_bootstrap_requested   999
+  wild_cluster_z.n_convergence_failures  0
+  wild_cluster_z.seed                    20260728
+  wild_cluster_z.weight_type             rademacher
+  wild_cluster_z.n_clusters              47
+  wild_cluster_z.treated_clusters        2
+
+[wild_cluster_bootstrap normalized (pct_rank) — Phase 7A]
+  wild_cluster_pr.test_coef              host_x_subj
+  wild_cluster_pr.observed_coef          0.061606610665110265
+  wild_cluster_pr.observed_se            0.04703097934836242
+  wild_cluster_pr.observed_t             1.3099155390489514
+  wild_cluster_pr.cluster_robust_p       0.1902244097637782
+  wild_cluster_pr.bootstrap_p            0.498
+  wild_cluster_pr.bootstrap_ci_low_95    -0.014852326990741668
+  wild_cluster_pr.bootstrap_ci_high_95   0.13853931120771495
+  wild_cluster_pr.n_bootstrap_used       999
+  wild_cluster_pr.n_bootstrap_requested  999
+  wild_cluster_pr.n_convergence_failures 0
+  wild_cluster_pr.seed                   20260728
+  wild_cluster_pr.weight_type            rademacher
+  wild_cluster_pr.n_clusters             47
+  wild_cluster_pr.treated_clusters       2
+
 [run_cross_section_inclusive_zero_imputed — Table 6 row (v) reproducibility (Phase 6B)]
   cross_section_inclusive_zero_imputed.name cross_section_inclusive_zero_imputed
   cross_section_inclusive_zero_imputed.dv score

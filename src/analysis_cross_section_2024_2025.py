@@ -131,6 +131,16 @@ def build_cross_section_frame(
     stacked["is_host_int"] = stacked["is_host"].astype(int)
     stacked["log_score"] = np.log1p(stacked["score"])
 
+    # Phase 7A (GPT round-8 「必須修正 3」応答): normalized outcomes for scale-invariant
+    # host×subj interaction analysis. Sport, year, and cup 間の score scale 差を吸収するため
+    # sport-year-cup cell 内で z-score / percentile rank を計算 → 生得点ベースの主張が
+    # 尺度差 artifact でないことを検証する目的。
+    cell_group = stacked.groupby(["sport", "year", "cup"], observed=True)["score"]
+    stacked["z_score"] = cell_group.transform(
+        lambda x: (x - x.mean()) / x.std(ddof=0) if x.std(ddof=0) > 0 else 0.0
+    )
+    stacked["pct_rank"] = cell_group.rank(pct=True)
+
     return stacked.reset_index(drop=True)
 
 
@@ -392,6 +402,37 @@ def run_cross_section_zero_imputed(include_winter: bool = True) -> CrossSectionR
         with_semi_interaction=False,
         name="cross_section_obj_vs_subj_zero_imputed",
     )
+
+
+def run_cross_section_normalized(
+    include_winter: bool = True,
+) -> list[CrossSectionResult]:
+    """Phase 7A (GPT round-8 「必須修正 3」応答): 正規化 outcome specification.
+
+    生得点 (raw score) は sport/year/cup ごとに獲得可能得点総数・種目数・参加県数が
+    異なる → 生得点差の大きさは尺度差 artifact を含む。sport FE で mean-level 差は
+    吸収されるが scale 差 (1 点の意味) までは吸収されない。以下 2 spec で正規化:
+
+    - z_score (dv): sport-year-cup cell 内で標準化した score (mean 0, sd 1)
+    - pct_rank (dv): sport-year-cup cell 内の percentile rank (0-1)
+
+    どちらも host×subj interaction が正方向を保てば「主観競技の host boost が
+    客観競技より大きい」の主張は尺度差 artifact でない。
+
+    Returns:
+        [z_score result, pct_rank result] の list (CrossSectionResult × 2)
+    """
+    df = build_cross_section_frame(include_winter=include_winter)
+    return [
+        fit_cross_section_ols(
+            df, dv="z_score", with_semi_interaction=False,
+            name="cross_section_z_score_within_cell",
+        ),
+        fit_cross_section_ols(
+            df, dv="pct_rank", with_semi_interaction=False,
+            name="cross_section_pct_rank_within_cell",
+        ),
+    ]
 
 
 def run_cross_section_inclusive_zero_imputed(

@@ -89,29 +89,128 @@ golden kougou     38      35      37      37   0.921053   0.973684   0.973684
     8   kougou    0.9333     0.1660    0.0426    0.0933    0.2400   0.0001
 
 --------------------------------------------------------------------------------
-[4] chi_square_era_comparison (3期間 top-k 率の差 + Monte Carlo permutation (FFH 近似) + pairwise Fisher exact)
-     ※ Phase 6A (GPT round-7 major #5): shock 期 n=7 で期待度数不足 → Pearson χ² 漸近条件違反。
-     ※ Monte Carlo permutation p (Fisher-Freeman-Halton exact の n_perm=10,000 近似) を primary global test に格上げ。
-     ※ Pearson χ² は sensitivity として保持。
+[4] chi_square_era_comparison (3期間 top-k 率の差 + conditional exact / MC-perm / Pearson χ² + pairwise Fisher exact)
+     ※ Phase 7A (GPT round-8 「必須修正 1」): 完全列挙 conditional Pearson χ² exact p を primary global test に格上げ。
+     ※ 2×3 tables は 100-200 通り程度で列挙可能 → Monte Carlo 近似より精密。
+     ※ MC-perm p (n_perm=10,000) は下方互換のため保持 (旧 Phase 6A primary)。
+     ※ Pearson χ² は sensitivity として保持 (shock 期 n=7 で期待度数不足=漸近近似条件違反)。
 --------------------------------------------------------------------------------
-  cup= tennou top1: rates early=0.567 golden=0.974 shock=0.429 | MC-perm p=0.0001 (primary) | Pearson χ²=19.88 dof=2 p=0.0000 (sensitivity)
+  cup= tennou top1: rates early=0.567 golden=0.974 shock=0.429 | exact p=0.000036 (primary; N_tables=124) | MC-perm p=0.0001 | Pearson χ²=19.88 dof=2 p=0.0000 (sensitivity)
       pairwise Fisher: early_vs_golden=0.0000 golden_vs_shock=0.0011 early_vs_shock=0.6800
-  cup= tennou top3: rates early=0.833 golden=0.974 shock=1.000 | MC-perm p=0.0865 (primary) | Pearson χ²=5.16 dof=2 p=0.0758 (sensitivity)
+  cup= tennou top3: rates early=0.833 golden=0.974 shock=1.000 | exact p=0.084267 (primary; N_tables=28) | MC-perm p=0.0865 | Pearson χ²=5.16 dof=2 p=0.0758 (sensitivity)
       pairwise Fisher: early_vs_golden=0.0801 golden_vs_shock=1.0000 early_vs_shock=0.5599
-  cup= tennou top8: rates early=0.867 golden=0.974 shock=1.000 | MC-perm p=0.2152 (primary) | Pearson χ²=3.64 dof=2 p=0.1623 (sensitivity)
+  cup= tennou top8: rates early=0.867 golden=0.974 shock=1.000 | exact p=0.204465 (primary; N_tables=21) | MC-perm p=0.2152 | Pearson χ²=3.64 dof=2 p=0.1623 (sensitivity)
       pairwise Fisher: early_vs_golden=0.1617 golden_vs_shock=1.0000 early_vs_shock=0.5697
-  cup= kougou top1: rates early=0.300 golden=0.921 shock=0.429 | MC-perm p=0.0001 (primary) | Pearson χ²=28.93 dof=2 p=0.0000 (sensitivity)
+  cup= kougou top1: rates early=0.300 golden=0.921 shock=0.429 | exact p=0.000000 (primary; N_tables=204) | MC-perm p=0.0001 | Pearson χ²=28.93 dof=2 p=0.0000 (sensitivity)
       pairwise Fisher: early_vs_golden=0.0000 golden_vs_shock=0.0068 early_vs_shock=0.6594
-  cup= kougou top3: rates early=0.667 golden=0.974 shock=1.000 | MC-perm p=0.0016 (primary) | Pearson χ²=13.95 dof=2 p=0.0009 (sensitivity)
+  cup= kougou top3: rates early=0.667 golden=0.974 shock=1.000 | exact p=0.001079 (primary; N_tables=68) | MC-perm p=0.0016 | Pearson χ²=13.95 dof=2 p=0.0009 (sensitivity)
       pairwise Fisher: early_vs_golden=0.0008 golden_vs_shock=1.0000 early_vs_shock=0.1551
-  cup= kougou top8: rates early=0.867 golden=0.974 shock=1.000 | MC-perm p=0.2152 (primary) | Pearson χ²=3.64 dof=2 p=0.1623 (sensitivity)
+  cup= kougou top8: rates early=0.867 golden=0.974 shock=1.000 | exact p=0.204465 (primary; N_tables=21) | MC-perm p=0.2152 | Pearson χ²=3.64 dof=2 p=0.1623 (sensitivity)
       pairwise Fisher: early_vs_golden=0.1617 golden_vs_shock=1.0000 early_vs_shock=0.5697
-  cup=   both top1: rates early=0.433 golden=0.947 shock=0.429 | MC-perm p=0.0001 (primary) | Pearson χ²=46.76 dof=2 p=0.0000 (sensitivity)
+  cup=   both top1: rates early=0.433 golden=0.947 shock=0.429 | exact p=0.000000 (primary; N_tables=600) | MC-perm p=0.0001 | Pearson χ²=46.76 dof=2 p=0.0000 (sensitivity)
       pairwise Fisher: early_vs_golden=0.0000 golden_vs_shock=0.0000 early_vs_shock=1.0000
-  cup=   both top3: rates early=0.750 golden=0.974 shock=1.000 | MC-perm p=0.0004 (primary) | Pearson χ²=18.67 dof=2 p=0.0001 (sensitivity)
+  cup=   both top3: rates early=0.750 golden=0.974 shock=1.000 | exact p=0.000206 (primary; N_tables=165) | MC-perm p=0.0004 | Pearson χ²=18.67 dof=2 p=0.0001 (sensitivity)
       pairwise Fisher: early_vs_golden=0.0001 golden_vs_shock=1.0000 early_vs_shock=0.0590
-  cup=   both top8: rates early=0.867 golden=0.974 shock=1.000 | MC-perm p=0.0260 (primary) | Pearson χ²=7.27 dof=2 p=0.0263 (sensitivity)
+  cup=   both top8: rates early=0.867 golden=0.974 shock=1.000 | exact p=0.027398 (primary; N_tables=66) | MC-perm p=0.0260 | Pearson χ²=7.27 dof=2 p=0.0263 (sensitivity)
       pairwise Fisher: early_vs_golden=0.0222 golden_vs_shock=1.0000 early_vs_shock=0.3390
+
+--------------------------------------------------------------------------------
+[4b] pairwise_fisher_with_holm (Phase 7A: Table 4 pairwise Fisher に Holm-Bonferroni 補正)
+--------------------------------------------------------------------------------
+  threshold=top1
+   cup        contrast  p_fisher_raw  p_fisher_holm
+tennou early_vs_golden  3.810869e-05   1.905435e-04
+tennou golden_vs_shock  1.105783e-03   4.423131e-03
+tennou  early_vs_shock  6.799952e-01   1.000000e+00
+kougou early_vs_golden  8.948581e-08   5.369148e-07
+kougou golden_vs_shock  6.837651e-03   2.051295e-02
+kougou  early_vs_shock  6.594056e-01   1.000000e+00
+
+  threshold=top3
+   cup        contrast  p_fisher_raw  p_fisher_holm
+tennou early_vs_golden      0.080123       0.400613
+tennou golden_vs_shock      1.000000       1.000000
+tennou  early_vs_shock      0.559908       1.000000
+kougou early_vs_golden      0.000780       0.004682
+kougou golden_vs_shock      1.000000       1.000000
+kougou  early_vs_shock      0.155070       0.620281
+
+  threshold=top8
+   cup        contrast  p_fisher_raw  p_fisher_holm
+tennou early_vs_golden      0.161725       0.970348
+tennou golden_vs_shock      1.000000       1.000000
+tennou  early_vs_shock      0.569687       1.000000
+kougou early_vs_golden      0.161725       0.970348
+kougou golden_vs_shock      1.000000       1.000000
+kougou  early_vs_shock      0.569687       1.000000
+
+--------------------------------------------------------------------------------
+[4c] era_boundary_sensitivity_grid (Phase 7A: GPT round-8 「必須修正 4」)
+     ※ golden_start ∈ {1975..1980} × shock_start ∈ {2014..2018} × 2 cups = 60 combinations
+     ※ 各 combination で per-cup top-1 rate と exact p (conditional Pearson χ²) を再算出
+     ※ 非単調 top-1 pattern が特定境界に依存しないことを示す
+--------------------------------------------------------------------------------
+ golden_start  shock_start    cup  threshold  n_early  n_golden  n_shock  rate_early  rate_golden  rate_shock  chi2_p_asymptotic  exact_p_conditional
+         1975         2014 tennou          1       27        39        9    0.518519     0.974359    0.555556       3.502200e-05         2.939482e-05
+         1975         2014 kougou          1       27        39        9    0.296296     0.923077    0.333333       2.321246e-07         3.370826e-08
+         1975         2015 tennou          1       27        40        8    0.518519     0.975000    0.500000       1.907869e-05         2.857146e-05
+         1975         2015 kougou          1       27        40        8    0.296296     0.900000    0.375000       1.049023e-06         2.899092e-07
+         1975         2016 tennou          1       27        41        7    0.518519     0.975610    0.428571       8.732356e-06         1.929368e-05
+         1975         2016 kougou          1       27        41        7    0.296296     0.878049    0.428571       4.027974e-06         1.000812e-06
+         1975         2017 tennou          1       27        42        6    0.518519     0.952381    0.500000       6.196980e-05         1.129076e-04
+         1975         2017 kougou          1       27        42        6    0.296296     0.857143    0.500000       1.272737e-05         3.778416e-06
+         1975         2018 tennou          1       27        43        5    0.518519     0.930233    0.600000       3.088423e-04         6.649526e-04
+         1975         2018 kougou          1       27        43        5    0.296296     0.837209    0.600000       3.107019e-05         8.768183e-06
+         1976         2014 tennou          1       28        38        9    0.535714     0.973684    0.555556       6.451608e-05         5.021781e-05
+         1976         2014 kougou          1       28        38        9    0.321429     0.921053    0.333333       6.357571e-07         1.073868e-07
+         1976         2015 tennou          1       28        39        8    0.535714     0.974359    0.500000       3.514922e-05         5.312193e-05
+         1976         2015 kougou          1       28        39        8    0.321429     0.897436    0.375000       2.847555e-06         7.968597e-07
+         1976         2016 tennou          1       28        40        7    0.535714     0.975000    0.428571       1.608925e-05         1.879280e-05
+         1976         2016 kougou          1       28        40        7    0.321429     0.875000    0.428571       1.081794e-05         3.837914e-06
+         1976         2017 tennou          1       28        41        6    0.535714     0.951220    0.500000       1.136436e-04         1.420468e-04
+         1976         2017 kougou          1       28        41        6    0.321429     0.853659    0.500000       3.377080e-05         1.121662e-05
+         1976         2018 tennou          1       28        42        5    0.535714     0.928571    0.600000       5.622564e-04         8.214367e-04
+         1976         2018 kougou          1       28        42        5    0.321429     0.833333    0.600000       8.135197e-05         2.362755e-05
+         1977         2014 tennou          1       29        37        9    0.551724     0.972973    0.555556       1.139194e-04         8.967687e-05
+         1977         2014 kougou          1       29        37        9    0.310345     0.945946    0.333333       1.222384e-07         1.528141e-08
+         1977         2015 tennou          1       29        38        8    0.551724     0.973684    0.500000       6.207102e-05         1.337198e-04
+         1977         2015 kougou          1       29        38        8    0.310345     0.921053    0.375000       6.023636e-07         1.281525e-07
+         1977         2016 tennou          1       29        39        7    0.551724     0.974359    0.428571       2.841510e-05         3.132972e-05
+         1977         2016 kougou          1       29        39        7    0.310345     0.897436    0.428571       2.499719e-06         3.329524e-07
+         1977         2017 tennou          1       29        40        6    0.551724     0.950000    0.500000       1.997183e-04         1.632613e-04
+         1977         2017 kougou          1       29        40        6    0.310345     0.875000    0.500000       8.469175e-06         3.209748e-06
+         1977         2018 tennou          1       29        41        5    0.551724     0.926829    0.600000       9.805930e-04         1.178625e-03
+         1977         2018 kougou          1       29        41        5    0.310345     0.853659    0.600000       2.201312e-05         6.217180e-06
+         1978         2014 tennou          1       30        36        9    0.566667     0.972222    0.555556       1.936253e-04         2.179729e-04
+         1978         2014 kougou          1       30        36        9    0.300000     0.972222    0.333333       2.089417e-08         1.953841e-09
+         1978         2015 tennou          1       30        37        8    0.566667     0.972973    0.500000       1.055116e-04         1.662663e-04
+         1978         2015 kougou          1       30        37        8    0.300000     0.945946    0.375000       1.141833e-07         1.642686e-08
+         1978         2016 tennou          1       30        38        7    0.566667     0.973684    0.428571       4.830633e-05         3.633749e-05
+         1978         2016 kougou          1       30        38        7    0.300000     0.921053    0.428571       5.213211e-07         5.380799e-08
+         1978         2017 tennou          1       30        39        6    0.566667     0.948718    0.500000       3.377718e-04         3.391852e-04
+         1978         2017 kougou          1       30        39        6    0.300000     0.897436    0.500000       1.929369e-06         4.326051e-07
+         1978         2018 tennou          1       30        40        5    0.566667     0.925000    0.600000       1.645181e-03         1.410537e-03
+         1978         2018 kougou          1       30        40        5    0.300000     0.875000    0.600000       5.442630e-06         1.124804e-06
+         1979         2014 tennou          1       31        35        9    0.580645     0.971429    0.555556       3.179475e-04         5.751000e-04
+         1979         2014 kougou          1       31        35        9    0.322581     0.971429    0.333333       5.746641e-08         4.426038e-09
+         1979         2015 tennou          1       31        36        8    0.580645     0.972222    0.500000       1.732785e-04         1.855984e-04
+         1979         2015 kougou          1       31        36        8    0.322581     0.944444    0.375000       3.125654e-07         7.010226e-08
+         1979         2016 tennou          1       31        37        7    0.580645     0.972973    0.428571       7.934061e-05         6.085893e-05
+         1979         2016 kougou          1       31        37        7    0.322581     0.918919    0.428571       1.416738e-06         2.759514e-07
+         1979         2017 tennou          1       31        38        6    0.580645     0.947368    0.500000       5.517577e-04         5.565091e-04
+         1979         2017 kougou          1       31        38        6    0.322581     0.894737    0.500000       5.194218e-06         1.219833e-06
+         1979         2018 tennou          1       31        39        5    0.580645     0.923077    0.600000       2.664916e-03         2.407179e-03
+         1979         2018 kougou          1       31        39        5    0.322581     0.871795    0.600000       1.448972e-05         3.190941e-06
+         1980         2014 tennou          1       32        34        9    0.593750     0.970588    0.555556       5.060252e-04         6.357884e-04
+         1980         2014 kougou          1       32        34        9    0.343750     0.970588    0.333333       1.483378e-07         1.265337e-08
+         1980         2015 tennou          1       32        35        8    0.593750     0.971429    0.500000       2.758144e-04         2.192356e-04
+         1980         2015 kougou          1       32        35        8    0.343750     0.942857    0.375000       8.028086e-07         1.931357e-07
+         1980         2016 tennou          1       32        36        7    0.593750     0.972222    0.428571       1.263045e-04         1.120708e-04
+         1980         2016 kougou          1       32        36        7    0.343750     0.916667    0.428571       3.611071e-06         9.980503e-07
+         1980         2017 tennou          1       32        37        6    0.593750     0.945946    0.500000       8.733304e-04         7.127105e-04
+         1980         2017 kougou          1       32        37        6    0.343750     0.891892    0.500000       1.310918e-05         4.253526e-06
+         1980         2018 tennou          1       32        38        5    0.593750     0.921053    0.600000       4.180911e-03         4.580157e-03
+         1980         2018 kougou          1       32        38        5    0.343750     0.868421    0.600000       3.614271e-05         7.996686e-06
 
 --------------------------------------------------------------------------------
 [5] run_ordered_logit_v3 (rank_ordinal ~ C(era) + C(cup)?・cluster SE at host_pref_code)
