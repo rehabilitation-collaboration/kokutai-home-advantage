@@ -33,8 +33,6 @@ from src.analysis_main_v3 import (
     ERA_BOUNDARIES,
     ERA_ORDER,
     RANK_OUTSIDE,
-    _classify_era,
-    descriptive_by_era,
     load_v3_panel,
     one_sample_proportion_test,
 )
@@ -237,8 +235,8 @@ def plot_fig1_v3_host_rank_1948_2025_era() -> tuple[Path, Path]:
                            alpha=0.85,
                            zorder=3)
 
-    # era 境界破線
-    for boundary_year in [1978, 2016]:
+    # era 境界破線 (ERA_BOUNDARIES 準拠・DRY = golden/shock 各 era の start year を参照)
+    for boundary_year in [ERA_BOUNDARIES["golden"][0], ERA_BOUNDARIES["shock"][0]]:
         ax.axvline(boundary_year - 0.5, color="#333333", linewidth=0.8,
                    linestyle="--", alpha=0.6, zorder=1)
 
