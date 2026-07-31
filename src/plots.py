@@ -24,7 +24,6 @@ import pandas as pd
 from src.analysis_cross_section_2024_2025 import (
     build_cross_section_frame,
     descriptive_by_category,
-    fit_cross_section_ols,
 )
 from src.analysis_event_study import (
     build_event_study_frame,

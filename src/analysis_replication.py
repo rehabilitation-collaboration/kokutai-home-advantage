@@ -12,7 +12,9 @@ Deviation #3 で「必要時点で ESRI 旧SNA 別ページから追加取得」
 本モジュールでは controls 抜き simple spec (舟橋 base モデルの再現主目的)。
 
 2012-2022 の score DV OLS 拡張は JSPO PDF 68-77 が 404/画像 PDF で取得不能
-(Deviation #2) = 順位 DV 順序 logit 主モデル (`analysis_main.py`) で代替済。
+(Deviation #2) = v3 では順位 DV 順序 logit 主モデル (`analysis_main_v3.py`) で代替済。
+旧 legacy 2012-2022 pooled 実装 (`analysis_main.py`) は M4-H で削除・
+commit `fa07fd2` 以前の git 履歴で参照可。
 本モジュールでは 2012 単年拡張 (第67回大分) 1年分を舟橋+1 として提供する。
 """
 

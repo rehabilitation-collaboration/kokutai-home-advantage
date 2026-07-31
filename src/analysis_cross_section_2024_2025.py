@@ -1,7 +1,9 @@
 """Phase 2 副次: 2024佐賀 + 2025滋賀 の 2 年断面 Subj × Host 交互作用
 
 本論 novelty core (選択肢A 実装・Deviation #4)。
-主モデル (analysis_main.py) は総合順位 Host のみで推定し、Subj_i は 2 年断面専用。
+v3 主モデル (analysis_main_v3.py) は総合順位 Host のみで推定し、
+Subj_i は 2 年断面専用 (本モジュール)。旧 legacy 2012-2022 pooled 実装
+(analysis_main.py) は M4-H で削除・commit `fa07fd2` 以前の git 履歴で参照可。
 Balmer2003 の主観 vs 客観分離を国体で世界初検証する。
 
 データセット (4 stack):
