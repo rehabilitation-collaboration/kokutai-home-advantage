@@ -1,7 +1,14 @@
 """Generate manuscript PDF from manuscript.md using weasyprint.
 
 Tables are embedded in the markdown (no CSV build needed).
-Figures are inserted from plots/ (fig1..fig5 PNG).
+Figures are inserted from plots/ (v3 主稿 Fig 1-3 + Supplement Fig S1/S2 PNG).
+
+v3 図構成 (M4-I で v6-final から差し替え):
+- Figure 1 = fig1_v3_host_rank_1948_2025_era (era 色分け・非単調時代パターン可視化)
+- Figure 2 = fig2_v3_topk_rate_by_era_cup (top-k rate bar chart・95% CI)
+- Figure 3 = fig2_subj_vs_obj_host_bias (Balmer2003 分離検証・副次)
+- Supp Fig S1 = fig3_event_study_two_layers (§S1 event-study 2 層)
+- Supp Fig S2 = fig5_replication_extended (§S3 Funahashi replication)
 """
 
 import re
@@ -17,14 +24,14 @@ PDF_DIR.mkdir(exist_ok=True)
 MANUSCRIPT_MD = PROJECT_DIR / "manuscript.md"
 
 MAIN_FIGURES = {
-    "Figure 1": "fig1_host_win_rate_timeseries.png",
-    "Figure 2": "fig2_subj_vs_obj_host_bias.png",
-    "Figure 3": "fig4_confounders_attenuation.png",
-    "Figure 4": "fig5_replication_extended.png",
+    "Figure 1": "fig1_v3_host_rank_1948_2025_era.png",
+    "Figure 2": "fig2_v3_topk_rate_by_era_cup.png",
+    "Figure 3": "fig2_subj_vs_obj_host_bias.png",
 }
 
 SUPPLEMENTARY_FIGURES = {
     "Figure S1": "fig3_event_study_two_layers.png",
+    "Figure S2": "fig5_replication_extended.png",
 }
 
 CSS = """
@@ -161,7 +168,7 @@ def convert():
 <html><head><meta charset="utf-8"><style>{CSS}</style></head>
 <body>{html_body}{figures_html}</body></html>"""
 
-    out_path = PDF_DIR / "kokutai-v6-final.pdf"
+    out_path = PDF_DIR / "kokutai-v3-final.pdf"
     weasyprint.HTML(string=html, base_url=str(PROJECT_DIR)).write_pdf(str(out_path))
     print(f"[OK] {out_path} ({out_path.stat().st_size / 1024:.0f} KB)")
 
