@@ -54,6 +54,7 @@ h2 { font-size: 13pt; margin-top: 20pt; margin-bottom: 6pt;
 h3 { font-size: 11.5pt; margin-top: 14pt; margin-bottom: 4pt;
      page-break-after: avoid; }
 p { margin: 6pt 0; text-align: justify; widows: 3; orphans: 3; }
+ol li, ul li { margin: 6pt 0; widows: 2; orphans: 2; }
 sup { font-size: 0.75em; }
 table {
     border-collapse: collapse; width: 100%; margin: 10pt 0;
@@ -153,9 +154,10 @@ def convert():
     md_text = MANUSCRIPT_MD.read_text(encoding="utf-8")
     legends = extract_figure_legends(md_text)
 
-    # Remove Figure Legends section (rebuilt with actual images below)
+    # Remove Figure Legends section only (rebuilt with actual images below).
+    # Non-greedy up to next ## heading — preserves following ## Supplementary Materials section.
     md_text = re.sub(
-        r"### Figure Legends.*",
+        r"### Figure Legends.*?(?=\n## )",
         "",
         md_text,
         flags=re.DOTALL,
