@@ -1,7 +1,16 @@
-"""Phase 3 執筆用: 全モデルの実測値 (coef/SE/p 生値・n_obs) を results/ に出力する。
+"""v3 執筆用: 各モデルの実測値 (coef/SE/p 生値・n_obs) を results/ に出力する。
 
 丸め表記に頼らず manuscript.md の p 値・係数表記を確定するための一次ソース。
 [[feedback-paper-precision-over-effort]] + [[feedback-paper-pdf-selfqa-before-gpt]] 対応。
+
+v3 主モデル (analysis_main_v3.py) の dump は `scripts/dump_analysis_main_v3.py` で
+別実行する (v3 host-rank パネル・n=150)。本 script は v3 副次分析 (Funahashi replication・
+event-study 2 層・2024-2025 cross-section) を dump する。
+
+M4-H 整理履歴: 旧 `main_models()` (2012-2022 legacy 47-prefecture-year panel) と
+`confounders_models()` (Csurilla-style staged specification) は v3 スコープ外として削除。
+両実装は commit `fa07fd2` 以前の git 履歴で参照可能 (`src/analysis_main.py` +
+`src/analysis_confounders.py`)。
 """
 
 from __future__ import annotations
@@ -18,50 +27,6 @@ RESULTS_DIR.mkdir(exist_ok=True)
 
 def dump_line(f, label: str, value):
     f.write(f"{label:<40} {value}\n")
-
-
-def main_models():
-    from src import analysis_main
-
-    out = RESULTS_DIR / "analysis_main.txt"
-    with out.open("w") as f:
-        f.write("=" * 80 + "\n")
-        f.write("analysis_main.py — 主モデル (2012-2022 tennou・n<=423)\n")
-        f.write("=" * 80 + "\n\n")
-
-        desc = analysis_main.descriptive_host_summary(cup="tennou")
-        f.write("[descriptive_host_summary — tennou 2012-2022]\n")
-        for k, v in desc.items():
-            dump_line(f, k, v)
-        f.write("\n")
-
-        for cup in ["tennou", "kougou"]:
-            f.write(f"[run_main_models cup={cup}]\n")
-            f.write("  # pooled = prefecture-clustered SE (47 clusters); FE = Fisher info\n")
-            results = analysis_main.run_main_models(cup=cup)
-            for r in results:
-                cov = getattr(r.result_obj, "cov_type", "nonrobust")
-                prsq = float(getattr(r.result_obj, "prsquared", float("nan")))
-                f.write(
-                    f"  {r.name:<40} coef={r.coef_is_host:+.6f} "
-                    f"se={r.se_is_host:.6f} p={r.p_is_host:.6f} "
-                    f"n={r.n_obs} converged={r.converged} llf={r.llf:.4f} "
-                    f"pseudoR2={prsq:.4f} cov={cov}\n"
-                )
-            f.write("\n")
-
-        # Finding #18: Brant-style partial-proportional-odds diagnostic
-        f.write("[brant_partial_po_test cup=tennou is_host_int across rank thresholds]\n")
-        f.write("  # Y<=j vs Y>j binary logit for each threshold, pref-clustered SE.\n")
-        f.write("  # Approximation: independent-threshold assumption (conservative).\n")
-        brant = analysis_main.brant_partial_po_test(cup="tennou")
-        f.write(f"  chi2={brant['chi2']} df={brant['df']} p_value={brant['p_value']} "
-                f"n_thresholds_used={brant['n_thresholds_used']} "
-                f"beta_pool_weighted={brant['beta_pool_weighted']}\n")
-        f.write("  threshold_rows:\n")
-        f.write(brant["threshold_rows"].to_string(index=False) + "\n")
-        f.write("\n")
-    print(f"[OK] {out}")
 
 
 def replication_models():
@@ -146,54 +111,6 @@ def event_study_models():
     print(f"[OK] {out}")
 
 
-def confounders_models():
-    from src import analysis_confounders
-
-    out = RESULTS_DIR / "analysis_confounders.txt"
-    with out.open("w") as f:
-        f.write("=" * 80 + "\n")
-        f.write("analysis_confounders.py — Csurilla型段階投入 M1→M5\n")
-        f.write("=" * 80 + "\n\n")
-
-        for dv in ["top1", "rank_ordinal"]:
-            f.write(f"[run_staged_analysis dv={dv} tennou 2012-2022]\n")
-            results = analysis_confounders.run_staged_analysis(cup="tennou", dv=dv)
-            for r in results:
-                cov = getattr(r.result_obj, "cov_type", "nonrobust")
-                prsq = float(getattr(r.result_obj, "prsquared", float("nan")))
-                f.write(
-                    f"  {r.name:<40} coef={r.coef_is_host:+.6f} "
-                    f"se={r.se_is_host:.6f} p={r.p_is_host:.6f} "
-                    f"n={r.n_obs} converged={r.converged} llf={r.llf:.4f} "
-                    f"pseudoR2={prsq:.4f} cov={cov}\n"
-                )
-            f.write("\n")
-
-            f.write(f"[compute_attenuation dv={dv}]\n")
-            att = analysis_confounders.compute_attenuation(results)
-            f.write(f"{att.to_string()}\n\n")
-
-        # Finding #12: Tokyo (pref_code=13) exclusion sensitivity
-        for dv in ["top1", "rank_ordinal"]:
-            f.write(f"[run_staged_analysis dv={dv} tennou 2012-2022 EXCLUDE Tokyo (pref=13)]\n")
-            f.write("  # Csurilla-reverse mechanism quantitative check: Tokyo dominates\n")
-            f.write("  # non-host top-1 (3/3 = 2016/2017/2022) so removal purges the\n")
-            f.write("  # non-host championship mass; expect host coef to strengthen.\n")
-            results = analysis_confounders.run_staged_analysis(cup="tennou", dv=dv,
-                                                                exclude_pref_codes=[13])
-            for r in results:
-                cov = getattr(r.result_obj, "cov_type", "nonrobust")
-                prsq = float(getattr(r.result_obj, "prsquared", float("nan")))
-                f.write(
-                    f"  {r.name:<40} coef={r.coef_is_host:+.6f} "
-                    f"se={r.se_is_host:.6f} p={r.p_is_host:.6f} "
-                    f"n={r.n_obs} converged={r.converged} llf={r.llf:.4f} "
-                    f"pseudoR2={prsq:.4f} cov={cov}\n"
-                )
-            f.write("\n")
-    print(f"[OK] {out}")
-
-
 def cross_section_models():
     from src import analysis_cross_section_2024_2025 as csm
 
@@ -229,9 +146,7 @@ def cross_section_models():
 
 
 if __name__ == "__main__":
-    main_models()
     replication_models()
     event_study_models()
-    confounders_models()
     cross_section_models()
     print("\n[DONE] all results saved to results/")

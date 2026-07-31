@@ -1,18 +1,16 @@
-"""図表生成: v3 M4 Figure 1-3 + Supplement + 旧 F1-F5 (M4-H まで併存)
+"""図表生成: v3 M4 主稿 Figure 1-3 + Supplement Fig S1/S2
 
 論文本文用の主要 Figure を生成する。
 出力先: `plots/fig{N}_*.{png,pdf}` (PNG は 300 dpi・PDF は vector)
 
-v3 Figure (M4-D で新規・主稿用):
+v3 主稿 Figure (M4-D で新規):
 - Fig 1 (v3): Host-rank 1948-2025 era 色分け (early/golden/shock 3 期の非単調変化を可視化)
 - Fig 2 (v3): Top-k rate by era × cup bar chart (top1/3/8 × tennou/kougou × 3 era, 95% CI エラーバー)
-- Fig 3 (v3): Host boost by sport category 2024-2025 (旧 F2 保持・plot_fig2_subj_vs_obj_host_bias)
+- Fig 3: Host boost by sport category 2024-2025 (plot_fig2_subj_vs_obj_host_bias)
 
-旧 Figure (v6-final 遺産・M4-H で整理予定・現在 併存):
-- 旧 Fig 1 = plot_fig1_host_win_rate_timeseries (1978-2025・v3 F1 に差替済み)
-- 旧 Fig 3 = plot_fig3_event_study_two_layers (Supp Fig S1 に降格予定)
-- 旧 Fig 4 = plot_fig4_confounders_attenuation (v3 スコープ外・落とし予定)
-- 旧 Fig 5 = plot_fig5_replication_extended (Supp Fig S2 に降格予定)
+Supplement Figure:
+- Supp Fig S1 = plot_fig3_event_study_two_layers (event-study 2 層・§S1 event-study)
+- Supp Fig S2 = plot_fig5_replication_extended (Funahashi replication・§S3 Extension through 2022)
 
 論文誌 print フレンドリー: グレースケール寄り + 太めの線 + サンセリフフォント。
 """
@@ -23,7 +21,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from src.analysis_confounders import compute_attenuation, run_staged_analysis
 from src.analysis_cross_section_2024_2025 import (
     build_cross_section_frame,
     descriptive_by_category,
@@ -46,21 +43,8 @@ from src.analysis_replication import (
     FUNAHASHI_2016_HOST_COEF,
     run_replication_models,
 )
-from src.definitions import KOKUTAI_HOSTS
-from src.panel_builder import build_ranking_panel
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PLOTS_DIR = PROJECT_ROOT / "plots"
-
-# 開催地敗北6ショック年
-SHOCK_YEARS: dict[int, str] = {
-    2002: "Kochi",
-    2016: "Iwate",
-    2017: "Ehime",
-    2022: "Tochigi",
-    2023: "Kagoshima (special)",
-    2024: "Saga",
-}
 
 # Print-friendly styling
 plt.rcParams.update({
@@ -90,40 +74,6 @@ def _save(fig, stem: str) -> tuple[Path, Path]:
     fig.savefig(pdf)
     plt.close(fig)
     return png, pdf
-
-
-def plot_fig1_host_win_rate_timeseries(cup: str = "tennou") -> tuple[Path, Path]:
-    """Fig 1: 開催地優勝率の時系列 (1978-2025) + 6ショック年マーカー
-
-    - 単年 host_win = 1 (host が rank1) / 0 (host が非rank1)
-    - 5年移動平均も重ねる (トレンド可視化)
-    - 6ショック年 = 赤マーカーでハイライト
-    """
-    panel = build_ranking_panel()
-    host_only = panel[(panel["cup"] == cup) & (panel["is_host"]) & (~panel["is_special"]) & (~panel["cancelled"])].copy()
-    host_only["host_win"] = (host_only["rank"] == 1).astype(int)
-    host_only = host_only[host_only["year"] >= 1978].sort_values("year")
-
-    yearly = host_only.groupby("year")["host_win"].mean().reset_index()
-    yearly["rolling_5yr"] = yearly["host_win"].rolling(window=5, min_periods=3, center=True).mean()
-
-    fig, ax = plt.subplots(figsize=(9, 4.5))
-    ax.scatter(yearly["year"], yearly["host_win"], s=30, color="#444444", label="host win (per year)", zorder=3)
-    ax.plot(yearly["year"], yearly["rolling_5yr"], color="#0066cc", linewidth=1.8, label="5-yr rolling mean")
-
-    for shock_yr, shock_name in SHOCK_YEARS.items():
-        if shock_yr < 1978 or shock_yr > yearly["year"].max():
-            continue
-        ax.axvline(shock_yr, color="#cc0033", linewidth=0.9, alpha=0.5, linestyle="--", zorder=1)
-        ax.text(shock_yr, 1.06, shock_name, rotation=45, fontsize=7,
-                color="#cc0033", ha="left", va="bottom", zorder=4)
-
-    ax.set_xlabel("Year")
-    ax.set_ylabel("Host prefecture wins (1 = won overall)")
-    ax.set_title("Host prefecture win rate over time (1978-2025, tennou cup)")
-    ax.set_ylim(-0.08, 1.20)
-    ax.legend(loc="lower left", frameon=False)
-    return _save(fig, "fig1_host_win_rate_timeseries")
 
 
 def plot_fig2_subj_vs_obj_host_bias() -> tuple[Path, Path]:
@@ -202,30 +152,6 @@ def plot_fig3_event_study_two_layers(cup: str = "tennou") -> tuple[Path, Path]:
 
     fig.suptitle("Event-study: host effect on top-1 probability (LP model, clustered SE)", y=1.02)
     return _save(fig, "fig3_event_study_two_layers")
-
-
-def plot_fig4_confounders_attenuation(cup: str = "tennou") -> tuple[Path, Path]:
-    """Fig 4: Csurilla型交絡変数統制 (M1-M5) の host effect 減衰"""
-    staged = run_staged_analysis(dv="top1", cup=cup)
-    att_df = compute_attenuation(staged)
-    labels = att_df["name"].tolist()
-    coefs = att_df["coef_is_host"].tolist()
-    ses = att_df["se_is_host"].tolist()
-    ci95 = [1.96 * s if not np.isnan(s) else 0 for s in ses]
-
-    fig, ax = plt.subplots(figsize=(8, 4.5))
-    xs = np.arange(len(labels))
-    ax.errorbar(xs, coefs, yerr=ci95, fmt="o-", color="#333333", ecolor="#888888",
-                capsize=5, markersize=7, linewidth=1.2)
-    for i, c in enumerate(coefs):
-        ax.text(xs[i], c + 0.4, f"{c:.2f}", ha="center", va="bottom", fontsize=8)
-
-    ax.axhline(0, color="#cc0033", linewidth=0.7, linestyle="--", alpha=0.6)
-    ax.set_xticks(xs)
-    ax.set_xticklabels(labels, rotation=15, ha="right", fontsize=9)
-    ax.set_ylabel("coef_is_host (logit top-1)")
-    ax.set_title("Csurilla-type confounder attenuation (2012-2022 tennou)")
-    return _save(fig, "fig4_confounders_attenuation")
 
 
 def plot_fig5_replication_extended(cup: str = "tennou") -> tuple[Path, Path]:
@@ -448,11 +374,9 @@ def generate_v3_figures() -> dict[str, tuple[Path, Path]]:
 
 
 def generate_all_figures(cup: str = "tennou") -> dict[str, tuple[Path, Path]]:
-    """Fig 1-5 を全て生成し、{fig_key: (png, pdf)} を返す"""
+    """v3 主稿 Fig 3 (subj vs obj) + Supplement Fig S1 (event-study) + Supp Fig S2 (Funahashi replication) を生成"""
     return {
-        "fig1": plot_fig1_host_win_rate_timeseries(cup=cup),
-        "fig2": plot_fig2_subj_vs_obj_host_bias(),
-        "fig3": plot_fig3_event_study_two_layers(cup=cup),
-        "fig4": plot_fig4_confounders_attenuation(cup=cup),
-        "fig5": plot_fig5_replication_extended(cup=cup),
+        "fig2_subj_vs_obj": plot_fig2_subj_vs_obj_host_bias(),
+        "supp_fig_s1_event_study": plot_fig3_event_study_two_layers(cup=cup),
+        "supp_fig_s2_replication": plot_fig5_replication_extended(cup=cup),
     }
