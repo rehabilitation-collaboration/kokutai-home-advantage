@@ -476,6 +476,34 @@ class TestZeroImputed:
             f"[{lower:.2f}, {upper:.2f}] of primary +{primary_beta}"
         )
 
+    def test_inclusive_zero_imputed_sample_size_7097(self):
+        """inclusive zero-imputed = full cartesian n=7,097 (semi 除外なし・Phase 6B)."""
+        from src.analysis_cross_section_2024_2025 import run_cross_section_inclusive_zero_imputed
+        result = run_cross_section_inclusive_zero_imputed(include_winter=True)
+        assert result.n_obs == 7097, f"Expected 7097, got {result.n_obs}"
+
+    def test_inclusive_zero_imputed_beta_H_close_to_complete_case(self):
+        """inclusive zero-imputed β_H が complete-case primary +16.60 の ±0.5 pt 範囲
+        (Phase 6B: manuscript Table 6 row (v) の β_H = +16.65 を裏付ける実測根拠)."""
+        from src.analysis_cross_section_2024_2025 import run_cross_section_inclusive_zero_imputed
+        result = run_cross_section_inclusive_zero_imputed(include_winter=True)
+        complete_case_beta_h = 16.60  # Table 6 row (i)-(ii) baseline
+        assert abs(result.coef_is_host - complete_case_beta_h) < 0.5, (
+            f"inclusive zero-imputed β_H={result.coef_is_host:.4f} outside ±0.5 pt "
+            f"of complete-case +{complete_case_beta_h}"
+        )
+
+    def test_inclusive_zero_imputed_beta_HS_close_to_complete_case(self):
+        """inclusive zero-imputed β_HS が complete-case primary +16.68 の ±1.0 pt 範囲
+        (Phase 6B: manuscript Table 6 row (v) の β_HS = +16.49 を裏付ける実測根拠)."""
+        from src.analysis_cross_section_2024_2025 import run_cross_section_inclusive_zero_imputed
+        result = run_cross_section_inclusive_zero_imputed(include_winter=True)
+        complete_case_beta_hs = 16.68  # Table 6 row (i)-(ii) baseline
+        assert abs(result.coef_interaction - complete_case_beta_hs) < 1.0, (
+            f"inclusive zero-imputed β_HS={result.coef_interaction:.4f} outside ±1.0 pt "
+            f"of complete-case +{complete_case_beta_hs}"
+        )
+
 
 class TestBootstrapByVariant:
     """v4 Phase A-2 (GPT round-2 応答・Finding L): Table 5d 4 variant 全てで

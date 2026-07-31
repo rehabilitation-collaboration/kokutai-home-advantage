@@ -142,6 +142,22 @@ def cross_section_models():
         for k, v in wcb.items():
             dump_line(f, f"  wild_cluster.{k}", v)
         f.write("\n")
+
+        f.write("[run_cross_section_inclusive_zero_imputed — Table 6 row (v) reproducibility (Phase 6B)]\n")
+        zi_result = csm.run_cross_section_inclusive_zero_imputed()
+        d = zi_result.__dict__
+        for k, v in d.items():
+            if k in ("result_obj",):
+                continue
+            dump_line(f, f"  {zi_result.name}.{k}", v)
+        f.write("\n")
+
+        f.write("[wild_cluster_bootstrap inclusive zero-imputed — Table 6 row (v) bootstrap (Phase 6B)]\n")
+        df_zi = csm.build_cross_section_frame_zero_imputed()
+        wcb_zi = csm.wild_cluster_bootstrap(df_zi, dv="score", test_coef="host_x_subj", n_bootstrap=999)
+        for k, v in wcb_zi.items():
+            dump_line(f, f"  wild_cluster_zi.{k}", v)
+        f.write("\n")
     print(f"[OK] {out}")
 
 

@@ -388,6 +388,30 @@ def run_cross_section_zero_imputed(include_winter: bool = True) -> CrossSectionR
     )
 
 
+def run_cross_section_inclusive_zero_imputed(
+    include_winter: bool = True,
+) -> CrossSectionResult:
+    """GPT round-7 応答 (Phase 6B): reproducibility 回復用 inclusive zero-imputed spec.
+
+    現行 run_cross_section_zero_imputed() は semi_excluded (obj-vs-subj pure) 版だが、
+    manuscript Table 6 row (v) は inclusive spec (row (i)-(ii) baseline と対応する
+    n=7,097 全 sport) の zero-imputed 数値を報告している。両者の乖離を解消するため
+    inclusive 版を独立関数として追加。
+
+    Phase 5D (16th session) では inline eval で数値取得 (β_H=+16.65, β_HS=+16.49)
+    したが公開 code 未実装 = GPT round-7 で「投稿時点で再現不能」と指摘。本関数追加
+    で Table 6 row (v) を公開 code から再現可能に。
+    """
+    df = build_cross_section_frame_zero_imputed(include_winter=include_winter)
+    # inclusive spec = semi 含む全 sample (Table 6 row (i)-(ii) baseline と対応)
+    return fit_cross_section_ols(
+        df,
+        dv="score",
+        with_semi_interaction=False,
+        name="cross_section_inclusive_zero_imputed",
+    )
+
+
 def wild_cluster_bootstrap(
     df: pd.DataFrame,
     dv: str = "score",

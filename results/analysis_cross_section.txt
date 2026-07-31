@@ -10,6 +10,32 @@ Subj×Host 交互作用 (novelty core)
 2       subjective     19.331784  57.236842         1721.0        38.0                     37.905058
 
 [run_cross_section_models — 3 spec]
+  cross_section_obj_vs_subj_primary.name cross_section_obj_vs_subj_primary
+  cross_section_obj_vs_subj_primary.dv   score
+  cross_section_obj_vs_subj_primary.coef_is_host 11.175321179981864
+  cross_section_obj_vs_subj_primary.se_is_host 1.6956852380743896
+  cross_section_obj_vs_subj_primary.p_is_host 4.38508691379183e-11
+  cross_section_obj_vs_subj_primary.coef_interaction 20.26538673894437
+  cross_section_obj_vs_subj_primary.se_interaction 9.14577474277896
+  cross_section_obj_vs_subj_primary.p_interaction 0.02670386101693509
+  cross_section_obj_vs_subj_primary.n_obs 4744
+  cross_section_obj_vs_subj_primary.n_params 79
+  cross_section_obj_vs_subj_primary.n_clusters 47
+  cross_section_obj_vs_subj_primary.r2   0.2934812684053255
+
+  cross_section_obj_vs_subj_primary_sport_cup.name cross_section_obj_vs_subj_primary_sport_cup
+  cross_section_obj_vs_subj_primary_sport_cup.dv score
+  cross_section_obj_vs_subj_primary_sport_cup.coef_is_host 9.707625400164646
+  cross_section_obj_vs_subj_primary_sport_cup.se_is_host 592562.5465745702
+  cross_section_obj_vs_subj_primary_sport_cup.p_is_host 0.9999869286972771
+  cross_section_obj_vs_subj_primary_sport_cup.coef_interaction 21.96755459826907
+  cross_section_obj_vs_subj_primary_sport_cup.se_interaction 688545.8719962465
+  cross_section_obj_vs_subj_primary_sport_cup.p_interaction 0.9999745440741679
+  cross_section_obj_vs_subj_primary_sport_cup.n_obs 4744
+  cross_section_obj_vs_subj_primary_sport_cup.n_params 131
+  cross_section_obj_vs_subj_primary_sport_cup.n_clusters 47
+  cross_section_obj_vs_subj_primary_sport_cup.r2 0.30950563939989884
+
   cross_section_baseline.name            cross_section_baseline
   cross_section_baseline.dv              score
   cross_section_baseline.coef_is_host    16.602075911470287
@@ -55,10 +81,45 @@ Subj×Host 交互作用 (novelty core)
   wild_cluster.observed_se               7.722305799612529
   wild_cluster.observed_t                2.160454986978429
   wild_cluster.cluster_robust_p          0.030737464640059758
-  wild_cluster.bootstrap_p               0.15515515515515516
+  wild_cluster.bootstrap_p               0.156
+  wild_cluster.bootstrap_ci_low_95       -0.4199298370348856
+  wild_cluster.bootstrap_ci_high_95      33.86129869367788
   wild_cluster.n_bootstrap_used          999
   wild_cluster.n_bootstrap_requested     999
+  wild_cluster.n_convergence_failures    0
   wild_cluster.seed                      20260728
+  wild_cluster.weight_type               rademacher
   wild_cluster.n_clusters                47
   wild_cluster.treated_clusters          2
+
+[run_cross_section_inclusive_zero_imputed — Table 6 row (v) reproducibility (Phase 6B)]
+  cross_section_inclusive_zero_imputed.name cross_section_inclusive_zero_imputed
+  cross_section_inclusive_zero_imputed.dv score
+  cross_section_inclusive_zero_imputed.coef_is_host 16.645372663642565
+  cross_section_inclusive_zero_imputed.se_is_host 29168.747128606403
+  cross_section_inclusive_zero_imputed.p_is_host 0.9995446809875741
+  cross_section_inclusive_zero_imputed.coef_interaction 16.494560612469108
+  cross_section_inclusive_zero_imputed.se_interaction nan
+  cross_section_inclusive_zero_imputed.p_interaction nan
+  cross_section_inclusive_zero_imputed.n_obs 7097
+  cross_section_inclusive_zero_imputed.n_params 92
+  cross_section_inclusive_zero_imputed.n_clusters 47
+  cross_section_inclusive_zero_imputed.r2 0.2444623085801252
+
+[wild_cluster_bootstrap inclusive zero-imputed — Table 6 row (v) bootstrap (Phase 6B)]
+  wild_cluster_zi.test_coef              host_x_subj
+  wild_cluster_zi.observed_coef          16.494560612469108
+  wild_cluster_zi.observed_se            nan
+  wild_cluster_zi.observed_t             nan
+  wild_cluster_zi.cluster_robust_p       nan
+  wild_cluster_zi.bootstrap_p            0.0019120458891013384
+  wild_cluster_zi.bootstrap_ci_low_95    nan
+  wild_cluster_zi.bootstrap_ci_high_95   nan
+  wild_cluster_zi.n_bootstrap_used       522
+  wild_cluster_zi.n_bootstrap_requested  999
+  wild_cluster_zi.n_convergence_failures 477
+  wild_cluster_zi.seed                   20260728
+  wild_cluster_zi.weight_type            rademacher
+  wild_cluster_zi.n_clusters             47
+  wild_cluster_zi.treated_clusters       2
 
