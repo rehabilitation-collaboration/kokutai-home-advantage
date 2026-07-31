@@ -30,7 +30,8 @@ MAIN_FIGURES = {
 }
 
 SUPPLEMENTARY_FIGURES = {
-    "Figure S1": "fig3_event_study_two_layers.png",
+    # Figure S1 (fig3_event_study_two_layers) removed — see manuscript §S1 note
+    # (design was circular; near-zero τ trails by construction, not a robustness check).
     "Figure S2": "fig5_replication_extended.png",
 }
 
