@@ -13,7 +13,7 @@ FE 設計 (handoff 申し送り ②):
 時代分解 (handoff 申し送り ③・Background 節):
 - early: 第 3-32 回 (1948-1977)
 - golden: 第 33-70 回 (1978-2015・host 優勝率 97.30%)
-- shock: 第 71-79 回 (2016-2025・敗北 6 ショック期 37.50%)
+- shock: 第 71-79 回 (2016-2025・第 75/76 中止で 7 完了大会)
 """
 
 from __future__ import annotations

@@ -23,8 +23,9 @@ Balmer2003 の主観 vs 客観分離を国体で世界初検証する。
 Robustness:
 - with_semi: subjective/semi_subjective を分離して 2 交互作用項
 - log_score: log(score+1) 変換版
-- sport_cup interaction: primary spec に sport × cup 交互作用を追加 (GPT round-1 Finding #5
-  診断・rank-deficient regime k/G≈2.8 で cluster SE 計算不能・point-estimate-only diagnostic)
+- sport_cup interaction: 旧 primary (semi 除外・obj-vs-subj pure) spec に sport × cup 交互作用
+  を追加した diagnostic sensitivity (GPT round-1 Finding #5 診断・rank-deficient regime
+  k/G≈2.8 で cluster SE 計算不能・point-estimate-only diagnostic)
 """
 
 from dataclasses import dataclass
@@ -154,7 +155,8 @@ def build_cross_section_frame_zero_imputed(
 
     GPT round-2 #3 応答: non-participation vs missing-data の解釈弾力性 sensitivity.
     prefecture が JSPO overall-standings publication から欠落しているセルを
-    "non-participation → score=0" として扱う仮定で primary spec を再推定する。
+    "non-participation → score=0" として扱う frame を作る (呼び出し側で inclusive
+    baseline_primary または旧 obj-vs-subj-pure sensitivity spec を fit する用)。
 
     Full cartesian n = 47 prefectures × ([40 tennou + 35 kougou] + [40 tennou + 36 kougou])
                     = 47 × 151 = 7,097 cells (Table 1 theoretical n と一致)
@@ -371,11 +373,15 @@ def run_cross_section_models_by_variant(
     variants: tuple[str, ...] = ("pure_judged", "no_combat", "combat_to_semi"),
     include_winter: bool = True,
 ) -> dict[str, CrossSectionResult]:
-    """GPT round-1 Finding #6 応答: 各 variant で primary spec (semi 除外・obj-vs-subj pure)
-    を再推定して β_HS の分類 sensitivity を検証する。
+    """GPT round-1 Finding #6 応答: 各 variant で旧 primary (semi 除外・obj-vs-subj pure) spec
+    を再推定して β_HS の分類 sensitivity を検証する。現在の manuscript primary は inclusive
+    n=6,991 (cross_section_baseline_primary・Table 6 row i-ii)。本関数の旧 spec は
+    Phase 9 rename 後 cross_section_sensitivity_obj_vs_subj_pure に相当し、分類 variant
+    (pure_judged / no_combat / combat_to_semi) を回して β_HS 頑健性を報告する。
 
-    Table 5d の 3 行分の数値を返す。default variant は run_cross_section_models で提供済み
-    (primary +20.27・SE 9.15・p 0.027・n 4744)。
+    Table 6 の classification-variant sensitivity 行を返す。default variant (semi 除外) は
+    run_cross_section_models で cross_section_sensitivity_obj_vs_subj_pure として提供済み
+    (+20.27・SE 9.15・p 0.027・n 4744)。
 
     Args:
         variants: 対象 variant 名 tuple (sport_classifier._VARIANT_OVERRIDES キー)
@@ -397,14 +403,18 @@ def run_cross_section_models_by_variant(
 
 def run_cross_section_zero_imputed(include_winter: bool = True) -> CrossSectionResult:
     """GPT round-2 #3 応答: 欠測 106 セル (7,097 - 6,991) を score=0 埋めた
-    primary spec (semi 除外・obj-vs-subj pure) の zero-imputed variant.
+    旧 primary spec (semi 除外・obj-vs-subj pure・Phase 9 rename 後
+    cross_section_sensitivity_obj_vs_subj_pure) の zero-imputed variant.
 
     non-participation vs missing-data の解釈弾力性 sensitivity check.
-    Table 5 primary (+20.27) との direction 一致 + magnitude 保持を確認する
+    旧 primary (+20.27) との direction 一致 + magnitude 保持を確認する
     ("results were directionally unchanged" 主張の実測根拠)。
+
+    現 manuscript primary (inclusive n=6,991) 側の zero-imputed 対応は
+    run_cross_section_inclusive_zero_imputed (Phase 6B 追加・Table 6 row v)。
     """
     df = build_cross_section_frame_zero_imputed(include_winter=include_winter)
-    # primary spec = semi 除外 (obj vs subj pure)
+    # 旧 primary spec (semi 除外 obj-vs-subj pure) の zero-imputed 版
     df_obj_subj = df[df["is_semi"] == 0].reset_index(drop=True)
     return fit_cross_section_ols(
         df_obj_subj,
