@@ -46,11 +46,14 @@ body {
     line-height: 1.6;
     color: #111;
 }
-h1 { font-size: 16pt; margin-top: 0; margin-bottom: 8pt; line-height: 1.3; }
+h1 { font-size: 16pt; margin-top: 0; margin-bottom: 8pt; line-height: 1.3;
+     page-break-after: avoid; }
 h2 { font-size: 13pt; margin-top: 20pt; margin-bottom: 6pt;
-     border-bottom: 1px solid #ccc; padding-bottom: 3pt; }
-h3 { font-size: 11.5pt; margin-top: 14pt; margin-bottom: 4pt; }
-p { margin: 6pt 0; text-align: justify; }
+     border-bottom: 1px solid #ccc; padding-bottom: 3pt;
+     page-break-after: avoid; }
+h3 { font-size: 11.5pt; margin-top: 14pt; margin-bottom: 4pt;
+     page-break-after: avoid; }
+p { margin: 6pt 0; text-align: justify; widows: 3; orphans: 3; }
 sup { font-size: 0.75em; }
 table {
     border-collapse: collapse; width: 100%; margin: 10pt 0;
