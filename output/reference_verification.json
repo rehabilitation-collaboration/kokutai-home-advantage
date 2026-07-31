@@ -456,7 +456,7 @@
   {
     "ref_number": 15,
     "status": "MATCH",
-    "raw_text": "MacKinnon JG, Webb MD. Wild bootstrap inference for wildly different cluster sizes. *J Appl Econometrics*. 2017;32(2):233-254. doi:10.1002/jae.2508\n\n---",
+    "raw_text": "MacKinnon JG, Webb MD. Wild bootstrap inference for wildly different cluster sizes. *J Appl Econometrics*. 2017;32(2):233-254. doi:10.1002/jae.2508",
     "mismatched_fields": [],
     "manuscript_data": {
       "authors": "MacKinnon JG, Webb MD",
@@ -478,6 +478,70 @@
     },
     "crossref_doi": "10.1002/jae.2508",
     "corrected_citation": "MacKinnon JG, Webb MD. Wild Bootstrap Inference for Wildly Different Cluster Sizes. Journal of Applied Econometrics. 2017;32:233-254. doi:10.1002/jae.2508.",
+    "is_retracted": false,
+    "retraction_doi": "",
+    "url_status": 0,
+    "notes": [
+      "Resolved via DOI (high confidence)"
+    ]
+  },
+  {
+    "ref_number": 16,
+    "status": "MATCH",
+    "raw_text": "Mammen E. Bootstrap and wild bootstrap for high dimensional linear models. *Ann Stat*. 1993;21(1):255-285. doi:10.1214/aos/1176349025",
+    "mismatched_fields": [],
+    "manuscript_data": {
+      "authors": "Mammen E",
+      "title": "Bootstrap and wild bootstrap for high dimensional linear models",
+      "journal": "",
+      "year": "1993",
+      "volume": "21",
+      "pages": "255-285",
+      "doi": "10.1214/aos/1176349025"
+    },
+    "crossref_data": {
+      "title": "Bootstrap and Wild Bootstrap for High Dimensional Linear Models",
+      "journal": "The Annals of Statistics",
+      "year": "1993",
+      "volume": "21",
+      "page": "",
+      "doi": "10.1214/aos/1176349025",
+      "authors": "Mammen E"
+    },
+    "crossref_doi": "10.1214/aos/1176349025",
+    "corrected_citation": "Mammen E. Bootstrap and Wild Bootstrap for High Dimensional Linear Models. The Annals of Statistics. 1993;21. doi:10.1214/aos/1176349025.",
+    "is_retracted": false,
+    "retraction_doi": "",
+    "url_status": 0,
+    "notes": [
+      "Resolved via DOI (high confidence)"
+    ]
+  },
+  {
+    "ref_number": 17,
+    "status": "MATCH",
+    "raw_text": "Phipson B, Smyth GK. Permutation P-values should never be zero: calculating exact P-values when permutations are randomly drawn. *Stat Appl Genet Mol Biol*. 2010;9(1):Article 39. doi:10.2202/1544-6115.1585\n\n---",
+    "mismatched_fields": [],
+    "manuscript_data": {
+      "authors": "Phipson B, Smyth GK",
+      "title": "Permutation P-values should never be zero: calculating exact P-values when permutations are randomly drawn",
+      "journal": "",
+      "year": "2010",
+      "volume": "9",
+      "pages": "",
+      "doi": "10.2202/1544-6115.1585"
+    },
+    "crossref_data": {
+      "title": "Permutation P-values Should Never Be Zero: Calculating Exact P-values When Permutations Are Randomly Drawn",
+      "journal": "Statistical Applications in Genetics and Molecular Biology",
+      "year": "2010",
+      "volume": "9",
+      "page": "",
+      "doi": "10.2202/1544-6115.1585",
+      "authors": "Phipson B, Smyth GK"
+    },
+    "crossref_doi": "10.2202/1544-6115.1585",
+    "corrected_citation": "Phipson B, Smyth GK. Permutation P-values Should Never Be Zero: Calculating Exact P-values When Permutations Are Randomly Drawn. Statistical Applications in Genetics and Molecular Biology. 2010;9. doi:10.2202/1544-6115.1585.",
     "is_retracted": false,
     "retraction_doi": "",
     "url_status": 0,

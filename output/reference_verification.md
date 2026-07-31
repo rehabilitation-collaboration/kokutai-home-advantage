@@ -1,12 +1,12 @@
 # Reference Verification Report
 
-Generated: 2026-07-29 21:39
+Generated: 2026-07-31 15:43
 Tool: verify_refs.py (CrossRef API)
 
 ## Summary
 
-- Total references: 15
-- MATCH: 9
+- Total references: 17
+- MATCH: 11
 - MISMATCH: 4
 - MANUAL: 2
 
@@ -74,3 +74,5 @@ Tool: verify_refs.py (CrossRef API)
 | [13] | MISMATCH | 10.3368/jhr.50.2.317 | Resolved via DOI (high confidence) |
 | [14] | MATCH | 10.1162/rest.90.3.414 | Resolved via DOI (high confidence) |
 | [15] | MATCH | 10.1002/jae.2508 | Resolved via DOI (high confidence) |
+| [16] | MATCH | 10.1214/aos/1176349025 | Resolved via DOI (high confidence) |
+| [17] | MATCH | 10.2202/1544-6115.1585 | Resolved via DOI (high confidence) |
