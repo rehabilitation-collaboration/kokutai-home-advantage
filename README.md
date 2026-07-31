@@ -54,7 +54,7 @@ Deprecated legacy modules (`src/analysis_main.py` = 2012-2022 legacy 47-prefectu
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-python3 -m pytest tests/                       # 326 tests, ~3 min
+python3 -m pytest tests/                       # 335 tests, ~3 min
 python3 scripts/dump_analysis_main_v3.py       # v3 main analysis dump → results/analysis_main_v3.txt
 python3 run_all_models.py                      # Subsidiary v3 analyses (replication + event-study + 2024-25 cross-section)
 python3 generate_pdf.py                        # builds pdf/kokutai-v3-final.pdf

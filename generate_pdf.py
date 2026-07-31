@@ -3,12 +3,11 @@
 Tables are embedded in the markdown (no CSV build needed).
 Figures are inserted from plots/ (v3 主稿 Fig 1-3 + Supplement Fig S1/S2 PNG).
 
-v3 図構成 (M4-I で v6-final から差し替え):
+v3 図構成 (M4-I で v6-final から差し替え・Phase 6E で §S1 event-study 削除に伴い renumber):
 - Figure 1 = fig1_v3_host_rank_1948_2025_era (era 色分け・非単調時代パターン可視化)
 - Figure 2 = fig2_v3_topk_rate_by_era_cup (top-k rate bar chart・95% CI)
 - Figure 3 = fig2_subj_vs_obj_host_bias (Balmer2003 分離検証・副次)
-- Supp Fig S1 = fig3_event_study_two_layers (§S1 event-study 2 層)
-- Supp Fig S2 = fig5_replication_extended (§S3 Funahashi replication)
+- Supp Fig S1 = fig5_replication_extended (§S2 Funahashi replication・旧 Supp Fig S2 を renumber)
 """
 
 import re
@@ -30,9 +29,9 @@ MAIN_FIGURES = {
 }
 
 SUPPLEMENTARY_FIGURES = {
-    # Figure S1 (fig3_event_study_two_layers) removed — see manuscript §S1 note
-    # (design was circular; near-zero τ trails by construction, not a robustness check).
-    "Figure S2": "fig5_replication_extended.png",
+    # Prior "Figure S2" (Funahashi replication) is now Figure S1 after §S1 event-study
+    # was removed in Phase 6E and §S2 (Mammen) → §S1 renumber cascaded.
+    "Figure S1": "fig5_replication_extended.png",
 }
 
 CSS = """
