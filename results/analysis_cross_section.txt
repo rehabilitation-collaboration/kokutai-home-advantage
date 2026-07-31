@@ -10,44 +10,18 @@ Subj×Host 交互作用 (novelty core)
 2       subjective     19.331784  57.236842         1721.0        38.0                     37.905058
 
 [run_cross_section_models — 3 spec]
-  cross_section_obj_vs_subj_primary.name cross_section_obj_vs_subj_primary
-  cross_section_obj_vs_subj_primary.dv   score
-  cross_section_obj_vs_subj_primary.coef_is_host 11.175321179981697
-  cross_section_obj_vs_subj_primary.se_is_host 1.6955035218184284
-  cross_section_obj_vs_subj_primary.p_is_host 4.364272114459122e-11
-  cross_section_obj_vs_subj_primary.coef_interaction 20.265386738944716
-  cross_section_obj_vs_subj_primary.se_interaction 9.144794645820495
-  cross_section_obj_vs_subj_primary.p_interaction 0.02668759453993082
-  cross_section_obj_vs_subj_primary.n_obs 4744
-  cross_section_obj_vs_subj_primary.n_params 78
-  cross_section_obj_vs_subj_primary.n_clusters 47
-  cross_section_obj_vs_subj_primary.r2   0.2934812684053255
-
-  cross_section_obj_vs_subj_primary_sport_cup.name cross_section_obj_vs_subj_primary_sport_cup
-  cross_section_obj_vs_subj_primary_sport_cup.dv score
-  cross_section_obj_vs_subj_primary_sport_cup.coef_is_host 11.16238488316148
-  cross_section_obj_vs_subj_primary_sport_cup.se_is_host nan
-  cross_section_obj_vs_subj_primary_sport_cup.p_is_host nan
-  cross_section_obj_vs_subj_primary_sport_cup.coef_interaction 20.172042607496813
-  cross_section_obj_vs_subj_primary_sport_cup.se_interaction nan
-  cross_section_obj_vs_subj_primary_sport_cup.p_interaction nan
-  cross_section_obj_vs_subj_primary_sport_cup.n_obs 4744
-  cross_section_obj_vs_subj_primary_sport_cup.n_params 130
-  cross_section_obj_vs_subj_primary_sport_cup.n_clusters 47
-  cross_section_obj_vs_subj_primary_sport_cup.r2 0.3122869646171468
-
-  cross_section_baseline.name            cross_section_baseline
-  cross_section_baseline.dv              score
-  cross_section_baseline.coef_is_host    16.60207591147035
-  cross_section_baseline.se_is_host      1.250389513842837
-  cross_section_baseline.p_is_host       3.125621233759173e-40
-  cross_section_baseline.coef_interaction 16.683694075745283
-  cross_section_baseline.se_interaction  7.721746191959277
-  cross_section_baseline.p_interaction   0.030725357796562318
-  cross_section_baseline.n_obs           6991
-  cross_section_baseline.n_params        91
-  cross_section_baseline.n_clusters      47
-  cross_section_baseline.r2              0.24379994856499632
+  cross_section_baseline_primary.name    cross_section_baseline_primary
+  cross_section_baseline_primary.dv      score
+  cross_section_baseline_primary.coef_is_host 16.60207591147035
+  cross_section_baseline_primary.se_is_host 1.250389513842837
+  cross_section_baseline_primary.p_is_host 3.125621233759173e-40
+  cross_section_baseline_primary.coef_interaction 16.683694075745283
+  cross_section_baseline_primary.se_interaction 7.721746191959277
+  cross_section_baseline_primary.p_interaction 0.030725357796562318
+  cross_section_baseline_primary.n_obs   6991
+  cross_section_baseline_primary.n_params 91
+  cross_section_baseline_primary.n_clusters 47
+  cross_section_baseline_primary.r2      0.24379994856499632
 
   cross_section_with_semi.name           cross_section_with_semi
   cross_section_with_semi.dv             score
@@ -74,6 +48,32 @@ Subj×Host 交互作用 (novelty core)
   cross_section_log_baseline.n_params    91
   cross_section_log_baseline.n_clusters  47
   cross_section_log_baseline.r2          0.27919535640777415
+
+  cross_section_sensitivity_obj_vs_subj_pure.name cross_section_sensitivity_obj_vs_subj_pure
+  cross_section_sensitivity_obj_vs_subj_pure.dv score
+  cross_section_sensitivity_obj_vs_subj_pure.coef_is_host 11.175321179981697
+  cross_section_sensitivity_obj_vs_subj_pure.se_is_host 1.6955035218184284
+  cross_section_sensitivity_obj_vs_subj_pure.p_is_host 4.364272114459122e-11
+  cross_section_sensitivity_obj_vs_subj_pure.coef_interaction 20.265386738944716
+  cross_section_sensitivity_obj_vs_subj_pure.se_interaction 9.144794645820495
+  cross_section_sensitivity_obj_vs_subj_pure.p_interaction 0.02668759453993082
+  cross_section_sensitivity_obj_vs_subj_pure.n_obs 4744
+  cross_section_sensitivity_obj_vs_subj_pure.n_params 78
+  cross_section_sensitivity_obj_vs_subj_pure.n_clusters 47
+  cross_section_sensitivity_obj_vs_subj_pure.r2 0.2934812684053255
+
+  cross_section_sensitivity_obj_vs_subj_pure_sport_cup.name cross_section_sensitivity_obj_vs_subj_pure_sport_cup
+  cross_section_sensitivity_obj_vs_subj_pure_sport_cup.dv score
+  cross_section_sensitivity_obj_vs_subj_pure_sport_cup.coef_is_host 11.16238488316148
+  cross_section_sensitivity_obj_vs_subj_pure_sport_cup.se_is_host nan
+  cross_section_sensitivity_obj_vs_subj_pure_sport_cup.p_is_host nan
+  cross_section_sensitivity_obj_vs_subj_pure_sport_cup.coef_interaction 20.172042607496813
+  cross_section_sensitivity_obj_vs_subj_pure_sport_cup.se_interaction nan
+  cross_section_sensitivity_obj_vs_subj_pure_sport_cup.p_interaction nan
+  cross_section_sensitivity_obj_vs_subj_pure_sport_cup.n_obs 4744
+  cross_section_sensitivity_obj_vs_subj_pure_sport_cup.n_params 130
+  cross_section_sensitivity_obj_vs_subj_pure_sport_cup.n_clusters 47
+  cross_section_sensitivity_obj_vs_subj_pure_sport_cup.r2 0.3122869646171468
 
 [wild_cluster_bootstrap — few-treated-clusters robust p (Finding #5)]
   wild_cluster.test_coef                 host_x_subj

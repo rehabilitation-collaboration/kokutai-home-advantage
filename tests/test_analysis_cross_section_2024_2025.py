@@ -110,26 +110,34 @@ class TestFitCrossSectionOLS:
 
 class TestRunCrossSectionModels:
     def test_returns_5_models(self):
-        # GPT round-1 Finding #1 応答で primary spec (obj_vs_subj_primary) 追加 → 4 spec
-        # + GPT round-1 Finding #5 応答で sport × cup interaction diagnostic 追加 → 5 spec
+        # Phase 9 (GPT round-10 「必須修正 2」応答): primary は manuscript Table 6 row i-ii と
+        # 対応する inclusive n=6,991 (baseline_primary)。旧 obj_vs_subj 除外版は
+        # sensitivity_obj_vs_subj_pure に改名。runner は primary → sensitivity 順で並ぶ。
         results = run_cross_section_models()
         assert len(results) == 5
         assert {r.name for r in results} == {
-            "cross_section_obj_vs_subj_primary",
-            "cross_section_obj_vs_subj_primary_sport_cup",
-            "cross_section_baseline",
+            "cross_section_baseline_primary",
             "cross_section_with_semi",
             "cross_section_log_baseline",
+            "cross_section_sensitivity_obj_vs_subj_pure",
+            "cross_section_sensitivity_obj_vs_subj_pure_sport_cup",
         }
 
-    def test_primary_and_baseline_and_log_significant(self):
-        # SE がクラスタリング下で崩れない 3 モデル (with_semi は cluster SE 計算不能 = 除外)
+    def test_primary_first_in_runner(self):
+        # Phase 9: 第三者が runner 先頭を「論文の primary」と読める順序保証
+        results = run_cross_section_models()
+        assert results[0].name == "cross_section_baseline_primary"
+
+    def test_primary_and_log_and_sensitivity_significant(self):
+        # SE がクラスタリング下で崩れないモデルは全て β_H の cluster-robust p < 0.01
+        # (with_semi は now identified post 6A・sport_cup diagnostic は rank-deficient)
         results = run_cross_section_models()
         for r in results:
             if r.name in (
-                "cross_section_obj_vs_subj_primary",
-                "cross_section_baseline",
+                "cross_section_baseline_primary",
                 "cross_section_log_baseline",
+                "cross_section_sensitivity_obj_vs_subj_pure",
+                "cross_section_with_semi",
             ):
                 assert r.p_is_host < 0.01, f"{r.name}: p={r.p_is_host}"
 

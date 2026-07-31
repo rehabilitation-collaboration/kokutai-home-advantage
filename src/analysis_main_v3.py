@@ -376,14 +376,23 @@ def chi_square_era_comparison(
     n_perm: int = 10_000,
     seed: int = 0,
 ) -> dict:
-    """3 期間 (early/golden/shock) × top-k 率の χ² + pairwise Fisher exact
-    + Monte Carlo permutation p (Fisher-Freeman-Halton 近似)
+    """3 期間 (early/golden/shock) × top-k 率の global test + pairwise Fisher exact
 
-    GPT round-7 major #5 応答 (Phase 6A): shock 期 n=7 で期待度数不足
-    (emperor's 期待非成功 ~1.68・empress's 期待成功 ~4.39・期待非成功 ~2.61)
-    → Pearson χ² 漸近近似条件違反。Monte Carlo permutation p (Fisher-Freeman-Halton
-    exact の approximation) を追加し、これを primary global test とする。
-    Pearson χ² は sensitivity として保持。
+    返り値 dict の主要 key:
+    - exact_p_conditional (primary): 完全列挙 conditional Pearson χ² exact p
+      (Phase 7A・GPT round-8 「必須修正 1」応答・_conditional_exact_p_chi2 実装)
+    - mc_permutation_p (numerical cross-check): 同 Pearson χ² statistic 上の
+      Monte Carlo permutation p (n_perm=10_000・_mc_permutation_chi2 実装)
+    - chi2 / chi2_p (asymptotic sensitivity): scipy.stats.chi2_contingency
+    - pairwise_fisher: 3 pairwise Fisher exact p (Holm 補正は
+      pairwise_fisher_with_holm() が別途返す)
+
+    Phase 6A (GPT round-7 major #5) 経緯: shock 期 n=7 で期待度数不足
+    (emperor's 期待非成功 ~1.68・empress's 期待成功 ~4.39・期待非成功 ~2.61) →
+    Pearson χ² 漸近近似条件違反。まず Monte Carlo permutation p を primary に格上げ
+    (旧 phase 6A)、Phase 7A で完全列挙 exact p に置換 (現行 primary)。
+    MC-perm p は numerical cross-check として保持 (両者 2×10⁻² 以内で一致)。
+    Pearson χ² は asymptotic sensitivity として保持。
     """
     sub = df if cup == "both" else df[df["cup"] == cup]
     col = f"top{threshold}_flag"

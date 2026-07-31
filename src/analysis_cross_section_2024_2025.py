@@ -14,9 +14,11 @@ Balmer2003 の主観 vs 客観分離を国体で世界初検証する。
 
 母集団: 47県 × sport (78/79 で入替あり = クレー射撃 78 のみ・ボクシング 79 のみ) × 2 cup
 
-モデル (main):
-- score ~ is_host + is_subjective + is_host × is_subjective + pref FE + sport FE + year FE + cup FE
-- clustered SE (pref・7332 obs 相当だがここは ~7000obs で 47 cluster)
+モデル (Phase 6A 以降・GPT round-7/8/10 反映):
+- score ~ is_host + is_host × is_subjective + pref FE + sport FE + year FE + cup FE
+- is_subjective 主効果は sport 固定属性で sport FE と完全共線 → design matrix から除外
+- host × subjective interaction は sport-fixed × prefecture-level treatment で識別可能
+- clustered SE (pref, 47 cluster; 2 treated = Saga 2024 / Shiga 2025)
 
 Robustness:
 - with_semi: subjective/semi_subjective を分離して 2 交互作用項
@@ -293,10 +295,14 @@ def fit_cross_section_ols(
     cluster_col: str = "pref_code",
     name: str = "cross_section_baseline",
 ) -> CrossSectionResult:
-    """score ~ is_host + is_subjective + is_host × is_subjective + FE (clustered SE)
+    """score ~ is_host + is_host × is_subjective + FE (clustered SE)
+
+    is_subjective 主効果は sport 固定属性 (sport FE と完全共線) のため design matrix
+    から除外 (Phase 6A・GPT round-7 major #2 応答)。host × subjective interaction のみ
+    identified。
 
     Args:
-        dv: "score" or "log_score"
+        dv: "score" or "log_score" (or "z_score" / "pct_rank" — Phase 7A GPT round-8 #3)
         with_semi_interaction: True で semi_subjective も同時交互作用推定 (3 分類対比)
         add_sport_cup_interaction: True で sport × cup FE を追加 (GPT round-1 Finding #5
             診断用・k/G≈2.8 で cluster SE 計算不能 = point-estimate-only diagnostic)
@@ -328,32 +334,36 @@ def fit_cross_section_ols(
 
 
 def run_cross_section_models(include_winter: bool = True) -> list[CrossSectionResult]:
-    """副次分析の主モデル一式 (Table 5 primary + sensitivity + diagnostic 構成)
+    """副次分析の主モデル一式 (manuscript Table 6 rows i-iii + sensitivity)
 
-    GPT round-1 Finding #1 応答: 主回帰を obj vs subj pure に純化する (semi 除外)。
-    inclusive spec (semi 含む) は sensitivity として retention。
-    GPT round-1 Finding #5 応答: sport × cup interaction を primary base に追加した
-    diagnostic spec を新設 (rank-deficient regime k/G≈2.8 で cluster SE 計算不能・
-    point-estimate-only として β_HS の direction/magnitude 頑健性確認に使用)。
+    Phase 9 (GPT round-10 「必須修正 2」応答): manuscript の primary は inclusive
+    n=6,991 (Table 6 row i-ii = cross_section_baseline_primary)。旧 obj_vs_subj 除外版
+    (n≈4,744) は sensitivity_obj_vs_subj_pure に改名し、runner の末尾に配置。
+    第三者が runner 先頭を「論文の primary」と誤読するリスクを解消。
 
-    (Primary)     obj_vs_subj_primary:            semi 除外・obj vs subj pure 比較 (n≈4,744)
-                  score ~ is_host + is_subjective + host×subj + FE
-    (Diagnostic)  obj_vs_subj_primary_sport_cup:  primary base + sport×cup interaction
-                  (Finding #5 診断・cluster SE 計算不能・point estimate only)
-    (Sensitivity) baseline:                       semi 含む全 sample (旧 M1・n=6,991)
-                  score ~ is_host + is_subjective + host×subj + FE
-    (Descriptive) with_semi:                      3-way (subj + semi 両交互作用・cluster SE 計算不能)
-                  score ~ is_host + subj + semi + host×subj + host×semi + FE
-    (Robustness)  log_baseline:                   log(score+1) inclusive (旧 M3)
+    is_subjective 主効果は sport 固定属性で sport FE と完全共線のため design matrix
+    から除外している (Phase 6A・GPT round-7 major #2 応答)。全 spec は
+    host × subjective interaction のみを identifying variance とする。
+
+    (Primary)     baseline_primary:               manuscript Table 6 row i-ii primary (n=6,991)
+                  score ~ is_host + host×subj + pref+sport+year+cup FE
+    (Descriptive) with_semi:                      3-way (host×subj + host×semi 両交互作用)
+                  score ~ is_host + host×subj + host×semi + FE
+    (Robustness)  log_baseline:                   Table 6 row iii = log(score+1) inclusive
+    (Sensitivity) sensitivity_obj_vs_subj_pure:   semi 除外 obj vs subj pure (n≈4,744)
+                  旧 primary・現在は sensitivity として documented in code のみ
+                  (β_HS ≈ +20.27 with cluster-robust p ≈ 0.027, bootstrap p ≈ 0.175)
+    (Diagnostic)  sensitivity_obj_vs_subj_pure_sport_cup:  上記 + sport×cup interaction
+                  (GPT round-1 Finding #5 診断・point estimate only)
     """
     df = build_cross_section_frame(include_winter=include_winter)
     df_obj_subj = df[df["is_semi"] == 0].reset_index(drop=True)
     return [
-        fit_cross_section_ols(df_obj_subj, dv="score", with_semi_interaction=False, name="cross_section_obj_vs_subj_primary"),
-        fit_cross_section_ols(df_obj_subj, dv="score", with_semi_interaction=False, add_sport_cup_interaction=True, name="cross_section_obj_vs_subj_primary_sport_cup"),
-        fit_cross_section_ols(df, dv="score", with_semi_interaction=False, name="cross_section_baseline"),
+        fit_cross_section_ols(df, dv="score", with_semi_interaction=False, name="cross_section_baseline_primary"),
         fit_cross_section_ols(df, dv="score", with_semi_interaction=True, name="cross_section_with_semi"),
         fit_cross_section_ols(df, dv="log_score", with_semi_interaction=False, name="cross_section_log_baseline"),
+        fit_cross_section_ols(df_obj_subj, dv="score", with_semi_interaction=False, name="cross_section_sensitivity_obj_vs_subj_pure"),
+        fit_cross_section_ols(df_obj_subj, dv="score", with_semi_interaction=False, add_sport_cup_interaction=True, name="cross_section_sensitivity_obj_vs_subj_pure_sport_cup"),
     ]
 
 
