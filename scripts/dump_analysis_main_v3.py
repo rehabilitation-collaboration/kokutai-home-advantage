@@ -104,15 +104,19 @@ def main() -> None:
     lines.append("")
 
     lines.append("-" * 80)
-    lines.append("[4] chi_square_era_comparison (3期間 top-k 率の差 + pairwise Fisher exact)")
+    lines.append("[4] chi_square_era_comparison (3期間 top-k 率の差 + Monte Carlo permutation (FFH 近似) + pairwise Fisher exact)")
+    lines.append("     ※ Phase 6A (GPT round-7 major #5): shock 期 n=7 で期待度数不足 → Pearson χ² 漸近条件違反。")
+    lines.append("     ※ Monte Carlo permutation p (Fisher-Freeman-Halton exact の n_perm=10,000 近似) を primary global test に格上げ。")
+    lines.append("     ※ Pearson χ² は sensitivity として保持。")
     lines.append("-" * 80)
     for cup in ["tennou", "kougou", "both"]:
         for k in [1, 3, 8]:
-            r = chi_square_era_comparison(df, k, cup=cup)  # type: ignore
+            r = chi_square_era_comparison(df, k, cup=cup, n_perm=10_000, seed=0)  # type: ignore
             lines.append(
                 f"  cup={cup:>7} top{k}: rates early={fmt(r['rates']['early'],3)} "
                 f"golden={fmt(r['rates']['golden'],3)} shock={fmt(r['rates']['shock'],3)} "
-                f"| χ²={fmt(r['chi2'],2)} dof={r['chi2_dof']} p={fmt(r['chi2_p'],4)}"
+                f"| MC-perm p={fmt(r['mc_permutation_p'],4)} (primary) "
+                f"| Pearson χ²={fmt(r['chi2'],2)} dof={r['chi2_dof']} p={fmt(r['chi2_p'],4)} (sensitivity)"
             )
             pw = r["pairwise_fisher"]
             lines.append(

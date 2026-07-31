@@ -205,6 +205,25 @@ class TestChiSquareEraComparison:
         for era in ERA_ORDER:
             assert era in r["rates"]
 
+    def test_mc_permutation_p_returned(self, panel: pd.DataFrame):
+        """Phase 6A (GPT round-7 major #5): FFH 近似 Monte Carlo permutation p を返す."""
+        r = chi_square_era_comparison(panel, 1, cup="tennou", n_perm=1000, seed=0)
+        assert "mc_permutation_p" in r
+        assert 0 <= r["mc_permutation_p"] <= 1
+        assert r["n_perm"] == 1000
+
+    def test_mc_permutation_p_top1_significant(self, panel: pd.DataFrame):
+        """top1 tennou は era 差顕著 (early 56.7% / golden 97.4% / shock 42.9%) →
+        Pearson χ² と MC-perm 両方 p<0.01 のはず (n_perm=10,000 で下限 1e-4)."""
+        r = chi_square_era_comparison(panel, 1, cup="tennou", n_perm=10_000, seed=0)
+        assert r["mc_permutation_p"] < 0.01
+        assert r["chi2_p"] < 0.01
+
+    def test_mc_permutation_p_top8_nonsignificant(self, panel: pd.DataFrame):
+        """top8 tennou は era 差軽微 (86.7% / 97.4% / 100%) → non-significant"""
+        r = chi_square_era_comparison(panel, 8, cup="tennou", n_perm=10_000, seed=0)
+        assert r["mc_permutation_p"] > 0.10
+
 
 class TestOrderedLogit:
     def test_pooled_converged(self, panel: pd.DataFrame):

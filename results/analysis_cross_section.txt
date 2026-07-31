@@ -12,78 +12,78 @@ Subj×Host 交互作用 (novelty core)
 [run_cross_section_models — 3 spec]
   cross_section_obj_vs_subj_primary.name cross_section_obj_vs_subj_primary
   cross_section_obj_vs_subj_primary.dv   score
-  cross_section_obj_vs_subj_primary.coef_is_host 11.175321179981864
-  cross_section_obj_vs_subj_primary.se_is_host 1.6956852380743896
-  cross_section_obj_vs_subj_primary.p_is_host 4.38508691379183e-11
-  cross_section_obj_vs_subj_primary.coef_interaction 20.26538673894437
-  cross_section_obj_vs_subj_primary.se_interaction 9.14577474277896
-  cross_section_obj_vs_subj_primary.p_interaction 0.02670386101693509
+  cross_section_obj_vs_subj_primary.coef_is_host 11.175321179981697
+  cross_section_obj_vs_subj_primary.se_is_host 1.6955035218184284
+  cross_section_obj_vs_subj_primary.p_is_host 4.364272114459122e-11
+  cross_section_obj_vs_subj_primary.coef_interaction 20.265386738944716
+  cross_section_obj_vs_subj_primary.se_interaction 9.144794645820495
+  cross_section_obj_vs_subj_primary.p_interaction 0.02668759453993082
   cross_section_obj_vs_subj_primary.n_obs 4744
-  cross_section_obj_vs_subj_primary.n_params 79
+  cross_section_obj_vs_subj_primary.n_params 78
   cross_section_obj_vs_subj_primary.n_clusters 47
   cross_section_obj_vs_subj_primary.r2   0.2934812684053255
 
   cross_section_obj_vs_subj_primary_sport_cup.name cross_section_obj_vs_subj_primary_sport_cup
   cross_section_obj_vs_subj_primary_sport_cup.dv score
-  cross_section_obj_vs_subj_primary_sport_cup.coef_is_host 9.707625400164646
-  cross_section_obj_vs_subj_primary_sport_cup.se_is_host 592562.5465745702
-  cross_section_obj_vs_subj_primary_sport_cup.p_is_host 0.9999869286972771
-  cross_section_obj_vs_subj_primary_sport_cup.coef_interaction 21.96755459826907
-  cross_section_obj_vs_subj_primary_sport_cup.se_interaction 688545.8719962465
-  cross_section_obj_vs_subj_primary_sport_cup.p_interaction 0.9999745440741679
+  cross_section_obj_vs_subj_primary_sport_cup.coef_is_host 11.16238488316148
+  cross_section_obj_vs_subj_primary_sport_cup.se_is_host nan
+  cross_section_obj_vs_subj_primary_sport_cup.p_is_host nan
+  cross_section_obj_vs_subj_primary_sport_cup.coef_interaction 20.172042607496813
+  cross_section_obj_vs_subj_primary_sport_cup.se_interaction nan
+  cross_section_obj_vs_subj_primary_sport_cup.p_interaction nan
   cross_section_obj_vs_subj_primary_sport_cup.n_obs 4744
-  cross_section_obj_vs_subj_primary_sport_cup.n_params 131
+  cross_section_obj_vs_subj_primary_sport_cup.n_params 130
   cross_section_obj_vs_subj_primary_sport_cup.n_clusters 47
-  cross_section_obj_vs_subj_primary_sport_cup.r2 0.30950563939989884
+  cross_section_obj_vs_subj_primary_sport_cup.r2 0.3122869646171468
 
   cross_section_baseline.name            cross_section_baseline
   cross_section_baseline.dv              score
-  cross_section_baseline.coef_is_host    16.602075911470287
-  cross_section_baseline.se_is_host      1.2504801316284895
-  cross_section_baseline.p_is_host       3.1660335404340418e-40
-  cross_section_baseline.coef_interaction 16.683694075745333
-  cross_section_baseline.se_interaction  7.722305799612529
-  cross_section_baseline.p_interaction   0.030737464640059758
+  cross_section_baseline.coef_is_host    16.60207591147035
+  cross_section_baseline.se_is_host      1.250389513842837
+  cross_section_baseline.p_is_host       3.125621233759173e-40
+  cross_section_baseline.coef_interaction 16.683694075745283
+  cross_section_baseline.se_interaction  7.721746191959277
+  cross_section_baseline.p_interaction   0.030725357796562318
   cross_section_baseline.n_obs           6991
-  cross_section_baseline.n_params        92
+  cross_section_baseline.n_params        91
   cross_section_baseline.n_clusters      47
-  cross_section_baseline.r2              0.2437999485649962
+  cross_section_baseline.r2              0.24379994856499632
 
   cross_section_with_semi.name           cross_section_with_semi
   cross_section_with_semi.dv             score
-  cross_section_with_semi.coef_is_host   12.992926646505328
-  cross_section_with_semi.se_is_host     nan
-  cross_section_with_semi.p_is_host      nan
-  cross_section_with_semi.coef_interaction 20.305381167922654
-  cross_section_with_semi.se_interaction nan
-  cross_section_with_semi.p_interaction  nan
+  cross_section_with_semi.coef_is_host   12.978150693295587
+  cross_section_with_semi.se_is_host     2.696765365697619
+  cross_section_with_semi.p_is_host      1.4906289993657086e-06
+  cross_section_with_semi.coef_interaction 20.30907515622497
+  cross_section_with_semi.se_interaction 9.132464912962687
+  cross_section_with_semi.p_interaction  0.026159694680089187
   cross_section_with_semi.n_obs          6991
-  cross_section_with_semi.n_params       94
+  cross_section_with_semi.n_params       92
   cross_section_with_semi.n_clusters     47
-  cross_section_with_semi.r2             0.2442367321357286
+  cross_section_with_semi.r2             0.24426771081486243
 
   cross_section_log_baseline.name        cross_section_log_baseline
   cross_section_log_baseline.dv          log_score
-  cross_section_log_baseline.coef_is_host 0.46712985616869285
-  cross_section_log_baseline.se_is_host  0.056876937311499724
-  cross_section_log_baseline.p_is_host   2.1574313562496015e-16
-  cross_section_log_baseline.coef_interaction 0.2926476022210591
-  cross_section_log_baseline.se_interaction 0.1695572773074926
-  cross_section_log_baseline.p_interaction 0.08435617548713861
+  cross_section_log_baseline.coef_is_host 0.4671298561686937
+  cross_section_log_baseline.se_is_host  0.056872815644961716
+  cross_section_log_baseline.p_is_host   2.1467589464195025e-16
+  cross_section_log_baseline.coef_interaction 0.292647602221059
+  cross_section_log_baseline.se_interaction 0.16954499010306073
+  cross_section_log_baseline.p_interaction 0.0843336731195084
   cross_section_log_baseline.n_obs       6991
-  cross_section_log_baseline.n_params    92
+  cross_section_log_baseline.n_params    91
   cross_section_log_baseline.n_clusters  47
-  cross_section_log_baseline.r2          0.27919535640777426
+  cross_section_log_baseline.r2          0.27919535640777415
 
 [wild_cluster_bootstrap — few-treated-clusters robust p (Finding #5)]
   wild_cluster.test_coef                 host_x_subj
-  wild_cluster.observed_coef             16.683694075745333
-  wild_cluster.observed_se               7.722305799612529
-  wild_cluster.observed_t                2.160454986978429
-  wild_cluster.cluster_robust_p          0.030737464640059758
+  wild_cluster.observed_coef             16.683694075745283
+  wild_cluster.observed_se               7.721746191959277
+  wild_cluster.observed_t                2.1606115587065218
+  wild_cluster.cluster_robust_p          0.030725357796562318
   wild_cluster.bootstrap_p               0.156
-  wild_cluster.bootstrap_ci_low_95       -0.4199298370348856
-  wild_cluster.bootstrap_ci_high_95      33.86129869367788
+  wild_cluster.bootstrap_ci_low_95       -0.41992983703484654
+  wild_cluster.bootstrap_ci_high_95      33.86129869367759
   wild_cluster.n_bootstrap_used          999
   wild_cluster.n_bootstrap_requested     999
   wild_cluster.n_convergence_failures    0
@@ -95,29 +95,29 @@ Subj×Host 交互作用 (novelty core)
 [run_cross_section_inclusive_zero_imputed — Table 6 row (v) reproducibility (Phase 6B)]
   cross_section_inclusive_zero_imputed.name cross_section_inclusive_zero_imputed
   cross_section_inclusive_zero_imputed.dv score
-  cross_section_inclusive_zero_imputed.coef_is_host 16.645372663642565
-  cross_section_inclusive_zero_imputed.se_is_host 29168.747128606403
-  cross_section_inclusive_zero_imputed.p_is_host 0.9995446809875741
-  cross_section_inclusive_zero_imputed.coef_interaction 16.494560612469108
-  cross_section_inclusive_zero_imputed.se_interaction nan
-  cross_section_inclusive_zero_imputed.p_interaction nan
+  cross_section_inclusive_zero_imputed.coef_is_host 16.651229631549022
+  cross_section_inclusive_zero_imputed.se_is_host 1.3114820412192094
+  cross_section_inclusive_zero_imputed.p_is_host 6.18350371071299e-37
+  cross_section_inclusive_zero_imputed.coef_interaction 16.48831318003546
+  cross_section_inclusive_zero_imputed.se_interaction 7.686554309993739
+  cross_section_inclusive_zero_imputed.p_interaction 0.0319460429084471
   cross_section_inclusive_zero_imputed.n_obs 7097
-  cross_section_inclusive_zero_imputed.n_params 92
+  cross_section_inclusive_zero_imputed.n_params 91
   cross_section_inclusive_zero_imputed.n_clusters 47
-  cross_section_inclusive_zero_imputed.r2 0.2444623085801252
+  cross_section_inclusive_zero_imputed.r2 0.24446466419068613
 
 [wild_cluster_bootstrap inclusive zero-imputed — Table 6 row (v) bootstrap (Phase 6B)]
   wild_cluster_zi.test_coef              host_x_subj
-  wild_cluster_zi.observed_coef          16.494560612469108
-  wild_cluster_zi.observed_se            nan
-  wild_cluster_zi.observed_t             nan
-  wild_cluster_zi.cluster_robust_p       nan
-  wild_cluster_zi.bootstrap_p            0.0019120458891013384
-  wild_cluster_zi.bootstrap_ci_low_95    nan
-  wild_cluster_zi.bootstrap_ci_high_95   nan
-  wild_cluster_zi.n_bootstrap_used       522
+  wild_cluster_zi.observed_coef          16.48831318003546
+  wild_cluster_zi.observed_se            7.686554309993739
+  wild_cluster_zi.observed_t             2.145085107718297
+  wild_cluster_zi.cluster_robust_p       0.0319460429084471
+  wild_cluster_zi.bootstrap_p            0.154
+  wild_cluster_zi.bootstrap_ci_low_95    -0.3997549059125731
+  wild_cluster_zi.bootstrap_ci_high_95   33.43415096184468
+  wild_cluster_zi.n_bootstrap_used       999
   wild_cluster_zi.n_bootstrap_requested  999
-  wild_cluster_zi.n_convergence_failures 477
+  wild_cluster_zi.n_convergence_failures 0
   wild_cluster_zi.seed                   20260728
   wild_cluster_zi.weight_type            rademacher
   wild_cluster_zi.n_clusters             47

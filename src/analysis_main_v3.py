@@ -233,12 +233,77 @@ def permutation_test(
     }
 
 
+def _mc_permutation_chi2(
+    cont_np: np.ndarray,
+    n_perm: int = 10_000,
+    seed: int = 0,
+) -> tuple[float, float]:
+    """Fisher-Freeman-Halton exact test の Monte Carlo 近似 (scipy 未収載回避)
+
+    era labels を permutation で shuffle → χ² 統計量分布 → observed 以上の割合を p 値化.
+    marginal totals (row/col sums) は permutation で保存されるので Fisher exact test
+    と同じ null (independence given marginals) を持つ. Pearson χ² と違い期待度数
+    条件 (≥ 5) を要求しない → shock 期 n=7 の Table 4 主要 test に適合.
+
+    Args:
+        cont_np: 2×K contingency table (rows=[False,True], cols=eras)
+        n_perm: permutation 回数 (default 10,000)
+        seed: RNG seed
+
+    Returns:
+        (observed_chi2, mc_p_value): Pearson χ² 統計量 (Yates correction OFF・
+        chi2_contingency と同じ定義) と Monte Carlo permutation p 値 (Phipson-Smyth 下限補正).
+    """
+    row_totals = cont_np.sum(axis=1).astype(int)
+    col_totals = cont_np.sum(axis=0).astype(int)
+    n_total = int(cont_np.sum())
+    K = len(col_totals)
+
+    if n_total == 0 or any(row_totals == 0) or any(col_totals == 0):
+        return (float("nan"), float("nan"))
+
+    expected = np.outer(row_totals, col_totals) / n_total
+    observed_chi2 = float(np.sum((cont_np - expected) ** 2 / expected))
+
+    row_labels = np.concatenate([
+        np.zeros(row_totals[0], dtype=int),
+        np.ones(row_totals[1], dtype=int),
+    ])
+    col_labels_orig = np.concatenate([
+        np.full(int(t), i, dtype=int) for i, t in enumerate(col_totals)
+    ])
+
+    rng = np.random.default_rng(seed)
+    count_ge = 0
+    for _ in range(n_perm):
+        col_shuffled = rng.permutation(col_labels_orig)
+        combined = row_labels * K + col_shuffled
+        cont_flat = np.bincount(combined, minlength=2 * K)
+        cont_perm = cont_flat.reshape(2, K).astype(float)
+        chi2_perm = float(np.sum((cont_perm - expected) ** 2 / expected))
+        if chi2_perm >= observed_chi2:
+            count_ge += 1
+
+    mc_p = (count_ge + 1) / (n_perm + 1)  # Phipson-Smyth 下限補正
+    return (observed_chi2, mc_p)
+
+
 def chi_square_era_comparison(
     df: pd.DataFrame,
     threshold: int,
     cup: CupMode = "tennou",
+    n_perm: int = 10_000,
+    seed: int = 0,
 ) -> dict:
-    """3 期間 (early/golden/shock) × top-k 率の χ² + pairwise Fisher exact"""
+    """3 期間 (early/golden/shock) × top-k 率の χ² + pairwise Fisher exact
+    + Monte Carlo permutation p (Fisher-Freeman-Halton 近似)
+
+    GPT round-7 major #5 応答 (Phase 6A): shock 期 n=7 で期待度数不足
+    (emperor's 期待非成功 ~1.68・empress's 期待成功 ~4.39・期待非成功 ~2.61)
+    → Pearson χ² 漸近近似条件違反。Monte Carlo permutation p (Fisher-Freeman-Halton
+    exact の approximation) を追加し、これを primary global test とする。
+    Pearson χ² は sensitivity として保持。
+    """
     sub = df if cup == "both" else df[df["cup"] == cup]
     col = f"top{threshold}_flag"
 
@@ -253,6 +318,9 @@ def chi_square_era_comparison(
     cont = cont.reindex(index=[False, True], columns=ERA_ORDER, fill_value=0)
 
     chi2, chi2_p, chi2_dof, _ = st.chi2_contingency(cont.values)
+
+    # Monte Carlo permutation (Fisher-Freeman-Halton 近似・GPT round-7 major #5)
+    _, mc_p = _mc_permutation_chi2(cont.values, n_perm=n_perm, seed=seed)
 
     pairs = [("early", "golden"), ("golden", "shock"), ("early", "shock")]
     pairwise = {}
@@ -277,6 +345,8 @@ def chi_square_era_comparison(
         "chi2": float(chi2),
         "chi2_dof": int(chi2_dof),
         "chi2_p": float(chi2_p),
+        "mc_permutation_p": float(mc_p),
+        "n_perm": int(n_perm),
         "pairwise_fisher": pairwise,
     }
 

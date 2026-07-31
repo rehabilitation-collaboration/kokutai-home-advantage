@@ -221,22 +221,28 @@ def _build_design(
     列順:
     - const
     - is_host_int
-    - is_subjective (Balmer2003 主観判定ダミー)
-    - [is_semi] (with_semi_interaction=True 時のみ)
     - host_x_subj = is_host_int × is_subjective  ← 主目的の交互作用項
     - [host_x_semi] (with_semi_interaction=True 時のみ)
     - pref FE / sport FE / year FE / cup FE
     - [sport × cup FE] (add_sport_cup_interaction=True 時のみ・GPT round-1 Finding #5 診断用)
+
+    GPT round-7 major #2 応答 (Phase 6A): is_subjective / is_semi は sport 固定属性
+    (剣道は subjective, 陸上は objective 等) → sport_FE (add_sport_fe=True) と完全共線
+    (linear combination) で識別不能。statsmodels は疑似逆行列で数値返してたが
+    rank-deficient regime。sport_FE を残す設計方針では is_subjective / is_semi の
+    主効果 term は design matrix から除外する。host×subj / host×semi interaction 項は
+    sport_FE と共線ではない (sport_j 固定属性 × host_ij 治療 = sport-level ではなく
+    prefecture×year×sport-level の interaction) ため保持。
     """
     base = pd.DataFrame({
         "is_host_int": df["is_host_int"].astype(float),
-        "is_subjective": df["is_subjective"].astype(float),
     })
-    base["host_x_subj"] = base["is_host_int"] * base["is_subjective"]
+    is_subj_col = df["is_subjective"].astype(float)
+    base["host_x_subj"] = base["is_host_int"] * is_subj_col
 
     if with_semi_interaction:
-        base["is_semi"] = df["is_semi"].astype(float)
-        base["host_x_semi"] = base["is_host_int"] * base["is_semi"]
+        is_semi_col = df["is_semi"].astype(float)
+        base["host_x_semi"] = base["is_host_int"] * is_semi_col
 
     X = base.copy()
     if add_pref_fe:

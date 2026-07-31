@@ -89,25 +89,28 @@ golden kougou     38      35      37      37   0.921053   0.973684   0.973684
     8   kougou    0.9333     0.1660    0.0426    0.0933    0.2400   0.0001
 
 --------------------------------------------------------------------------------
-[4] chi_square_era_comparison (3期間 top-k 率の差 + pairwise Fisher exact)
+[4] chi_square_era_comparison (3期間 top-k 率の差 + Monte Carlo permutation (FFH 近似) + pairwise Fisher exact)
+     ※ Phase 6A (GPT round-7 major #5): shock 期 n=7 で期待度数不足 → Pearson χ² 漸近条件違反。
+     ※ Monte Carlo permutation p (Fisher-Freeman-Halton exact の n_perm=10,000 近似) を primary global test に格上げ。
+     ※ Pearson χ² は sensitivity として保持。
 --------------------------------------------------------------------------------
-  cup= tennou top1: rates early=0.567 golden=0.974 shock=0.429 | χ²=19.88 dof=2 p=0.0000
+  cup= tennou top1: rates early=0.567 golden=0.974 shock=0.429 | MC-perm p=0.0001 (primary) | Pearson χ²=19.88 dof=2 p=0.0000 (sensitivity)
       pairwise Fisher: early_vs_golden=0.0000 golden_vs_shock=0.0011 early_vs_shock=0.6800
-  cup= tennou top3: rates early=0.833 golden=0.974 shock=1.000 | χ²=5.16 dof=2 p=0.0758
+  cup= tennou top3: rates early=0.833 golden=0.974 shock=1.000 | MC-perm p=0.0865 (primary) | Pearson χ²=5.16 dof=2 p=0.0758 (sensitivity)
       pairwise Fisher: early_vs_golden=0.0801 golden_vs_shock=1.0000 early_vs_shock=0.5599
-  cup= tennou top8: rates early=0.867 golden=0.974 shock=1.000 | χ²=3.64 dof=2 p=0.1623
+  cup= tennou top8: rates early=0.867 golden=0.974 shock=1.000 | MC-perm p=0.2152 (primary) | Pearson χ²=3.64 dof=2 p=0.1623 (sensitivity)
       pairwise Fisher: early_vs_golden=0.1617 golden_vs_shock=1.0000 early_vs_shock=0.5697
-  cup= kougou top1: rates early=0.300 golden=0.921 shock=0.429 | χ²=28.93 dof=2 p=0.0000
+  cup= kougou top1: rates early=0.300 golden=0.921 shock=0.429 | MC-perm p=0.0001 (primary) | Pearson χ²=28.93 dof=2 p=0.0000 (sensitivity)
       pairwise Fisher: early_vs_golden=0.0000 golden_vs_shock=0.0068 early_vs_shock=0.6594
-  cup= kougou top3: rates early=0.667 golden=0.974 shock=1.000 | χ²=13.95 dof=2 p=0.0009
+  cup= kougou top3: rates early=0.667 golden=0.974 shock=1.000 | MC-perm p=0.0016 (primary) | Pearson χ²=13.95 dof=2 p=0.0009 (sensitivity)
       pairwise Fisher: early_vs_golden=0.0008 golden_vs_shock=1.0000 early_vs_shock=0.1551
-  cup= kougou top8: rates early=0.867 golden=0.974 shock=1.000 | χ²=3.64 dof=2 p=0.1623
+  cup= kougou top8: rates early=0.867 golden=0.974 shock=1.000 | MC-perm p=0.2152 (primary) | Pearson χ²=3.64 dof=2 p=0.1623 (sensitivity)
       pairwise Fisher: early_vs_golden=0.1617 golden_vs_shock=1.0000 early_vs_shock=0.5697
-  cup=   both top1: rates early=0.433 golden=0.947 shock=0.429 | χ²=46.76 dof=2 p=0.0000
+  cup=   both top1: rates early=0.433 golden=0.947 shock=0.429 | MC-perm p=0.0001 (primary) | Pearson χ²=46.76 dof=2 p=0.0000 (sensitivity)
       pairwise Fisher: early_vs_golden=0.0000 golden_vs_shock=0.0000 early_vs_shock=1.0000
-  cup=   both top3: rates early=0.750 golden=0.974 shock=1.000 | χ²=18.67 dof=2 p=0.0001
+  cup=   both top3: rates early=0.750 golden=0.974 shock=1.000 | MC-perm p=0.0004 (primary) | Pearson χ²=18.67 dof=2 p=0.0001 (sensitivity)
       pairwise Fisher: early_vs_golden=0.0001 golden_vs_shock=1.0000 early_vs_shock=0.0590
-  cup=   both top8: rates early=0.867 golden=0.974 shock=1.000 | χ²=7.27 dof=2 p=0.0263
+  cup=   both top8: rates early=0.867 golden=0.974 shock=1.000 | MC-perm p=0.0260 (primary) | Pearson χ²=7.27 dof=2 p=0.0263 (sensitivity)
       pairwise Fisher: early_vs_golden=0.0222 golden_vs_shock=1.0000 early_vs_shock=0.3390
 
 --------------------------------------------------------------------------------

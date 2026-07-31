@@ -286,6 +286,68 @@ class TestWildClusterBootstrap:
         assert abs(p_rade - p_mamm) < 0.15, f"Rademacher p={p_rade}, Mammen p={p_mamm}"
 
 
+class TestCollinearityFixed:
+    """Phase 6A (GPT round-7 major #2): sport FE ↔ is_subjective 主効果 完全共線性 fix
+
+    sport 固定属性 (剣道=subj / 陸上=obj 等) の is_subjective / is_semi 主効果は
+    sport_FE (add_sport_fe=True) と linear combination で識別不能。design matrix から
+    除外して host×subj / host×semi interaction 項のみ保持する設計に変更。
+    """
+
+    def test_design_matrix_excludes_is_subjective_main_effect(self):
+        from src.analysis_cross_section_2024_2025 import _build_design
+        df = build_cross_section_frame()
+        X = _build_design(
+            df,
+            with_semi_interaction=False,
+            add_pref_fe=True,
+            add_sport_fe=True,
+            add_year_fe=True,
+            add_cup_fe=True,
+        )
+        assert "is_subjective" not in X.columns, (
+            "is_subjective main effect must be dropped (collinear with sport_FE)"
+        )
+        assert "host_x_subj" in X.columns, (
+            "host×subj interaction should be retained (not collinear with sport_FE)"
+        )
+
+    def test_design_matrix_excludes_is_semi_main_effect_with_semi(self):
+        from src.analysis_cross_section_2024_2025 import _build_design
+        df = build_cross_section_frame()
+        X = _build_design(
+            df,
+            with_semi_interaction=True,
+            add_pref_fe=True,
+            add_sport_fe=True,
+            add_year_fe=True,
+            add_cup_fe=True,
+        )
+        assert "is_semi" not in X.columns, (
+            "is_semi main effect must be dropped (collinear with sport_FE)"
+        )
+        assert "host_x_semi" in X.columns, (
+            "host×semi interaction should be retained (not collinear with sport_FE)"
+        )
+
+    def test_with_semi_cluster_se_now_identified(self):
+        """共線性 fix で cross_section_with_semi の cluster SE が nan → identified に."""
+        from src.analysis_cross_section_2024_2025 import (
+            build_cross_section_frame, fit_cross_section_ols,
+        )
+        df = build_cross_section_frame()
+        result = fit_cross_section_ols(
+            df, dv="score", with_semi_interaction=True, name="test_with_semi"
+        )
+        import math
+        assert not math.isnan(result.se_is_host), (
+            f"β_H SE should be identified post 6A fix, got {result.se_is_host}"
+        )
+        assert not math.isnan(result.se_interaction), (
+            f"β_HS SE should be identified post 6A fix, got {result.se_interaction}"
+        )
+
+
 class TestSportCupInteraction:
     """GPT round-1 Finding #5 応答: sport × cup interaction diagnostic spec
 
